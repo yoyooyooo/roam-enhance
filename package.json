@@ -1,0 +1,17 @@
+{
+  "name": "roam-enhance",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "build": "rm -rf dist && rollup -c"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.2.0",
+    "rollup": "^2.39.1",
+    "rollup-plugin-uglify": "^6.0.4"
+  }
+}
