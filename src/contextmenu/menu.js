@@ -231,6 +231,21 @@ export function getMenu(target) {
     target.parentNode.className === "rm-title-display"
   ) {
     const pageTitle = target.closest(".rm-title-display").innerText;
+    // 右键侧边栏标题
+    if (target.closest(".sidebar-content")) {
+      return [
+        [
+          {
+            text: "Focus on page",
+            onClick: async () => {
+              await roam42.common.navigateUiTo(pageTitle);
+            }
+          },
+          ...pageTitleMenu
+        ],
+        { pageTitle, target }
+      ];
+    }
     return [pageTitleMenu, { pageTitle, target }];
   }
 
