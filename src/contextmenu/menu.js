@@ -1,4 +1,5 @@
 import { confirm, getBlockUidFromId } from "../utils/common";
+import yoyo from "../globals";
 
 export const blockMenu = [
   {
@@ -58,6 +59,7 @@ export const blockMenu = [
       {
         text: "remove tags",
         onClick: async ({ currentUid }) => {
+          // TODO: 暴露 yoyo下的方法
           const a = await yoyo.getCurrentBlockInfo(currentUid);
           await roam42.common.updateBlock(currentUid, yoyo.utils.removeTags(a.string));
         }
@@ -141,8 +143,16 @@ export const pageTitleMenu = [
     text: "Delete all refering blocks",
     onClick: async ({ pageTitle }) => {
       const refers = await roam42.common.getBlocksReferringToThisPage(pageTitle);
-      if (refers.length && (await confirm(`当前页面有${refers.length}个引用，是否全部删除？`))) {
-        refers.forEach(async (a) => roam42.common.deleteBlock(a[0].uid));
+      if (refers.length) {
+        if (await confirm(`当前页面有${refers.length}个引用，是否全部删除？`)) {
+          refers.forEach(async (a) => roam42.common.deleteBlock(a[0].uid));
+        }
+      } else {
+        iziToast.info({
+          title: "该页面没有引用",
+          position: "topCenter",
+          timeout: 2000
+        });
       }
     }
   },

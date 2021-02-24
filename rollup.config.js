@@ -7,8 +7,5 @@ export default {
     file: "dist/main.js",
     format: "iife"
   },
-  plugins: [
-    nodeResolve()
-    //uglify(),
-  ]
+  plugins: [nodeResolve(), uglify()]
 };
