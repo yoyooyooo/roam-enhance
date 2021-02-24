@@ -46,7 +46,7 @@ export const getMenuHTML = (menu, parentText = "") => {
     .join("");
 };
 
-export function mergeMenu(menuDOM, menu, { currentUid, currentTarget, pageTitle }) {
+export function mergeMenu(menuDOM, menu, onClickArgs) {
   const addItem = document.createElement("template");
   addItem.innerHTML = getMenuHTML(menu);
   [...addItem.content.childNodes].forEach((a) => {
@@ -58,25 +58,17 @@ export function mergeMenu(menuDOM, menu, { currentUid, currentTarget, pageTitle 
       ) {
         const onClick = onClickMap[e.target.closest(".bp3-menu-item").dataset.key];
         if (onClick) {
-          if (currentUid || currentTarget) {
-            try {
-              await onClick({ currentUid, currentTarget, pageTitle });
-              // iziToast.success({
-              //   title: "操作成功",
-              //   position: "topCenter",
-              //   timeout: 3000
-              // });
-            } catch (e) {
-              console.log(e);
-              iziToast.error({
-                title: "操作失败",
-                position: "topCenter",
-                timeout: 3000
-              });
-            }
-          } else {
+          try {
+            await onClick(onClickArgs);
+            // iziToast.success({
+            //   title: "操作成功",
+            //   position: "topCenter",
+            //   timeout: 3000
+            // });
+          } catch (e) {
+            console.log(e);
             iziToast.error({
-              title: "没有 uid 或 pageTitle",
+              title: "操作失败",
               position: "topCenter",
               timeout: 3000
             });

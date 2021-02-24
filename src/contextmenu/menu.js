@@ -1,4 +1,4 @@
-import { confirm } from "../utils/common";
+import { confirm, getBlockUidFromId } from "../utils/common";
 
 export const blockMenu = [
   {
@@ -69,8 +69,8 @@ export const blockMenu = [
     children: [
       {
         text: "Expand all",
-        onClick: async ({ currentTarget }) => {
-          currentTarget
+        onClick: async ({ target }) => {
+          target
             .closest(".roam-block-container")
             .querySelectorAll(".rm-block-children .rm-paren > .rm-spacer")
             .forEach((a) => a.click());
@@ -78,8 +78,8 @@ export const blockMenu = [
       },
       {
         text: "Collapse all",
-        onClick: async ({ currentTarget }) => {
-          currentTarget
+        onClick: async ({ target }) => {
+          target
             .closest(".roam-block-container")
             .querySelectorAll(".rm-block-children .rm-paren__paren")
             .forEach((a) => a.click());
@@ -202,3 +202,26 @@ export const pageTitleMenu = [
     }
   }
 ];
+
+export function getMenu(target) {
+  if (
+    target.classList.contains("rm-bullet__inner") ||
+    target.classList.contains("rm-bullet") ||
+    target.classList.contains("rm-caret") ||
+    target.classList.contains("block-expand")
+  ) {
+    const currentUid = getBlockUidFromId(
+      target.closest(".rm-block-main").querySelector(".rm-block__input").id
+    );
+    return [blockMenu, { currentUid, target }];
+  }
+  if (
+    target.className === "rm-title-display" ||
+    target.parentNode.className === "rm-title-display"
+  ) {
+    const pageTitle = target.closest(".rm-title-display").innerText;
+    return [pageTitleMenu, { pageTitle, target }];
+  }
+
+  return [null, null];
+}
