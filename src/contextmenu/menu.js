@@ -208,7 +208,8 @@ export function getMenu(target) {
     target.classList.contains("rm-bullet__inner") ||
     target.classList.contains("rm-bullet") ||
     target.classList.contains("rm-caret") ||
-    target.classList.contains("block-expand")
+    target.classList.contains("block-expand") ||
+    target.classList.contains("rm-block__controls")
   ) {
     const currentUid = getBlockUidFromId(
       target.closest(".rm-block-main").querySelector(".rm-block__input").id
