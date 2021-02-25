@@ -3,8 +3,9 @@ import * as dateProcessing from "./dateProcessing";
 import * as common from "./common";
 
 const yoyo = {};
-Object.keys(common).forEach((key) => (yoyo[key] = common[key]));
+// Object.keys(common).forEach((key) => (yoyo[key] = common[key]));
 
+yoyo.common = common;
 yoyo.utils = utils;
 yoyo.dateProcessing = dateProcessing;
 

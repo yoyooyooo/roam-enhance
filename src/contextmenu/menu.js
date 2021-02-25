@@ -28,7 +28,7 @@ export const blockMenu = [
         text: "Delete current block and embed block's refers",
         onClick: async ({ currentUid }) => {
           try {
-            const info = await yoyo.getCurrentBlockInfo(currentUid);
+            const info = await yoyo.common.getCurrentBlockInfo(currentUid);
             const embed = info.string.match(/\{\{\[\[embed\]\]\:\s+\(\(\(\((.*?)\)\)\)\)\}\}/);
             if (embed) {
               const originUid = embed[1];
@@ -57,11 +57,36 @@ export const blockMenu = [
     text: "Format",
     children: [
       {
-        text: "remove tags",
+        text: "Remove tags",
         onClick: async ({ currentUid }) => {
-          // TODO: 暴露 yoyo下的方法
-          const a = await yoyo.getCurrentBlockInfo(currentUid);
+          const a = await yoyo.common.getCurrentBlockInfo(currentUid);
           await roam42.common.updateBlock(currentUid, yoyo.utils.removeTags(a.string));
+        }
+      }
+    ]
+  },
+  {
+    text: "Format child blocks",
+    children: [
+      {
+        text: "Embed to text",
+        onClick: async ({ currentUid }) => {
+          await yoyo.utils.patchBlockChildren(currentUid, async (a) => {
+            const m = a.string.match(/\{\{\[\[embed\]\]\:\s+\(\(\(\((.*?)\)\)\)\)\}\}/);
+            const originUid = m && m[1];
+            if (originUid) {
+              const originInfo = await roam42.common.getBlockInfoByUID(originUid);
+              roam42.common.updateBlock(a.uid, originInfo[0][0].string);
+            }
+          });
+        }
+      },
+      {
+        text: "Remove tags",
+        onClick: async ({ currentUid }) => {
+          yoyo.utils.patchBlockChildren(currentUid, (a) => {
+            roam42.common.updateBlock(a.uid, yoyo.utils.removeTags(a.string));
+          });
         }
       }
     ]
@@ -85,32 +110,6 @@ export const blockMenu = [
             .closest(".roam-block-container")
             .querySelectorAll(".rm-block-children .rm-paren__paren")
             .forEach((a) => a.click());
-        }
-      }
-    ]
-  },
-  {
-    text: "Child Blocks",
-    children: [
-      {
-        text: "Embed to text",
-        onClick: async ({ currentUid }) => {
-          await yoyo.utils.patchBlockChildren(currentUid, async (a) => {
-            const m = a.string.match(/\{\{\[\[embed\]\]\:\s+\(\(\(\((.*?)\)\)\)\)\}\}/);
-            const originUid = m && m[1];
-            if (originUid) {
-              const originInfo = await roam42.common.getBlockInfoByUID(originUid);
-              roam42.common.updateBlock(a.uid, originInfo[0][0].string);
-            }
-          });
-        }
-      },
-      {
-        text: "Remove tags",
-        onClick: async ({ currentUid }) => {
-          yoyo.utils.patchBlockChildren(currentUid, async (a) => {
-            await roam42.common.updateBlock(a.uid, yoyo.utils.removeTags(a.string));
-          });
         }
       }
     ]

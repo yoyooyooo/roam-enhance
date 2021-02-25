@@ -9,6 +9,13 @@ export function addScript(src, id) {
   document.getElementsByTagName("head")[0].appendChild(s);
 }
 
+export const addStyle = (content) => {
+  const css = document.createElement("style");
+  css.textContent = content;
+  document.getElementsByTagName("head")[0].appendChild(css);
+  return css;
+};
+
 export function retry(fn, name = "") {
   let n = 0;
   function _retry(fn) {

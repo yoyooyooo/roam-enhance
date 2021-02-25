@@ -12,6 +12,7 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^11.2.0",
     "rollup": "^2.39.1",
+    "rollup-plugin-import-css": "^2.0.0",
     "rollup-plugin-uglify": "^6.0.4"
   }
 }
