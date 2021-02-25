@@ -5,7 +5,7 @@ import { mergeMenu } from "./utils";
 let mouseX;
 let mouseY;
 
-document.addEventListener("mousemove", (e) => {
+document.addEventListener("mousedown", (e) => {
   mouseX = e.clientX;
   mouseY = e.clientY;
 });
@@ -18,7 +18,7 @@ const observer = new MutationObserver((mutationsList, observer) => {
         m.target.className === "bp3-context-menu-popover-target")
   );
   if (isContextMenu) {
-    // 关闭右键菜单
+    // close right click menu
     // if (
     //   mutationsList.find(
     //     (m) =>
@@ -31,7 +31,7 @@ const observer = new MutationObserver((mutationsList, observer) => {
       (m) =>
         m.type === "childList" && m.addedNodes.length > 0 && m.target.className === "bp3-portal"
     );
-    // 打开右键菜单
+    // open right click menu
     if (portalMutation) {
       const currentTargets = document.elementsFromPoint(mouseX, mouseY);
       const [menu, onClickArgs] = getMenu(currentTargets[1]);
