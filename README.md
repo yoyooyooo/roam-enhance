@@ -18,11 +18,11 @@ document.getElementsByTagName("head")[0].appendChild(s);
 ## enhance right click menu
 
 click on block bullet:
-![](http://github.com/yoyooyooo/roam-enhance/blob/master/images/1.png)
+![click on block bullet](http://github.com/yoyooyooo/roam-enhance/blob/master/images/1.png)
 
 click on page title:
 
-![](http://github.com/yoyooyooo/roam-enhance/blob/master/images/2.png)
+![click on page title](http://github.com/yoyooyooo/roam-enhance/blob/master/images/2.png)
 
 click on page title of sidebar:
-![](http://github.com/yoyooyooo/roam-enhance/blob/master/images/23.png)
+![click on page title of sidebar](http://github.com/yoyooyooo/roam-enhance/blob/master/images/23.png)
