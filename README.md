@@ -27,4 +27,4 @@ click on page title:
 
 click on page title of sidebar:
 
-![click on page title of sidebar](http://github.com/yoyooyooo/roam-enhance/blob/master/images/23.png?raw=true)
+![click on page title of sidebar](http://github.com/yoyooyooo/roam-enhance/blob/master/images/3.png?raw=true)
