@@ -42,7 +42,7 @@ click on page title of sidebar:
  
 ### how to create your menu
 
-By default, all menu options are wrapped with {{}}, which has 3 sublevels
+By default, all menu options are wrapped with {{}}, when click a block'bullet, it's children will be executed in the following three ways:
 1. <%menu:built-in menu name%>：
    Runs the built-in menu name
 2. javascript code, such as ```javascript````` ：
