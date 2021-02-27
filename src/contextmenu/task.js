@@ -26,7 +26,11 @@ export const processBlock = async (parentUid, block, menuMap, onClickArgs) => {
     return;
   }
 
-  return await roam42.common.createBlock(parentUid, block.order, block.string);
+  return await roam42.common.createBlock(
+    parentUid,
+    block.order,
+    await roam42.smartBlocks.proccessBlockWithSmartness(block.string)
+  );
 };
 
 export async function runTask(block, onClickArgs, menuMap) {
