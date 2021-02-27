@@ -1,6 +1,6 @@
 enhance roam research
 
-## install
+# install
 
 ```js
 const old = document.getElementById("roam-enhance");
@@ -12,3 +12,14 @@ s.async = true;
 s.type = "text/javascript";
 document.getElementsByTagName("head")[0].appendChild(s);
 ```
+
+# features
+
+## enhance right click menu
+
+click on block bullet:
+![](http://github.com/yoyooyooo/roam-enhance/images/1.png)
+click on page title:
+![](http://github.com/yoyooyooo/roam-enhance/images/2.png)
+click on page title of sidebar:
+![](http://github.com/yoyooyooo/roam-enhance/images/23.png)
