@@ -12,30 +12,20 @@ export let blockMenu = [
         text: "Delete block and it's references",
         key: "Delete block and it's references",
         onClick: async ({ currentUid, selectUids }) => {
-          if (selectUids.length > 0) {
-            selectUids.forEach((uid) => roam42.common.deleteBlock(uid));
-            return;
-          }
-          const refers = await roam42.common.getBlocksReferringToThisBlockRef(currentUid);
-          if (refers.length > 0) {
-            if (
-              await confirm(
-                navigator.language === "zh-CN"
-                  ? `该 block 有${refers.length}个块引用，是否删除当前 block 及其所有块引用`
-                  : `this block has ${refers.length} references，delete this block and it's all references?`
-              )
-            ) {
-              refers.forEach(async (a) => roam42.common.deleteBlock(a[0].uid));
-              roam42.common.deleteBlock(currentUid);
-              roam42.help.displayMessage(
-                navigator.language === "zh-CN"
-                  ? `删除${refers.length}个引用`
-                  : `Successfully delete ${refers.length} references`,
-                2000
-              );
-            }
-          } else {
-            roam42.common.deleteBlock(currentUid);
+          if (
+            await confirm(
+              navigator.language === "zh-CN"
+                ? `确定删除当前所选 block 及其所有块引用`
+                : `Sure to delete the current block and it's all references??`
+            )
+          ) {
+            [currentUid, ...selectUids].forEach(async (uid) => {
+              const refers = await roam42.common.getBlocksReferringToThisBlockRef(uid);
+              if (refers.length > 0) {
+                refers.forEach(async (a) => roam42.common.deleteBlock(a[0].uid));
+              }
+              roam42.common.deleteBlock(uid);
+            });
           }
         }
       },
