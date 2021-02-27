@@ -1,5 +1,9 @@
 enhance roam research
 
+# before install
+
+you should install [roam42](https://roamresearch.com/#/app/roamhacker/page/jI-X_cwaf)
+
 # install
 
 ```js
@@ -19,12 +23,35 @@ document.getElementsByTagName("head")[0].appendChild(s);
 
 click on block bullet:
 
-![click on block bullet](http://github.com/yoyooyooo/roam-enhance/blob/master/images/1.png?raw=true)
+<img src="http://github.com/yoyooyooo/roam-enhance/blob/master/images/1.png?raw=true" width="200" alt="click on block bullet"/>
 
 click on page title:
 
-![click on page title](http://github.com/yoyooyooo/roam-enhance/blob/master/images/2.png?raw=true)
+<img src="http://github.com/yoyooyooo/roam-enhance/blob/master/images/2.png?raw=true" width="200" alt="click on page title"/>
 
 click on page title of sidebar:
 
-![click on page title of sidebar](http://github.com/yoyooyooo/roam-enhance/blob/master/images/23.png?raw=true)
+<img src="http://github.com/yoyooyooo/roam-enhance/blob/master/images/3.png?raw=true" width="200" alt="click on page title of sidebar"/>
+
+### change internal menu and custom your own menu
+
+you can create a page named `roam/enhance/menu`,then right click the page title, there will be a menu called `Pull internal menu` in the right click menu.
+click it and then it will automatically pull the built-in menu on the current page.
+
+At this point, you can freely change the order of these menus、delete them，or create your own menu.
+
+### how to create your menu
+
+By default, all menu options are wrapped with {{}}, when click a block'bullet, it's children will be executed in the following three ways:
+
+1. <%menu:built-in menu name%>：
+
+   Runs the built-in menu name
+
+2. javascript code, such as ```javascript````` ：
+
+   Run the code and output its return
+
+3. plain text：
+
+   will be copied as a template
