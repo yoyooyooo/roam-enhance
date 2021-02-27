@@ -43,9 +43,9 @@ click on page title of sidebar:
 ### how to create your menu
 
 By default, all menu options are wrapped with {{}}, which has 3 sublevels
-1. <%menu:built-in menu name%>.
+1. <%menu:built-in menu name%>：
    Runs the built-in menu name
-2. javascript code, such as ```javascript`````.
+2. javascript code, such as ```javascript````` ：
    Run the code and output its return
-3. plain text
+3. plain text：
     will be copied as a template
