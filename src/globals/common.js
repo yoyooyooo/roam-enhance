@@ -15,6 +15,47 @@ export const batchCreateBlocks = async (
   });
 };
 
+export const deepCreateBlock = async (parentUid, array, options = {}) => {
+  const {
+    textKey = "text",
+    childrenKey = "children",
+    shouldOrder = false,
+    startOrder = 0
+  } = options;
+  async function loop(parentUid, menu, startOrder) {
+    const list = shouldOrder ? menu.sort((a, b) => a.order - b.order) : menu;
+    for (let i = 0; i < list.length; i++) {
+      if (!parentUid) return;
+      const a = list[i];
+      const uid = await roam42.common.createBlock(parentUid, startOrder + i, a[textKey]);
+      if (a[childrenKey]) {
+        loop(uid, a[childrenKey], startOrder); // child sync is not necessary
+      }
+    }
+  }
+  await loop(parentUid, array, startOrder);
+};
+
+// copy template block and its'children to one block's child
+export const copyTemplateBlock = async (parentUid, templateUidOrBlocks, startOrder = 0) => {
+  if (typeof templateUidOrBlocks === "string") {
+    const info = await roam42.common.getBlockInfoByUID(templateUidOrBlocks);
+    if (info) {
+      await deepCreateBlock(parentUid, info[0][0], {
+        textKey: "string",
+        shouldOrder: true,
+        startOrder
+      });
+    }
+  } else {
+    await deepCreateBlock(parentUid, templateUidOrBlocks, {
+      textKey: "string",
+      shouldOrder: true,
+      startOrder
+    });
+  }
+};
+
 // 当前页面标题，如果是聚焦模式，取第一个面包屑
 export const getCurrentPageTitle = () =>
   utils.getValueInOrderIfError([

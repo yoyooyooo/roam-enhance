@@ -46,7 +46,7 @@ export const getMenuHTML = (menu, parentText = "") => {
     .join("");
 };
 
-export function mergeMenu(menuDOM, menu, onClickArgs) {
+export function mergeMenuToDOM(menuDOM, menu, onClickArgs) {
   const addItem = document.createElement("template");
   addItem.innerHTML = getMenuHTML(menu);
   [...addItem.content.childNodes].forEach((a) => {
@@ -60,11 +60,6 @@ export function mergeMenu(menuDOM, menu, onClickArgs) {
         if (onClick) {
           try {
             await onClick(onClickArgs);
-            // iziToast.success({
-            //   title: "操作成功",
-            //   position: "topCenter",
-            //   timeout: 3000
-            // });
           } catch (e) {
             console.log(e);
             iziToast.error({

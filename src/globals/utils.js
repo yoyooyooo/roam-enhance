@@ -53,3 +53,11 @@ export const unique = (array) => {
   array.forEach((k) => (temp[k] = k));
   return Object.keys(temp);
 };
+
+export const getSelectBlockUids = () => {
+  const ids = [
+    ...document.querySelectorAll(".roam-block-container.block-highlight-blue")
+  ].map((a) => getBlockUidFromId(a.querySelector(".rm-block__input").id));
+
+  return [...new Set(ids)];
+};

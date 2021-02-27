@@ -1,6 +1,7 @@
 import { retry } from "../utils/common";
-import { getMenu } from "./menu";
-import { mergeMenu } from "./utils";
+import { getSelectBlockUids } from "../globals/utils";
+import { getMenu, initMenu } from "./menu";
+import { mergeMenuToDOM } from "./utils";
 
 let mouseX;
 let mouseY;
@@ -10,7 +11,7 @@ document.addEventListener("mousedown", (e) => {
   mouseY = e.clientY;
 });
 
-const observer = new MutationObserver((mutationsList, observer) => {
+const observer = new MutationObserver(async (mutationsList, observer) => {
   const isContextMenu = !!mutationsList.find(
     (m) =>
       m.type === "childList" &&
@@ -33,11 +34,23 @@ const observer = new MutationObserver((mutationsList, observer) => {
     );
     // open right click menu
     if (portalMutation) {
-      const currentTargets = document.elementsFromPoint(mouseX, mouseY);
-      const [menu, onClickArgs] = getMenu(currentTargets[1]);
-      menu && mergeMenu(portalMutation.target.querySelector("ul.bp3-menu"), menu, onClickArgs);
+      console.time();
+      await initMenu();
+      console.timeEnd();
+      const path = document.elementsFromPoint(mouseX, mouseY);
+      const [menu, onClickArgs] = getMenu(path);
+      const selectUids = getSelectBlockUids();
+      menu &&
+        mergeMenuToDOM(portalMutation.target.querySelector("ul.bp3-menu"), menu, {
+          ...onClickArgs,
+          selectUids
+        });
     }
   }
+});
+
+retry(() => {
+  initMenu();
 });
 
 retry(() => {
