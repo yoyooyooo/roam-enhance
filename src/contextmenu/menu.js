@@ -389,7 +389,7 @@ export function getMenu(path) {
     if (pageTitle === "roam/enhance/menu") {
       menu.push(
         {
-          text: "Pull internal menu",
+          text: "Pull build-in menu",
           onClick: async () => {
             const pageUid = await roam42.common.getPageUidByTitle("roam/enhance/menu");
             const insertTemplateMenu = (menu) => {
