@@ -22,7 +22,18 @@ export const processBlock = async (parentUid, block, menuMap, onClickArgs) => {
   const internalMenu = block.string.match(/<%\s*menu:\s*(.*)\s*%>/);
   if (internalMenu) {
     const menu = menuMap[internalMenu[1]];
-    menu.onClick && menu.onClick(onClickArgs);
+    if (menu) {
+      menu.onClick && menu.onClick(onClickArgs);
+    } else {
+      iziToast.error({
+        title:
+          navigator.language === "zh-CN"
+            ? `不存在 menu: ${internalMenu[1]}`
+            : `no menu named${internalMenu[1]} found`,
+        position: "topCenter",
+        timeout: 1000
+      });
+    }
     return;
   }
 
