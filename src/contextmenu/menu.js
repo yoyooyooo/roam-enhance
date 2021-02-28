@@ -9,14 +9,14 @@ export let blockMenu = [
     key: "Delete",
     children: [
       {
-        text: "Delete block and it's references",
-        key: "Delete block and it's references",
+        text: "Delete block and its references",
+        key: "Delete block and its references",
         onClick: async ({ currentUid, selectUids }) => {
           if (
             await confirm(
               navigator.language === "zh-CN"
                 ? `确定删除当前所选 block 及其所有块引用`
-                : `Sure to delete the current block and it's all references??`
+                : `Sure to delete the current block and its all references??`
             )
           ) {
             [currentUid, ...selectUids].forEach(async (uid) => {

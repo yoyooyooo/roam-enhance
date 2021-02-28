@@ -42,7 +42,7 @@ At this point, you can freely change the order of these menus、delete them，or
 
 ### how to create your menu
 
-By default, all menu options are wrapped with {{}}, when click a block'bullet, it's children will be executed in the following three ways:
+By default, all menu options are wrapped with {{}}, when click a block'bullet, its children will be executed in the following three ways:
 
 1. <%menu:built-in menu name%>：
 
@@ -59,7 +59,7 @@ By default, all menu options are wrapped with {{}}, when click a block'bullet, i
 ### build-in menu
 
 - BlockMenu
-  - <%menu:Delete block and it's references%>
+  - <%menu:Delete block and its references%>
   - <%menu:Delete current block and embed block's refers%>
   - <%menu:Remove tags%>
   - <%menu:child blocks remove tags%>
