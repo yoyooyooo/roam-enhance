@@ -4,6 +4,7 @@ import yoyo from "../globals";
 import { runTasksByBlocks } from "./task";
 import { Menu } from "./types";
 import { render } from "../components/metadata";
+import { getSingleDOM } from "../utils/dom";
 
 export let blockMenu: Menu[] = [
   {
@@ -161,10 +162,7 @@ export let pageTitleMenu: Menu[] = [
     text: "0000",
     key: "0000",
     onClick: () => {
-      const dom = document.createElement("div");
-      dom.id = "metadata";
-      document.body.appendChild(dom);
-      render(dom);
+      render(getSingleDOM("metadata"), { open: true });
     }
   },
   {
