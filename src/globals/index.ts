@@ -2,14 +2,12 @@ import * as utils from "./utils";
 import * as dateProcessing from "./dateProcessing";
 import * as common from "./common";
 
-const yoyo = {};
+const yoyo = { common, utils, dateProcessing };
 // Object.keys(common).forEach((key) => (yoyo[key] = common[key]));
 
-yoyo.common = common;
-yoyo.utils = utils;
-yoyo.dateProcessing = dateProcessing;
-
+// @ts-ignore
 if (typeof window.yoyo == "undefined") {
+  // @ts-ignore
   window.yoyo = yoyo;
 }
 

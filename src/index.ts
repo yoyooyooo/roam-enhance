@@ -1,6 +1,9 @@
 import "./index.css";
 import "./globals";
 import "./contextmenu";
+import * as React from "react";
+
+console.log({ React });
 
 const css = document.createElement("link");
 css.rel = "stylesheet";

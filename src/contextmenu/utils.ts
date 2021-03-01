@@ -51,18 +51,19 @@ export function mergeMenuToDOM(menuDOM, menu, onClickArgs) {
   addItem.innerHTML = getMenuHTML(menu);
   [...addItem.content.childNodes].forEach((a) => {
     a.addEventListener("click", async (e) => {
+      const target = e.target as HTMLElement;
       if (
-        e.target.classList.contains("bp3-menu-item") ||
-        (e.target.classList.contains("bp3-fill") &&
-          e.target.classList.contains("bp3-text-overflow-ellipsis"))
+        target.classList.contains("bp3-menu-item") ||
+        (target.classList.contains("bp3-fill") &&
+          target.classList.contains("bp3-text-overflow-ellipsis"))
       ) {
-        const onClick = onClickMap[e.target.closest(".bp3-menu-item").dataset.key];
+        const onClick = onClickMap[(target.closest(".bp3-menu-item") as HTMLElement).dataset.key];
         if (onClick) {
           try {
             await onClick(onClickArgs);
           } catch (e) {
             console.log(e);
-            iziToast.error({
+            window.iziToast.error({
               title: "操作失败",
               position: "topCenter",
               timeout: 3000
@@ -71,17 +72,19 @@ export function mergeMenuToDOM(menuDOM, menu, onClickArgs) {
         }
       }
     });
-    [...a.querySelectorAll(".bp3-popover-wrapper")].forEach((a) => {
+    [...(a as HTMLElement).querySelectorAll(".bp3-popover-wrapper")].forEach((a) => {
       a.addEventListener("mouseenter", async (e) => {
-        if (e.target.parentNode.classList.contains("bp3-submenu")) {
-          e.target.querySelector(".bp3-popover-target").classList.add("bp3-popover-open");
-          e.target.querySelector(".bp3-overlay").classList.add("bp3-overlay-open");
+        const target = e.target as HTMLElement;
+        if ((target.parentNode as HTMLElement).classList.contains("bp3-submenu")) {
+          target.querySelector(".bp3-popover-target").classList.add("bp3-popover-open");
+          target.querySelector(".bp3-overlay").classList.add("bp3-overlay-open");
         }
       });
       a.addEventListener("mouseleave", async (e) => {
-        if (e.target.parentNode.classList.contains("bp3-submenu")) {
-          e.target.querySelector(".bp3-popover-target").classList.remove("bp3-popover-open");
-          e.target.querySelector(".bp3-overlay").classList.remove("bp3-overlay-open");
+        const target = e.target as HTMLElement;
+        if ((target.parentNode as HTMLElement).classList.contains("bp3-submenu")) {
+          target.querySelector(".bp3-popover-target").classList.remove("bp3-popover-open");
+          target.querySelector(".bp3-overlay").classList.remove("bp3-overlay-open");
         }
       });
     });

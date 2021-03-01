@@ -1,4 +1,4 @@
-export const processBlock = async (parentUid, block, menuMap, onClickArgs) => {
+export const processBlock = async (parentUid: string, block: Roam.Block, menuMap, onClickArgs) => {
   const { currentUid, selectUids, target, pageTitle } = onClickArgs;
   const js = block.string.match(/^\`\`\`javascript\n([\s\S]*)\`\`\`$/);
   if (js) {
@@ -13,7 +13,7 @@ export const processBlock = async (parentUid, block, menuMap, onClickArgs) => {
         code
       )(currentUid, selectUids, target, pageTitle);
       // nooutput
-      return await roam42.common.createBlock(parentUid, block.order, `${result}`);
+      return await window.roam42.common.createBlock(parentUid, block.order, `${result}`);
     } catch (e) {
       console.log(e);
     }
@@ -25,7 +25,7 @@ export const processBlock = async (parentUid, block, menuMap, onClickArgs) => {
     if (menu) {
       menu.onClick && menu.onClick(onClickArgs);
     } else {
-      iziToast.error({
+      window.iziToast.error({
         title:
           navigator.language === "zh-CN"
             ? `不存在 menu: ${internalMenu[1]}`
@@ -37,33 +37,12 @@ export const processBlock = async (parentUid, block, menuMap, onClickArgs) => {
     return;
   }
 
-  return await roam42.common.createBlock(
+  return await window.roam42.common.createBlock(
     parentUid,
     block.order,
-    await roam42.smartBlocks.proccessBlockWithSmartness(block.string)
+    await window.roam42.smartBlocks.proccessBlockWithSmartness(block.string)
   );
 };
-
-export async function runTask(block, onClickArgs, menuMap) {
-  const { prevInput, lastInput, currentUid, selectUids, target, pageTitle } = onClickArgs;
-  let finalUid;
-  if (currentUid) {
-    finalUid = currentUid;
-  } else if (pageTitle) {
-    finalUid = await roam42.common.getPageUidByTitle(pageTitle);
-  }
-
-  await processBlock(block, onClickArgs);
-
-  // template block
-  //   await yoyo.common.copyTemplateBlock(finalUid, [block], block.order);
-  const uid = await roam42.common.createBlock(finalUid, block.order, block.string);
-  if (block.children) {
-    for (const b of block.children) {
-      await runTask(b, onClickArgs, block.order, menuMap);
-    }
-  }
-}
 
 export async function runTasksByBlocks(blocks, menuMap, onClickArgs) {
   const { currentUid, selectUids, target, pageTitle } = onClickArgs;
@@ -71,7 +50,7 @@ export async function runTasksByBlocks(blocks, menuMap, onClickArgs) {
   if (currentUid) {
     finalUid = currentUid;
   } else if (pageTitle) {
-    finalUid = await roam42.common.getPageUidByTitle(pageTitle);
+    finalUid = await window.roam42.common.getPageUidByTitle(pageTitle);
   }
 
   const runTasks = async (parentUid, blocks) => {
@@ -84,9 +63,4 @@ export async function runTasksByBlocks(blocks, menuMap, onClickArgs) {
   };
 
   await runTasks(finalUid, blocks);
-
-  //   for (const block of blocks) {
-  //     prevInput = await runTask(block, { prevInput, lastInput, ...onClickArgs }, menuMap);
-  //     prevInput && (lastInput = prevInput);
-  //   }
 }

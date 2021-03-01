@@ -3,8 +3,8 @@ import { getSelectBlockUids } from "../globals/utils";
 import { getMenu, initMenu } from "./menu";
 import { mergeMenuToDOM } from "./utils";
 
-let mouseX;
-let mouseY;
+let mouseX: number;
+let mouseY: number;
 
 document.addEventListener("mousedown", (e) => {
   mouseX = e.clientX;
@@ -15,8 +15,8 @@ const observer = new MutationObserver(async (mutationsList, observer) => {
   const isContextMenu = !!mutationsList.find(
     (m) =>
       m.type === "childList" &&
-      (m.target.className === "bp3-context-menu" ||
-        m.target.className === "bp3-context-menu-popover-target")
+      ((m.target as HTMLElement).className === "bp3-context-menu" ||
+        (m.target as HTMLElement).className === "bp3-context-menu-popover-target")
   );
   if (isContextMenu) {
     // close right click menu
@@ -30,7 +30,9 @@ const observer = new MutationObserver(async (mutationsList, observer) => {
     // }
     let portalMutation = mutationsList.find(
       (m) =>
-        m.type === "childList" && m.addedNodes.length > 0 && m.target.className === "bp3-portal"
+        m.type === "childList" &&
+        m.addedNodes.length > 0 &&
+        (m.target as HTMLElement).className === "bp3-portal"
     );
     // open right click menu
     if (portalMutation) {
@@ -41,7 +43,7 @@ const observer = new MutationObserver(async (mutationsList, observer) => {
       const [menu, onClickArgs] = getMenu(path);
       const selectUids = getSelectBlockUids();
       menu &&
-        mergeMenuToDOM(portalMutation.target.querySelector("ul.bp3-menu"), menu, {
+        mergeMenuToDOM((portalMutation.target as HTMLElement).querySelector("ul.bp3-menu"), menu, {
           ...onClickArgs,
           selectUids
         });

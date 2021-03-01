@@ -2,8 +2,10 @@ import { confirm, getBlockUidFromId } from "../utils/common";
 import { deepCreateBlock } from "../globals/common";
 import yoyo from "../globals";
 import { runTasksByBlocks } from "./task";
+import { Menu } from "./types";
+import { render } from "../components/metadata";
 
-export let blockMenu = [
+export let blockMenu: Menu[] = [
   {
     text: "Delete",
     key: "Delete",
@@ -20,11 +22,11 @@ export let blockMenu = [
             )
           ) {
             [currentUid, ...selectUids].forEach(async (uid) => {
-              const refers = await roam42.common.getBlocksReferringToThisBlockRef(uid);
+              const refers = await window.roam42.common.getBlocksReferringToThisBlockRef(uid);
               if (refers.length > 0) {
-                refers.forEach(async (a) => roam42.common.deleteBlock(a[0].uid));
+                refers.forEach(async (a) => window.roam42.common.deleteBlock(a[0].uid));
               }
-              roam42.common.deleteBlock(uid);
+              window.roam42.common.deleteBlock(uid);
             });
           }
         }
@@ -38,22 +40,22 @@ export let blockMenu = [
             const embed = info.string.match(/\{\{\[\[embed\]\]\:\s+\(\(\(\((.*?)\)\)\)\)\}\}/);
             if (embed) {
               const originUid = embed[1];
-              const refers = await roam42.common.getBlocksReferringToThisBlockRef(originUid);
+              const refers = await window.roam42.common.getBlocksReferringToThisBlockRef(originUid);
               if (
                 refers.length > 0 &&
                 (await confirm(
                   `该 block 包含有 embed，embed 原 block有${refers.length}个块引用，是否一起删除`
                 ))
               ) {
-                refers.forEach(async (a) => roam42.common.deleteBlock(a[0].uid));
-                roam42.common.deleteBlock(originUid);
-                roam42.help.displayMessage(`删除${refers.length}个引用`, 2000);
+                refers.forEach(async (a) => window.roam42.common.deleteBlock(a[0].uid));
+                window.roam42.common.deleteBlock(originUid);
+                window.roam42.help.displayMessage(`删除${refers.length}个引用`, 2000);
               }
             }
-            roam42.common.deleteBlock(currentUid);
+            window.roam42.common.deleteBlock(currentUid);
           } catch (e) {
             console.log(e);
-            roam42.help.displayMessage("删除出错", 2000);
+            window.roam42.help.displayMessage("删除出错", 2000);
           }
         }
       }
@@ -69,7 +71,7 @@ export let blockMenu = [
         onClick: async ({ currentUid, selectUids }) => {
           [currentUid, ...selectUids].forEach(async (uid) => {
             const a = await yoyo.common.getCurrentBlockInfo(uid);
-            await roam42.common.updateBlock(uid, yoyo.utils.removeTags(a.string));
+            await window.roam42.common.updateBlock(uid, yoyo.utils.removeTags(a.string));
           });
         }
       }
@@ -87,8 +89,8 @@ export let blockMenu = [
             const m = a.string.match(/\{\{\[\[embed\]\]\:\s+\(\(\(\((.*?)\)\)\)\)\}\}/);
             const originUid = m && m[1];
             if (originUid) {
-              const originInfo = await roam42.common.getBlockInfoByUID(originUid);
-              roam42.common.updateBlock(a.uid, originInfo[0][0].string);
+              const originInfo = await window.roam42.common.getBlockInfoByUID(originUid);
+              window.roam42.common.updateBlock(a.uid, originInfo[0][0].string);
             }
           });
         }
@@ -98,7 +100,7 @@ export let blockMenu = [
         key: "child blocks remove tags",
         onClick: async ({ currentUid }) => {
           yoyo.utils.patchBlockChildren(currentUid, (a) => {
-            roam42.common.updateBlock(a.uid, yoyo.utils.removeTags(a.string));
+            window.roam42.common.updateBlock(a.uid, yoyo.utils.removeTags(a.string));
           });
         }
       }
@@ -144,9 +146,9 @@ export let blockMenu = [
           });
           await navigator.clipboard.writeText(highlights.join("\n"));
           if (highlights.length > 0) {
-            roam42.help.displayMessage("提取高亮成功，已复制到剪切板", 2000);
+            window.roam42.help.displayMessage("提取高亮成功，已复制到剪切板", 2000);
           } else {
-            roam42.help.displayMessage("提取不到高亮内容", 2000);
+            window.roam42.help.displayMessage("提取不到高亮内容", 2000);
           }
         }
       }
@@ -154,18 +156,28 @@ export let blockMenu = [
   }
 ];
 
-export let pageTitleMenu = [
+export let pageTitleMenu: Menu[] = [
+  {
+    text: "0000",
+    key: "0000",
+    onClick: () => {
+      const dom = document.createElement("div");
+      dom.id = "metadata";
+      document.body.appendChild(dom);
+      render(dom);
+    }
+  },
   {
     text: "Delete all refering blocks",
     key: "Delete all refering blocks",
     onClick: async ({ pageTitle }) => {
-      const refers = await roam42.common.getBlocksReferringToThisPage(pageTitle);
+      const refers = await window.roam42.common.getBlocksReferringToThisPage(pageTitle);
       if (refers.length) {
         if (await confirm(`当前页面有${refers.length}个引用，是否全部删除？`)) {
-          refers.forEach(async (a) => roam42.common.deleteBlock(a[0].uid));
+          refers.forEach(async (a) => window.roam42.common.deleteBlock(a[0].uid));
         }
       } else {
-        iziToast.info({
+        window.iziToast.info({
           title: "该页面没有引用",
           position: "topCenter",
           timeout: 2000
@@ -177,9 +189,9 @@ export let pageTitleMenu = [
     text: "Extract currentPage's refers",
     key: "Extract currentPage's refers",
     onClick: async ({ pageTitle }) => {
-      const refers = await roam42.common.getBlocksReferringToThisPage(pageTitle);
+      const refers = await window.roam42.common.getBlocksReferringToThisPage(pageTitle);
       if (!refers.length) {
-        roam42.help.displayMessage("提取不到东西", 2000);
+        window.roam42.help.displayMessage("提取不到东西", 2000);
         return;
       }
       function getContentWithChildren(item, depth = 2) {
@@ -199,7 +211,7 @@ export let pageTitleMenu = [
         return memo;
       }, {});
 
-      const pageNames = await roam42.common.getPageNamesFromBlockUidList(
+      const pageNames = await window.roam42.common.getPageNamesFromBlockUidList(
         refers.map((a) => a[0].uid)
       );
       const groupByPageUid = pageNames
@@ -228,17 +240,17 @@ export let pageTitleMenu = [
         })
         .join("\n");
       await navigator.clipboard.writeText(res);
-      roam42.help.displayMessage("提取成功，已复制到剪切板", 2000);
+      window.roam42.help.displayMessage("提取成功，已复制到剪切板", 2000);
     }
   }
 ];
 
-export let pageTitleMenu_Sidebar = [
+export let pageTitleMenu_Sidebar: Menu[] = [
   {
     text: "Focus on page",
     key: "Focus on page",
     onClick: async ({ pageTitle }) => {
-      await roam42.common.navigateUiTo(pageTitle);
+      await window.roam42.common.navigateUiTo(pageTitle);
     }
   },
   ...pageTitleMenu
@@ -272,7 +284,7 @@ export async function getMergeMenu(userBlocks, menuMap) {
         return {
           text: userBlock.string,
           onClick: () => {
-            iziToast.info({
+            window.iziToast.info({
               title:
                 navigator.language === "zh-CN"
                   ? "该菜单没有配置执行任务"
@@ -303,7 +315,7 @@ export async function getMergeMenu(userBlocks, menuMap) {
           return {
             text: userBlock.string,
             onClick: async () => {
-              const info = await roam42.common.getBlockInfoByUID(userBlock.children[0].uid);
+              const info = await window.roam42.common.getBlockInfoByUID(userBlock.children[0].uid);
               const code = info[0][0].string.match(/\`\`\`javascript\n(.*)\`\`\`/)[1];
               const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
               await new AsyncFunction(code)();
@@ -340,9 +352,9 @@ let pageTitleMenu_merge = [...pageTitleMenu];
 let pageTitleMenu_Sidebar_merge = [...pageTitleMenu_Sidebar];
 
 export async function initMenu() {
-  const pageUid = await roam42.common.getPageUidByTitle("roam/enhance/menu");
+  const pageUid = await window.roam42.common.getPageUidByTitle("roam/enhance/menu");
   if (pageUid) {
-    const info = await roam42.common.getBlockInfoByUID(pageUid, true);
+    const info = await window.roam42.common.getBlockInfoByUID(pageUid, true);
     if (info) {
       const blocks = info[0][0].children.sort((a, b) => a.order - b.order);
 
@@ -381,7 +393,7 @@ export function getMenu(path) {
         {
           text: "Pull build-in menu",
           onClick: async () => {
-            const pageUid = await roam42.common.getPageUidByTitle("roam/enhance/menu");
+            const pageUid = await window.roam42.common.getPageUidByTitle("roam/enhance/menu");
             const insertTemplateMenu = (menu) => {
               return menu.map((a) => {
                 if (a.children) {
@@ -408,14 +420,14 @@ export function getMenu(path) {
               console.time();
               await initMenu();
               console.timeEnd();
-              iziToast.success({
+              window.iziToast.success({
                 title: "Reload Menu Success",
                 position: "topCenter",
                 timeout: 1000
               });
             } catch (e) {
               console.log(e);
-              iziToast.error({
+              window.iziToast.error({
                 title: "Reload Menu Error",
                 position: "topCenter",
                 timeout: 1000

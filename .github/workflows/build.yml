@@ -1,0 +1,18 @@
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - run: |
+          git config user.name yoyo
+          git config user.email 315915093@qq.com
+          yarn
+          yarn build
+          git commit -m "build"
+          git push

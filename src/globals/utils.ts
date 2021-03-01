@@ -1,18 +1,22 @@
 // 提取字符串中的标签
-export const extractTags = (str) => {
+export const extractTags = (str: string) => {
   return str.match(/((?<=#?\[\[)(.*?)(?=\]\]))|((?<=#)\w+)/g) || [];
 };
 
 // 移除字符串中的标签,只移除带#的tag，避免匹配到句子中合理的页面引用以及{{[[TODO]]}}
-export const removeTags = (str) => {
+export const removeTags = (str: string) => {
   return str.replace(/(#\[\[(.*?)\]\])|(#\w+)/g, "").trim();
 };
 
 // 递归遍历子block
-export const patchBlockChildren = async (uid, fn, options = {}) => {
+export const patchBlockChildren: (
+  uid: string,
+  fn: Function,
+  options?: { skipTop?: boolean }
+) => void = async (uid, fn, options = {}) => {
   const { skipTop = true } = options;
-  const blocks = await roam42.common.getBlockInfoByUID(uid, true);
-  const loop = (blocks, top = true) => {
+  const blocks = await window.roam42.common.getBlockInfoByUID(uid, true);
+  const loop = (blocks: [[Roam.Block]] | Roam.Block[], top = true) => {
     if (!blocks) return false;
     blocks.forEach((a) => {
       const block = Array.isArray(a) ? a[0] : a;
@@ -27,16 +31,17 @@ export const patchBlockChildren = async (uid, fn, options = {}) => {
   loop(blocks);
 };
 
-export const getValueInOrderIfError = (fns) => {
+export const getValueInOrderIfError = (fns: Function[], defaultValue?: string) => {
   while (fns.length > 0) {
     const fn = fns.shift();
     try {
       return typeof fn === "function" ? fn() : fn;
     } catch (e) {}
   }
+  return defaultValue;
 };
 
-export const getBlockUidFromId = (id) => {
+export const getBlockUidFromId = (id: string) => {
   return getValueInOrderIfError(
     [
       () => id.match(/(?<=-).{9}$(?=[^-]*$)/)[0],
@@ -47,7 +52,7 @@ export const getBlockUidFromId = (id) => {
   );
 };
 
-export const unique = (array) => {
+export const unique = (array: string[]) => {
   if (!array || !array.length) return [];
   const temp = {};
   array.forEach((k) => (temp[k] = k));

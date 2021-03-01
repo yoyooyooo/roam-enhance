@@ -1,4 +1,4 @@
-export function addScript(src, id) {
+export function addScript(src: string, id: string) {
   const old = document.getElementById(id);
   old && old.remove();
   const s = document.createElement("script");
@@ -9,48 +9,35 @@ export function addScript(src, id) {
   document.getElementsByTagName("head")[0].appendChild(s);
 }
 
-export const addStyle = (content) => {
+export const addStyle = (content: string) => {
   const css = document.createElement("style");
   css.textContent = content;
   document.getElementsByTagName("head")[0].appendChild(css);
   return css;
 };
 
-export function retry(fn, name = "") {
+export function retry(fn: any, name = "") {
   let n = 0;
-  function _retry(fn) {
+  function _retry(fn: any) {
     try {
       fn();
     } catch (e) {
       console.log("error", e);
       n < 5 && setTimeout(() => _retry(++n), 3000);
-      n > 5 && roam42 && roam42.help.displayMessage(`${name}加载失败`, 2000);
+      n > 5 && window.roam42?.help.displayMessage(`${name}加载失败`, 2000);
     }
   }
 
   setTimeout(() => _retry(fn), 3000);
 }
 
-export function debounce(fn, delay) {
-  let timer = null;
-  const that = this;
-  return function (...args) {
-    if (timer) {
-      clearTimeout(timer);
-      timer = setTimeout(() => fn.apply(that, args), delay);
-    } else {
-      timer = setTimeout(() => fn.apply(that, args), delay);
-    }
-  };
-}
-
-export function confirm(message, options = {}) {
+export function confirm(message: string, options = {}) {
   return new Promise((resolve) => {
-    iziToast.question({
+    window.iziToast.question({
       timeout: 10000,
       close: false,
       overlay: true,
-      displayMode: "once",
+      displayMode: 1,
       id: "question",
       zindex: 999,
       title: "",
@@ -60,36 +47,38 @@ export function confirm(message, options = {}) {
         [
           "<button><b>YES</b></button>",
           function (instance, toast) {
-            instance.hide({ transitionOut: "fadeOut" }, toast, true);
+            instance.hide({ transitionOut: "fadeOut" }, toast, "true");
           },
           true
         ],
         [
           "<button>NO</button>",
           function (instance, toast) {
-            instance.hide({ transitionOut: "fadeOut" }, toast, false);
-          }
+            instance.hide({ transitionOut: "fadeOut" }, toast, "false");
+          },
+          true
         ]
       ],
       onClosing: function (instance, toast, closedBy) {
         resolve(closedBy === "timeout" ? false : closedBy);
       },
       onClosed: function (instance, toast, closedBy) {},
-      ...message
+      ...options
     });
   });
 }
 
-export function getValueInOrderIfError(fns) {
+export function getValueInOrderIfError(fns: Function[], defaultValue: any) {
   while (fns.length > 0) {
     const fn = fns.shift();
     try {
       return typeof fn === "function" ? fn() : fn;
     } catch (e) {}
   }
+  return defaultValue;
 }
 
-export function getBlockUidFromId(id) {
+export function getBlockUidFromId(id: string) {
   return getValueInOrderIfError(
     [
       () => id.match(/(?<=-).{9}$(?=[^-]*$)/)[0],

@@ -1,13 +1,14 @@
+// @ts-nocheck
 import * as utils from "./utils";
 
 export const batchCreateBlocks = async (
-  parent_uid,
-  starting_block_order,
-  string_array_to_insert,
-  renderItem = (x) => x
+  parent_uid: string,
+  starting_block_order: number,
+  string_array_to_insert: string[],
+  renderItem: (x: any) => string = (x) => x
 ) => {
-  await string_array_to_insert.forEach(async (item, counter) => {
-    await roam42.common.createBlock(
+  string_array_to_insert.forEach(async (item, counter) => {
+    await window.roam42.common.createBlock(
       parent_uid,
       counter + starting_block_order,
       `${renderItem(item)}`
@@ -15,19 +16,33 @@ export const batchCreateBlocks = async (
   });
 };
 
-export const deepCreateBlock = async (parentUid, array, options = {}) => {
+interface Menu {
+  text: string;
+  children: Menu[];
+}
+export const deepCreateBlock: (
+  parentUid: string,
+  array: Menu[],
+  options?: {
+    textKey?: string;
+    childrenKey?: string;
+    shouldOrder?: boolean;
+    startOrder?: number;
+  }
+) => void = async (parentUid, array, options = {}) => {
   const {
     textKey = "text",
     childrenKey = "children",
     shouldOrder = false,
     startOrder = 0
   } = options;
-  async function loop(parentUid, menu, startOrder) {
+  async function loop(parentUid: string, menu: Menu[], startOrder: number) {
+    // @ts-ignore
     const list = shouldOrder ? menu.sort((a, b) => a.order - b.order) : menu;
     for (let i = 0; i < list.length; i++) {
       if (!parentUid) return;
       const a = list[i];
-      const uid = await roam42.common.createBlock(parentUid, startOrder + i, a[textKey]);
+      const uid = await window.roam42.common.createBlock(parentUid, startOrder + i, a[textKey]);
       if (a[childrenKey]) {
         loop(uid, a[childrenKey], startOrder); // child sync is not necessary
       }
@@ -37,18 +52,22 @@ export const deepCreateBlock = async (parentUid, array, options = {}) => {
 };
 
 // copy template block and its'children to one block's child
-export const copyTemplateBlock = async (parentUid, templateUidOrBlocks, startOrder = 0) => {
+export const copyTemplateBlock = async (
+  parentUid: string,
+  templateUidOrBlocks: string | Roam.Block[],
+  startOrder = 0
+) => {
   if (typeof templateUidOrBlocks === "string") {
-    const info = await roam42.common.getBlockInfoByUID(templateUidOrBlocks);
+    const info = await window.roam42.common.getBlockInfoByUID(templateUidOrBlocks);
     if (info) {
-      await deepCreateBlock(parentUid, info[0][0], {
+      deepCreateBlock(parentUid, info[0] as any, {
         textKey: "string",
         shouldOrder: true,
         startOrder
       });
     }
   } else {
-    await deepCreateBlock(parentUid, templateUidOrBlocks, {
+    deepCreateBlock(parentUid, templateUidOrBlocks as any, {
       textKey: "string",
       shouldOrder: true,
       startOrder
@@ -58,29 +77,34 @@ export const copyTemplateBlock = async (parentUid, templateUidOrBlocks, startOrd
 
 // 当前页面标题，如果是聚焦模式，取第一个面包屑
 export const getCurrentPageTitle = () =>
-  utils.getValueInOrderIfError([
-    // 引用区看引用页面的标题
-    () =>
-      document.activeElement.closest(".rm-ref-page-view").querySelector(".rm-ref-page-view-title")
-        .innerText,
-    // daily note
-    () =>
-      document.activeElement.closest(".roam-log-page").querySelector(".rm-title-display").innerText,
-    // 特定页面
-    () =>
-      document.activeElement.closest(".roam-article").querySelector(".rm-title-display").innerText,
-    // 聚焦模式看面包屑
-    () => document.activeElement.closest(".roam-article").querySelector(".rm-zoom-item").innerText,
-    // 侧边栏标题
-    () =>
-      document.activeElement.closest(".rm-sidebar-outline").querySelector(".rm-title-display")
-        .innerText,
-    // 侧边栏面包屑
-    () =>
-      document.activeElement.closest(".rm-sidebar-outline").querySelector(".rm-zoom-item")
-        .innerText,
+  utils.getValueInOrderIfError(
+    [
+      // 引用区看引用页面的标题
+      () =>
+        document.activeElement.closest(".rm-ref-page-view").querySelector(".rm-ref-page-view-title")
+          .innerText,
+      // daily note
+      () =>
+        document.activeElement.closest(".roam-log-page").querySelector(".rm-title-display")
+          .innerText,
+      // 特定页面
+      () =>
+        document.activeElement.closest(".roam-article").querySelector(".rm-title-display")
+          .innerText,
+      // 聚焦模式看面包屑
+      () =>
+        document.activeElement.closest(".roam-article").querySelector(".rm-zoom-item").innerText,
+      // 侧边栏标题
+      () =>
+        document.activeElement.closest(".rm-sidebar-outline").querySelector(".rm-title-display")
+          .innerText,
+      // 侧边栏面包屑
+      () =>
+        document.activeElement.closest(".rm-sidebar-outline").querySelector(".rm-zoom-item")
+          .innerText
+    ],
     "xxx"
-  ]);
+  );
 
 export const getCurrentBlockUid = () => {
   let id = null;
@@ -93,33 +117,19 @@ export const getCurrentBlockUid = () => {
   }
   if (!id) {
     console.log("id 都获取不到");
-    roam42.help.displayMessage("id 都获取不到", 2000);
+    window.roam42.help.displayMessage("id 都获取不到", 2000);
   }
 
   res = utils.getBlockUidFromId(id);
 
   console.log("getCurrentBlockUid", { res, id });
-  !res && roam42.help.displayMessage("获取不到当前 block uid", 2000);
+  !res && window.roam42.help.displayMessage("获取不到当前 block uid", 2000);
   return res;
-};
-
-export const triggerChildBlocks = async (uid, renderItem = (x) => x + " ", n = 0) => {
-  const info = await roam42.common.getBlockInfoByUID(uid, true);
-  const loop = (children) => {
-    children.forEach((a) => {
-      n++;
-      updateBlock(a.uid, renderItem(a.string));
-      if (a.children) loop(a.children);
-    });
-  };
-  loop(info[0][0].children);
-  await roam42.common.sleep(1000);
-  roam42.help.displayMessage(`触发${n}个 block 的更新`, 2000);
 };
 
 export const deleteCurrentBlock = async (uid = getCurrentBlockUid()) => {
   if (uid) {
-    await roam42.common.deleteBlock(uid);
+    await window.roam42.common.deleteBlock(uid);
   }
 };
 
@@ -133,10 +143,10 @@ export const getParentBlockNode = (dom = document.activeElement) => {
 };
 export const getParentBlockUid = async (dom = document.activeElement) => {
   try {
-    return (await roam42.common.getDirectBlockParentUid(getCurrentBlockUid())).parentUID;
+    return (await window.roam42.common.getDirectBlockParentUid(getCurrentBlockUid())).parentUID;
   } catch (e) {
     console.log(e);
-    roam42.help.displayMessage("getParentBlockUid 执行出错", 2000);
+    window.roam42.help.displayMessage("getParentBlockUid 执行出错", 2000);
     return null;
   }
 };
@@ -154,7 +164,7 @@ export const getLastChildUidByNode = (containerNode) => {
 };
 export const getLastChildUidByUid = async (parentBlockUid = getParentBlockUid()) => {
   try {
-    const childrenContent = await roam42.common.getBlockInfoByUID(parentBlockUid, true);
+    const childrenContent = await window.roam42.common.getBlockInfoByUID(parentBlockUid, true);
     return childrenContent[0][0].children.sort((a, b) => a.sort - b.sort).slice(-1)[0].uid;
   } catch (e) {
     console.log("getLastChildUid error", e);
@@ -175,12 +185,12 @@ export const getCurrentBlockInfo = async (
   currentBlockUid = getCurrentBlockUid(),
   withChild = false
 ) => {
-  const currentBlockInfo = await roam42.common.getBlockInfoByUID(currentBlockUid, withChild);
+  const currentBlockInfo = await window.roam42.common.getBlockInfoByUID(currentBlockUid, withChild);
   try {
     return currentBlockInfo[0][0];
   } catch (e) {
     console.log(currentBlockInfo);
-    roam42.help.displayMessage("getCurrentBlockInfo 执行出错", 2000);
+    window.roam42.help.displayMessage("getCurrentBlockInfo 执行出错", 2000);
   }
 };
 
@@ -192,10 +202,9 @@ export const outputBlocks = async (fn, options = {}) => {
   try {
     const currentBlockUid = getCurrentBlockUid();
     const res = await fn({ currentBlockContent: prevValue, currentBlockUid });
-    deleteCurrentBlock && roamAlphaAPI.deleteBlock({ block: { uid: currentBlockUid } });
+    deleteCurrentBlock && window.roam42.common.deleteBlock(currentBlockUid);
     document.activeElement.value = prevValue;
-    !deleteCurrentBlock &&
-      roamAlphaAPI.updateBlock({ block: { uid: getCurrentBlockUid(), string: prevValue } });
+    !deleteCurrentBlock && window.roam42.common.updateBlock(getCurrentBlockUid(), prevValue);
     return res;
   } catch (e) {
     console.log("outputBlocks error", e);
@@ -211,11 +220,11 @@ export const updateCurrentBlock = async (fn, options = {}) => {
     const res =
       typeof fn === "function" ? await fn({ currentBlockContent: prevValue, currentBlockUid }) : fn;
     document.activeElement.value = res;
-    roamAlphaAPI.updateBlock({ block: { uid: currentBlockUid, string: res } });
+    window.roam42.common.updateBlock(currentBlockUid, res);
     return res;
   } catch (e) {
     console.log("updateCurrentBlock error", e);
-    roam42.help.displayMessage("updateCurrentBlock 执行出错", 2000);
+    window.roam42.help.displayMessage("updateCurrentBlock 执行出错", 2000);
   }
 };
 
@@ -231,7 +240,7 @@ export const outputListIntoOne = async ({
   if (output && output.length > 0) {
     order = order || (await getCurrentBlockInfo()).order || 99999;
     const _parentBlockUid = parentBlockUid || (await getParentBlockUid());
-    const uid = await roam42.common.createBlock(_parentBlockUid, order, title);
+    const uid = await window.roam42.common.createBlock(_parentBlockUid, order, title);
     if (customOutput) {
       customOutput(uid, order);
     } else {
@@ -257,7 +266,7 @@ export const outputBlocksRightHere = async (string0, options = {}) => {
       if (Array.isArray(string)) {
         await batchCreateBlocks(uid, order, string, renderItem);
       } else {
-        await roam42.common.createBlock(uid, order, renderItem(string));
+        await window.roam42.common.createBlock(uid, order, renderItem(string));
       }
     },
     { isAsync, deleteCurrentBlock: toChild ? false : deleteCurrentBlock }
@@ -265,9 +274,9 @@ export const outputBlocksRightHere = async (string0, options = {}) => {
 };
 
 // 收集某个 key 相关的标签列表
-export const getTags = async (tagName) => {
+export const getTags = async (tagName: string) => {
   try {
-    const refers = await roam42.common.getBlocksReferringToThisPage(tagName);
+    const refers = await window.roam42.common.getBlocksReferringToThisPage(tagName);
     const tags = (refers || [])
       .reduce((memo, r) => {
         // 合并当前行或者直系子层级包含的所有 tag
@@ -284,11 +293,11 @@ export const getTags = async (tagName) => {
         return [...memo, ...utils.extractTags(a.string)];
       }, []);
     if (!tags.length) {
-      roam42.help.displayMessage(`getOptions: ${tagName}获取不到索引`, 2000);
+      window.roam42.help.displayMessage(`getOptions: ${tagName}获取不到索引`, 2000);
     }
     return utils.unique(tags);
   } catch (e) {
     console.log("getTags error", e);
-    roam42.help.displayMessage("getTags 执行出错", 2000);
+    window.roam42.help.displayMessage("getTags 执行出错", 2000);
   }
 };
