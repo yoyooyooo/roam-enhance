@@ -10,9 +10,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
       - run: |
-          git config user.name yoyo
-          git config user.email 315915093@qq.com
+          git config user.name ${{ secrets.NAME }}
+          git config user.email ${{ secrets.EMAIL }}
           yarn
           yarn build
-          git commit -m "build"
-          git push
+          git add -f
+          git commit -m "build" && git push
+          echo "success"
