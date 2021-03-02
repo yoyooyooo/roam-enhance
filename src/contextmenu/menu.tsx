@@ -384,7 +384,7 @@ export async function getMenu(path: Element[], clickArea: ClickArea, onClickArgs
     menu = pageTitleMenu_Sidebar_merge = await getMergeMenuOfPage(
       blocks,
       "PageTitleMenu_Sidebar",
-      pageTitleMenu
+      pageTitleMenu_Sidebar
     );
   }
   if (onClickArgs.pageTitle === "roam/enhance/menu") {
