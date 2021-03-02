@@ -413,7 +413,7 @@ export async function getMenu(path: Element[], clickArea: ClickArea, onClickArgs
         }
       },
       {
-        text: "Pull diff build-in menu",
+        text: "Pull unused build-in menu",
         onClick: async ({ currentUid }) => {
           const userMenu = [];
           await yoyo.utils.patchBlockChildren(currentUid, (a) => {
