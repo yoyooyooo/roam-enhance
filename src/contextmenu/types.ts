@@ -4,3 +4,10 @@ export interface Menu {
   onClick?: any;
   children?: Menu[];
 }
+
+export type ClickArea = "block" | "pageTitle" | "pageTitle_sidebar";
+export interface ClickArgs {
+  target: HTMLElement;
+  pageTitle?: string;
+  currentUid?: string;
+}

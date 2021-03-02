@@ -1,6 +1,8 @@
+import { Menu } from "./types";
+
 export const onClickMap = {};
 
-export const getMenuHTML = (menu, parentText = "") => {
+export const getMenuHTML = (menu: Menu[], parentText = "") => {
   return menu
     .map((a) => {
       if (a.children && a.children.length) {
@@ -46,7 +48,7 @@ export const getMenuHTML = (menu, parentText = "") => {
     .join("");
 };
 
-export function mergeMenuToDOM(menuDOM, menu, onClickArgs) {
+export function mergeMenuToDOM(menuDOM, menu: Menu[], onClickArgs) {
   const addItem = document.createElement("template");
   addItem.innerHTML = getMenuHTML(menu);
   [...addItem.content.childNodes].forEach((a) => {

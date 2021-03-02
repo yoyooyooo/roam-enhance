@@ -31,7 +31,7 @@ export const processBlock = async (parentUid: string, block: Roam.Block, menuMap
             ? `不存在 menu: ${internalMenu[1]}`
             : `no menu named${internalMenu[1]} found`,
         position: "topCenter",
-        timeout: 1000
+        timeout: 3000
       });
     }
     return;

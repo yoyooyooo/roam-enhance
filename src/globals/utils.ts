@@ -13,7 +13,7 @@ export const patchBlockChildren: (
   uid: string,
   fn: Function,
   options?: { skipTop?: boolean }
-) => void = async (uid, fn, options = {}) => {
+) => Promise<void> = async (uid, fn, options = {}) => {
   const { skipTop = true } = options;
   const blocks = await window.roam42.common.getBlockInfoByUID(uid, true);
   const loop = (blocks: [[Roam.Block]] | Roam.Block[], top = true) => {

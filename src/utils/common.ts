@@ -40,8 +40,7 @@ export function confirm(message: string, options = {}) {
       displayMode: 1,
       id: "question",
       zindex: 999,
-      title: "",
-      message,
+      title: message,
       position: "center",
       buttons: [
         [
@@ -56,14 +55,59 @@ export function confirm(message: string, options = {}) {
           function (instance, toast) {
             instance.hide({ transitionOut: "fadeOut" }, toast, "false");
           },
-          true
+          false
         ]
       ],
       onClosing: function (instance, toast, closedBy) {
         resolve(closedBy === "timeout" ? false : closedBy);
       },
-      onClosed: function (instance, toast, closedBy) {},
       ...options
+    });
+  });
+}
+
+export function prompt(message: string, options = {}) {
+  return new Promise((resolve) => {
+    let res: string;
+    window.iziToast.info({
+      timeout: 20000,
+      overlay: true,
+      displayMode: 1,
+      id: "inputs",
+      zindex: 999,
+      title: "Inputs",
+      message: "Examples",
+      position: "center",
+      drag: false,
+      inputs: [
+        [
+          '<input type="text">',
+          "keyup",
+          function (instance, toast, input, e) {
+            res = input.value;
+          },
+          true
+        ]
+      ],
+      buttons: [
+        [
+          "<button><b>YES</b></button>",
+          function (instance, toast) {
+            instance.hide({ transitionOut: "fadeOut" }, toast, res);
+          },
+          false
+        ],
+        [
+          "<button>NO</button>",
+          function (instance, toast) {
+            instance.hide({ transitionOut: "fadeOut" }, toast, "");
+          },
+          false
+        ]
+      ],
+      onClosing: function (instance, toast, closedBy) {
+        resolve((closedBy !== "timeout" && closedBy) || "");
+      }
     });
   });
 }

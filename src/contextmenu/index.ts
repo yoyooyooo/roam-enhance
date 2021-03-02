@@ -1,6 +1,7 @@
+import { getBlockUidFromId, getSelectBlockUids } from "../globals/utils";
 import { retry } from "../utils/common";
-import { getSelectBlockUids } from "../globals/utils";
-import { getMenu, initMenu } from "./menu";
+import { getMenu } from "./menu";
+import { ClickArea } from "./types";
 import { mergeMenuToDOM } from "./utils";
 
 let mouseX: number;
@@ -36,23 +37,44 @@ const observer = new MutationObserver(async (mutationsList, observer) => {
     );
     // open right click menu
     if (portalMutation) {
-      console.time();
-      await initMenu();
-      console.timeEnd();
       const path = document.elementsFromPoint(mouseX, mouseY);
-      const [menu, onClickArgs] = getMenu(path);
-      const selectUids = getSelectBlockUids();
+      const onClickArgs = {} as any;
+      let clickArea: ClickArea = null;
+      onClickArgs.target = path[1]; // the closest element over mouse, path[0] is overlay
+      // click on block
+      const rmBlockMainDOM = path.find((a) => a.classList.contains("rm-block-main"));
+      if (rmBlockMainDOM) {
+        onClickArgs.currentUid = getBlockUidFromId(
+          rmBlockMainDOM.querySelector(".rm-block__input").id
+        );
+        clickArea = "block";
+      }
+      // click on page title
+      const pageTitleDOM = path.find((a) =>
+        a.classList.contains("rm-title-display")
+      ) as HTMLElement;
+      if (pageTitleDOM) {
+        onClickArgs.pageTitle = pageTitleDOM.innerText;
+        onClickArgs.currentUid = await window.roam42.common.getPageUidByTitle(
+          onClickArgs.pageTitle
+        );
+        if (path.find((a) => a.classList.contains("sidebar-content"))) {
+          clickArea = "pageTitle_sidebar";
+        } else {
+          clickArea = "pageTitle";
+        }
+      }
+
+      const menu = await getMenu(path, clickArea, onClickArgs);
+      onClickArgs.selectUids = getSelectBlockUids();
       menu &&
-        mergeMenuToDOM((portalMutation.target as HTMLElement).querySelector("ul.bp3-menu"), menu, {
-          ...onClickArgs,
-          selectUids
-        });
+        mergeMenuToDOM(
+          (portalMutation.target as HTMLElement).querySelector("ul.bp3-menu"),
+          menu,
+          onClickArgs
+        );
     }
   }
-});
-
-retry(() => {
-  initMenu();
 });
 
 retry(() => {

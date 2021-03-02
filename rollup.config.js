@@ -8,6 +8,7 @@ import replace from "@rollup/plugin-replace";
 export default {
   input: "src/index.ts",
   output: {
+    name: "roamEnhance",
     file: "dist/main.js",
     format: "iife"
   },
@@ -17,6 +18,7 @@ export default {
     commonjs(),
     css({ output: "main.css" }),
     replace({
+      preventAssignment: true,
       "process.env.NODE_ENV": '"production"'
     }),
     uglify()

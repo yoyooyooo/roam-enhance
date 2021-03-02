@@ -1,10 +1,11 @@
-import { confirm, getBlockUidFromId } from "../utils/common";
+import { confirm, prompt, getBlockUidFromId } from "../utils/common";
 import { deepCreateBlock } from "../globals/common";
 import yoyo from "../globals";
 import { runTasksByBlocks } from "./task";
-import { Menu } from "./types";
+import { Menu, ClickArgs, ClickArea } from "./types";
 import { render } from "../components/metadata";
 import { getSingleDOM } from "../utils/dom";
+import difference from "lodash-es/difference";
 
 export let blockMenu: Menu[] = [
   {
@@ -98,11 +99,38 @@ export let blockMenu: Menu[] = [
       },
       {
         text: "Remove tags",
-        key: "child blocks remove tags",
+        key: "Child blocks remove tags",
         onClick: async ({ currentUid }) => {
           yoyo.utils.patchBlockChildren(currentUid, (a) => {
             window.roam42.common.updateBlock(a.uid, yoyo.utils.removeTags(a.string));
           });
+        }
+      },
+      {
+        text: "Merge blocks",
+        key: "Merge child blocks",
+        onClick: async ({ currentUid }) => {
+          const count = +window.prompt(
+            navigator.language === "zh-CN" ? "每多少行为一组进行合并？" : "How many lines into one?"
+          );
+          if (count) {
+            const prefix = window.prompt(navigator.language === "zh-CN" ? " 前缀？" : "prefix?");
+            const currentBlockInfo = await window.roam42.common.getBlockInfoByUID(currentUid, true);
+
+            const childBlocks = currentBlockInfo[0][0].children.sort((a, b) => a.order - b.order);
+            let temp = "";
+            let bundleIndex = 0;
+
+            for (let i = 0; i < childBlocks.length; i++) {
+              const a = childBlocks[i];
+              window.roam42.common.deleteBlock(a.uid);
+              temp += `${!!temp ? "\n" : ""}${a.string}`;
+              if ((i > count - 2 && (i + 1) % count === 0) || i === childBlocks.length - 1) {
+                window.roam42.common.createBlock(currentUid, bundleIndex++, `${prefix}${temp}`);
+                temp = "";
+              }
+            }
+          }
         }
       }
     ]
@@ -162,7 +190,7 @@ export let pageTitleMenu: Menu[] = [
     text: "0000",
     key: "0000",
     onClick: () => {
-      render(getSingleDOM("metadata"), { open: true });
+      // render(getSingleDOM("metadata"), { open: true });
     }
   },
   {
@@ -258,9 +286,9 @@ export function flattenMenu(menu) {
   return menu.flatMap((a) => (a.children ? flattenMenu(a.children) : a));
 }
 
-export function getMenuMap(menu) {
+export function getMenuMap(menu: Menu[]) {
   const map = {};
-  const loop = (menu) => {
+  const loop = (menu: Menu[]) => {
     menu.forEach((a) => {
       if (a.children) {
         loop(a.children);
@@ -273,12 +301,11 @@ export function getMenuMap(menu) {
   return map;
 }
 
-// userBlocks: Array<{string:string,uid:string,children:[...]}>
-export async function getMergeMenu(userBlocks, menuMap) {
+export async function getMergeMenu(userBlocks: Roam.Block[], menuMap: Record<string, Menu>) {
   if (!userBlocks || !userBlocks.length) return [];
   return await Promise.all(
     userBlocks.map(async (userBlock) => {
-      if (!userBlock.children || userBlock.children.length === 0)
+      if (!userBlock.children?.length) {
         return {
           text: userBlock.string,
           onClick: () => {
@@ -292,6 +319,7 @@ export async function getMergeMenu(userBlocks, menuMap) {
             });
           }
         };
+      }
 
       const m = userBlock.string.match(/\{\{(.*)\}\}/);
       if (m) {
@@ -307,26 +335,6 @@ export async function getMergeMenu(userBlocks, menuMap) {
         };
       }
 
-      if (userBlock.children && userBlock.children.length === 1) {
-        const js = userBlock.children[0].string.match(/\`\`\`javascript\n(.*)\`\`\`/);
-        if (js) {
-          return {
-            text: userBlock.string,
-            onClick: async () => {
-              const info = await window.roam42.common.getBlockInfoByUID(userBlock.children[0].uid);
-              const code = info[0][0].string.match(/\`\`\`javascript\n(.*)\`\`\`/)[1];
-              const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
-              await new AsyncFunction(code)();
-            }
-          };
-        }
-        const internalMenu = userBlock.children[0].string.match(/<%\s*menu:\s*(.*)\s*%>/);
-        if (internalMenu) {
-          const menu = menuMap[internalMenu[1]];
-          return menu || { text: `${userBlock.string} (No template menu found)` };
-        }
-      }
-
       return {
         text: userBlock.string,
         children: await getMergeMenu(userBlock.children, menuMap)
@@ -335,7 +343,11 @@ export async function getMergeMenu(userBlocks, menuMap) {
   );
 }
 
-async function getMergeMenuOfPage(pageBlocks, key, menu) {
+async function getMergeMenuOfPage(
+  pageBlocks: Roam.Block[],
+  key: "BlockMenu" | "PageTitleMenu" | "PageTitleMenu_Sidebar",
+  menu: Menu[]
+) {
   const info = pageBlocks.find((a) => a.string.includes(key));
   if (info) {
     const menuBlocks = (info && info.children.sort((a, b) => a.order - b.order)) || [];
@@ -349,94 +361,79 @@ let blockMenu_merge = [...blockMenu];
 let pageTitleMenu_merge = [...pageTitleMenu];
 let pageTitleMenu_Sidebar_merge = [...pageTitleMenu_Sidebar];
 
-export async function initMenu() {
+export async function getMenu(path: Element[], clickArea: ClickArea, onClickArgs: ClickArgs) {
   const pageUid = await window.roam42.common.getPageUidByTitle("roam/enhance/menu");
+
+  let blocks: Roam.Block[];
   if (pageUid) {
     const info = await window.roam42.common.getBlockInfoByUID(pageUid, true);
     if (info) {
-      const blocks = info[0][0].children.sort((a, b) => a.order - b.order);
-
-      blockMenu_merge = await getMergeMenuOfPage(blocks, "BlockMenu", blockMenu);
-      pageTitleMenu_merge = await getMergeMenuOfPage(blocks, "PageTitleMenu", pageTitleMenu);
-      pageTitleMenu_Sidebar_merge = await getMergeMenuOfPage(
-        blocks,
-        "PageTitleMenu_Sidebar",
-        pageTitleMenu_Sidebar
-      );
+      blocks = info[0][0].children.sort((a, b) => a.order - b.order);
     }
   }
-}
+  if (!blocks) return;
 
-export function getMenu(path) {
-  const target = path[1]; // the closest element over mouse, path[0] is overlay
-  const rmBlockMainDOM = path.find((a) => a.classList.contains("rm-block-main"));
-  if (rmBlockMainDOM) {
-    const currentUid = getBlockUidFromId(rmBlockMainDOM.querySelector(".rm-block__input").id);
-    return [blockMenu_merge, { currentUid, target }];
+  if (clickArea === "block") {
+    return (blockMenu_merge = await getMergeMenuOfPage(blocks, "BlockMenu", blockMenu));
   }
 
-  const pageTitleDOM = path.find((a) => a.classList.contains("rm-title-display"));
-  if (pageTitleDOM) {
-    const pageTitle = pageTitleDOM.innerText;
-    let menu;
-    // menu in sidebar
-    if (path.find((a) => a.classList.contains("sidebar-content"))) {
-      menu = [...pageTitleMenu_Sidebar_merge];
-    } else {
-      menu = [...pageTitleMenu_merge];
-    }
-
-    if (pageTitle === "roam/enhance/menu") {
-      menu.push(
-        {
-          text: "Pull build-in menu",
-          onClick: async () => {
-            const pageUid = await window.roam42.common.getPageUidByTitle("roam/enhance/menu");
-            const insertTemplateMenu = (menu) => {
-              return menu.map((a) => {
-                if (a.children) {
-                  return { ...a, children: insertTemplateMenu(a.children) };
-                } else {
-                  return { ...a, text: `{{${a.text}}}`, children: [{ text: `<%menu:${a.key}%>` }] };
-                }
-              });
-            };
-            deepCreateBlock(pageUid, [
-              { text: "**BlockMenu**", children: insertTemplateMenu(blockMenu) },
-              { text: "**PageTitleMenu**", children: insertTemplateMenu(pageTitleMenu) },
-              {
-                text: "**PageTitleMenu_Sidebar**",
-                children: insertTemplateMenu(pageTitleMenu_Sidebar)
+  let menu: Menu[];
+  if (clickArea === "pageTitle") {
+    menu = pageTitleMenu_merge = await getMergeMenuOfPage(blocks, "PageTitleMenu", pageTitleMenu);
+  } else {
+    menu = pageTitleMenu_Sidebar_merge = await getMergeMenuOfPage(
+      blocks,
+      "PageTitleMenu_Sidebar",
+      pageTitleMenu
+    );
+  }
+  if (onClickArgs.pageTitle === "roam/enhance/menu") {
+    menu.push(
+      {
+        text: "Pull all build-in menu",
+        onClick: async () => {
+          const pageUid = await window.roam42.common.getPageUidByTitle("roam/enhance/menu");
+          const insertTemplateMenu = (menu) => {
+            return menu.map((a) => {
+              if (a.children) {
+                return { ...a, children: insertTemplateMenu(a.children) };
+              } else {
+                return { ...a, text: `{{${a.text}}}`, children: [{ text: `<%menu:${a.key}%>` }] };
               }
-            ]);
-          }
-        },
-        {
-          text: "Reload Menu",
-          onClick: async () => {
-            try {
-              console.time();
-              await initMenu();
-              console.timeEnd();
-              window.iziToast.success({
-                title: "Reload Menu Success",
-                position: "topCenter",
-                timeout: 1000
-              });
-            } catch (e) {
-              console.log(e);
-              window.iziToast.error({
-                title: "Reload Menu Error",
-                position: "topCenter",
-                timeout: 1000
-              });
+            });
+          };
+          deepCreateBlock(pageUid, [
+            { text: "**BlockMenu**", children: insertTemplateMenu(blockMenu) },
+            { text: "**PageTitleMenu**", children: insertTemplateMenu(pageTitleMenu) },
+            {
+              text: "**PageTitleMenu_Sidebar**",
+              children: insertTemplateMenu(pageTitleMenu_Sidebar)
             }
-          }
+          ]);
         }
-      );
-    }
-    return [menu, { pageTitle, target }];
+      },
+      {
+        text: "Pull diff build-in menu",
+        onClick: async ({ currentUid }) => {
+          const userMenu = [];
+          await yoyo.utils.patchBlockChildren(currentUid, (a) => {
+            const m = a.string.match(/<%\s*menu:\s*(.*)\s*%>/);
+            m && userMenu.push(m[1]);
+          });
+          const internalMenu = Object.keys({
+            ...getMenuMap(blockMenu),
+            ...getMenuMap(pageTitleMenu),
+            ...getMenuMap(pageTitleMenu_Sidebar)
+          });
+          await yoyo.common.batchCreateBlocks(
+            currentUid,
+            0,
+            difference(internalMenu, userMenu).map((a) => `<%${a}%>`)
+          );
+        }
+      }
+    );
   }
 
-  return [null, null];
+  return menu;
 }
