@@ -11,6 +11,8 @@ const old = document.getElementById("roam-enhance");
 old && old.remove();
 const s = document.createElement("script");
 s.src = "https://roam-enhance.vercel.app/main.js";
+// or
+// s.src = "https://cdn.jsdelivr.net/gh/yoyooyooo/roam-enhance/dist/main.js";
 s.id = "roam-enhance";
 s.async = true;
 s.type = "text/javascript";
@@ -35,10 +37,12 @@ click on page title of sidebar:
 
 ### change build-in menu and custom your own menu
 
-you can create a page named `roam/enhance/menu`,then right click the page title, there will be a menu called `Pull build-in menu` in the right click menu.
+you can create a page named `roam/enhance/menu`,then right click the page title, there will be a menu called `Pull all build-in menu` in the right click menu.
 click it and then it will automatically pull the built-in menu on the current page.
 
 At this point, you can freely change the order of these menus、delete them，or create your own menu.
+
+> Afterwards you can click `Pull unused build-in menu` to pull unused menu or new menu.
 
 ### how to create your menu
 
