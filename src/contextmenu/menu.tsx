@@ -425,11 +425,17 @@ export async function getMenu(path: Element[], clickArea: ClickArea, onClickArgs
             ...getMenuMap(pageTitleMenu),
             ...getMenuMap(pageTitleMenu_Sidebar)
           });
-          await yoyo.common.batchCreateBlocks(
-            currentUid,
-            0,
-            difference(internalMenu, userMenu).map((a) => `<%${a}%>`)
-          );
+          const diff = difference(internalMenu, userMenu).map((a) => `<%${a}%>`);
+          if (diff.length) {
+            await yoyo.common.batchCreateBlocks(currentUid, 0, diff);
+          } else {
+            window.iziToast.info({
+              title:
+                navigator.language === "zh-CN"
+                  ? "当前没有未使用的内置菜单"
+                  : "No unused build-in menu found"
+            });
+          }
         }
       }
     );
