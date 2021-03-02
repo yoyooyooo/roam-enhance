@@ -9,9 +9,12 @@ export function addScript(src: string, id: string) {
   document.getElementsByTagName("head")[0].appendChild(s);
 }
 
-export const addStyle = (content: string) => {
+export const addStyle = (content: string, id: string) => {
+  const old = document.getElementById(id);
+  old && old.remove();
   const css = document.createElement("style");
   css.textContent = content;
+  id && (css.id = id);
   document.getElementsByTagName("head")[0].appendChild(css);
   return css;
 };
