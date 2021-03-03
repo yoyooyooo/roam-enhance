@@ -102,7 +102,10 @@ export let blockMenu: Menu[] = [
         key: "Child blocks remove tags",
         onClick: async ({ currentUid }) => {
           yoyo.utils.patchBlockChildren(currentUid, (a) => {
-            window.roam42.common.updateBlock(a.uid, yoyo.utils.removeTags(a.string));
+            const newString = yoyo.utils.removeTags(a.string);
+            if (newString !== a.string) {
+              window.roam42.common.updateBlock(a.uid, newString);
+            }
           });
         }
       },
