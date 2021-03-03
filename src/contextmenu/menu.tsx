@@ -1,11 +1,9 @@
-import { confirm, prompt, getBlockUidFromId } from "../utils/common";
-import { deepCreateBlock } from "../globals/common";
-import yoyo from "../globals";
-import { runTasksByBlocks } from "./task";
-import { Menu, ClickArgs, ClickArea } from "./types";
-import { render } from "../components/metadata";
-import { getSingleDOM } from "../utils/dom";
 import difference from "lodash-es/difference";
+import yoyo from "../globals";
+import { deepCreateBlock } from "../globals/common";
+import { confirm } from "../globals/help";
+import { runTasksByBlocks } from "./task";
+import { ClickArea, ClickArgs, Menu } from "./types";
 
 export let blockMenu: Menu[] = [
   {

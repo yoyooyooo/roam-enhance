@@ -1,4 +1,11 @@
-export const processBlock = async (parentUid: string, block: Roam.Block, menuMap, onClickArgs) => {
+import { Menu, ClickArgs } from "./types";
+
+export const processBlock = async (
+  parentUid: string,
+  block: Roam.Block,
+  menuMap: Record<string, Menu>,
+  onClickArgs: ClickArgs
+) => {
   const { currentUid, selectUids, target, pageTitle } = onClickArgs;
   const js = block.string.match(/^\`\`\`javascript\n([\s\S]*)\`\`\`$/);
   if (js) {
@@ -12,8 +19,10 @@ export const processBlock = async (parentUid: string, block: Roam.Block, menuMap
         "$pageTitle",
         code
       )(currentUid, selectUids, target, pageTitle);
-      // nooutput
-      return await window.roam42.common.createBlock(parentUid, block.order, `${result}`);
+      if (block.children?.length || result) {
+        return await window.roam42.common.createBlock(parentUid, block.order, `${result || ""}`);
+      }
+      return;
     } catch (e) {
       console.log(e);
     }

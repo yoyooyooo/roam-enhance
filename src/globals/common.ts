@@ -3,7 +3,7 @@ import * as utils from "./utils";
 
 export const batchCreateBlocks = async (
   parent_uid: string,
-  starting_block_order: number,
+  starting_block_order: number = 0,
   string_array_to_insert: string[],
   renderItem: (x: any) => string = (x) => x
 ) => {

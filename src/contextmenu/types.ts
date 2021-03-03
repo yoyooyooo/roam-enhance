@@ -10,4 +10,5 @@ export interface ClickArgs {
   target: HTMLElement;
   pageTitle?: string;
   currentUid?: string;
+  selectUids?: string[];
 }
