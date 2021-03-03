@@ -12,23 +12,23 @@ export const removeTags = (str: string) => {
 export const patchBlockChildren: (
   uid: string,
   fn: Function,
-  options?: { skipTop?: boolean }
+  options?: { skipTop?: boolean; depth?: number }
 ) => Promise<void> = async (uid, fn, options = {}) => {
-  const { skipTop = true } = options;
+  let { skipTop = true, depth = Infinity } = options;
   const blocks = await window.roam42.common.getBlockInfoByUID(uid, true);
-  const loop = (blocks: [[Roam.Block]] | Roam.Block[], top = true) => {
+  const loop = (blocks: [[Roam.Block]] | Roam.Block[], depth: number, top = true) => {
     if (!blocks) return false;
-    blocks.forEach((a) => {
+    blocks.forEach((a: Roam.Block | Roam.Block[]) => {
       const block = Array.isArray(a) ? a[0] : a;
-      if (block.children) {
-        loop(block.children, false);
+      if (block.children && depth > 0) {
+        loop(block.children, depth - 1, false);
       }
       if (skipTop ? !top : true) {
         fn(block);
       }
     });
   };
-  loop(blocks);
+  loop(blocks, depth);
 };
 
 export const getValueInOrderIfError = (fns: Function[], defaultValue?: string) => {
