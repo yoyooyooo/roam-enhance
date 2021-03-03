@@ -381,7 +381,7 @@ export async function getMenu(path: Element[], clickArea: ClickArea, onClickArgs
   let menu: Menu[];
   if (clickArea === "pageTitle") {
     menu = pageTitleMenu_merge = await getMergeMenuOfPage(blocks, "PageTitleMenu", pageTitleMenu);
-  } else {
+  } else if (clickArea === "pageTitle_sidebar") {
     menu = pageTitleMenu_Sidebar_merge = await getMergeMenuOfPage(
       blocks,
       "PageTitleMenu_Sidebar",
