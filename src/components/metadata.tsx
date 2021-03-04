@@ -3,7 +3,12 @@ import ReactDOM from "react-dom";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-const Component = ({ open: open0 = true, dom }) => {
+const Component: React.FC<{
+  open?: boolean;
+  dom: Element;
+  currentUid?: string;
+  pageTitle?: string;
+}> = ({ open: open0 = true, dom, currentUid, pageTitle }) => {
   const [open, setOpen] = useState(open0);
   return (
     <Dialog

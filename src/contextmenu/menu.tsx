@@ -50,12 +50,20 @@ export let blockMenu: Menu[] = [
                 refers.forEach(async (a) => window.roam42.common.deleteBlock(a[0].uid));
                 window.roam42.common.deleteBlock(originUid);
                 window.roam42.help.displayMessage(`删除${refers.length}个引用`, 2000);
+                window.iziToast.info({
+                  title:
+                    navigator.language === "zh-CN"
+                      ? `删除${refers.length}个引用`
+                      : `delete${refers.length} references`
+                });
               }
             }
             window.roam42.common.deleteBlock(currentUid);
           } catch (e) {
             console.log(e);
-            window.roam42.help.displayMessage("删除出错", 2000);
+            window.iziToast.error({
+              title: navigator.language === "zh-CN" ? "删除出错" : "Delete failed"
+            });
           }
         }
       }
@@ -176,9 +184,16 @@ export let blockMenu: Menu[] = [
           });
           await navigator.clipboard.writeText(highlights.join("\n"));
           if (highlights.length > 0) {
-            window.roam42.help.displayMessage("提取高亮成功，已复制到剪切板", 2000);
+            window.iziToast.success({
+              title:
+                navigator.language === "zh-CN"
+                  ? "提取高亮成功，已复制到剪切板"
+                  : "Extract successfully, Copied to clipboard!"
+            });
           } else {
-            window.roam42.help.displayMessage("提取不到高亮内容", 2000);
+            window.iziToast.info({
+              title: navigator.language === "zh-CN" ? "提取不到高亮内容" : "Can't extract anything"
+            });
           }
         }
       }
@@ -218,7 +233,9 @@ export let pageTitleMenu: Menu[] = [
     onClick: async ({ pageTitle }) => {
       const refers = await window.roam42.common.getBlocksReferringToThisPage(pageTitle);
       if (!refers.length) {
-        window.roam42.help.displayMessage("提取不到东西", 2000);
+        window.iziToast.info({
+          title: navigator.language === "zh-CN" ? "提取不到东西" : "Can't extract anything"
+        });
         return;
       }
       function getContentWithChildren(item, depth = 2) {
@@ -267,7 +284,12 @@ export let pageTitleMenu: Menu[] = [
         })
         .join("\n");
       await navigator.clipboard.writeText(res);
-      window.roam42.help.displayMessage("提取成功，已复制到剪切板", 2000);
+      window.iziToast.info({
+        title:
+          navigator.language === "zh-CN"
+            ? "提取成功，已复制到剪切板"
+            : "extract successfullly, Copied to clipboard!"
+      });
     }
   }
 ];
