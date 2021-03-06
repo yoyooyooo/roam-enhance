@@ -25,6 +25,8 @@ export const processBlock = async (
       return;
     } catch (e) {
       console.log(e);
+      window.iziToast.info({ title: navigator.language === "zh-CN" ? "执行错误" : "task error" });
+      return;
     }
   }
 
