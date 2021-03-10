@@ -26,7 +26,7 @@ export function confirm(message: string, options = {}) {
         ]
       ],
       onClosing: function (instance, toast, closedBy) {
-        resolve(closedBy === "timeout" ? false : closedBy);
+        resolve(closedBy === "timeout" ? false : JSON.parse(closedBy));
       },
       ...options
     });
