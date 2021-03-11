@@ -26,7 +26,10 @@ export const getMenuHTML = (menu: Menu[], parentText = "") => {
                                     <div class="bp3-popover bp3-minimal bp3-submenu" style="transform-origin: left center;">
                                         <div class="bp3-popover-content">
                                             <ul class="bp3-menu">
-                                                ${getMenuHTML(a.children, parentText + a.text)}
+                                                ${getMenuHTML(
+                                                  a.children,
+                                                  parentText + (a.key || a.text)
+                                                )}
                                             </ul>
                                         </div>
                                     </div>
@@ -35,10 +38,10 @@ export const getMenuHTML = (menu: Menu[], parentText = "") => {
                         </span>
                     </li>`;
       } else {
-        onClickMap[parentText + a.text] = a.onClick;
+        onClickMap[parentText + (a.key || a.text)] = a.onClick;
         return `<li>
                         <a class="bp3-menu-item bp3-popover-dismiss" data-key="${
-                          parentText + a.text
+                          parentText + (a.key || a.text)
                         }">
                             <div class="bp3-text-overflow-ellipsis bp3-fill">${a.text}</div>
                         </a>

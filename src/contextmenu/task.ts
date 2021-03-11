@@ -4,7 +4,8 @@ export const processBlock = async (
   parentUid: string,
   block: Roam.Block,
   menuMap: Record<string, Menu>,
-  onClickArgs: ClickArgs
+  onClickArgs: ClickArgs,
+  $ctx: any
 ) => {
   const { currentUid, selectUids, target, pageTitle } = onClickArgs;
   const js = block.string.match(/^\`\`\`javascript\n([\s\S]*)\`\`\`$/);
@@ -13,19 +14,23 @@ export const processBlock = async (
     const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
     try {
       const result = await new AsyncFunction(
+        "$ctx",
         "$currentUid",
         "$selectUids",
         "$target",
         "$pageTitle",
         code
-      )(currentUid, selectUids, target, pageTitle);
+      )($ctx, currentUid, selectUids, target, pageTitle);
       if (block.children?.length || result) {
         return await window.roam42.common.createBlock(parentUid, block.order, `${result || ""}`);
       }
       return;
     } catch (e) {
       console.log(e);
-      window.iziToast.info({ title: navigator.language === "zh-CN" ? "执行错误" : "task error" });
+      window.iziToast.info({
+        position: "topCenter",
+        title: navigator.language === "zh-CN" ? "执行错误" : "task error"
+      });
       return;
     }
   }
@@ -66,12 +71,14 @@ export async function runTasksByBlocks(blocks, menuMap, onClickArgs) {
 
   const runTasks = async (parentUid, blocks) => {
     for (const block of blocks.sort((a, b) => a.order - b.order)) {
-      const uid = await processBlock(parentUid, block, menuMap, onClickArgs);
+      const uid = await processBlock(parentUid, block, menuMap, onClickArgs, $ctx);
       if (block.children) {
         runTasks(uid || parentUid, block.children); // child sync is not necessary
       }
     }
   };
 
+  let $ctx = {};
   await runTasks(finalUid, blocks);
+  $ctx = {};
 }

@@ -51,6 +51,7 @@ export let blockMenu: Menu[] = [
                 window.roam42.common.deleteBlock(originUid);
                 window.roam42.help.displayMessage(`删除${refers.length}个引用`, 2000);
                 window.iziToast.info({
+                  position: "topCenter",
                   title:
                     navigator.language === "zh-CN"
                       ? `删除${refers.length}个引用`
@@ -155,7 +156,7 @@ export let blockMenu: Menu[] = [
           target
             .closest(".roam-block-container")
             .querySelectorAll(".rm-block-children .rm-paren > .rm-spacer")
-            .forEach((a) => a.click());
+            .forEach((a) => (a as HTMLElement).click());
         }
       },
       {
@@ -165,7 +166,7 @@ export let blockMenu: Menu[] = [
           target
             .closest(".roam-block-container")
             .querySelectorAll(".rm-block-children .rm-paren__paren")
-            .forEach((a) => a.click());
+            .forEach((a) => (a as HTMLElement).click());
         }
       }
     ]
@@ -192,6 +193,7 @@ export let blockMenu: Menu[] = [
             });
           } else {
             window.iziToast.info({
+              position: "topCenter",
               title: navigator.language === "zh-CN" ? "提取不到高亮内容" : "Can't extract anything"
             });
           }
@@ -203,10 +205,21 @@ export let blockMenu: Menu[] = [
 
 export let pageTitleMenu: Menu[] = [
   {
-    text: "0000",
-    key: "0000",
-    onClick: () => {
-      // render(getSingleDOM("metadata"), { open: true });
+    text: "Clear current page",
+    key: "Clear current page",
+    onClick: async ({ currentUid }) => {
+      if (
+        await yoyo.help.confirm(
+          navigator.language === "zh-CN"
+            ? "确定清空当前页吗？"
+            : "Are you sure to clear the current page?"
+        )
+      ) {
+        const info = await window.roam42.common.getBlockInfoByUID(currentUid, true);
+        info[0][0].children.forEach((a) => {
+          window.roam42.common.deleteBlock(a.uid);
+        });
+      }
     }
   },
   {
@@ -215,12 +228,18 @@ export let pageTitleMenu: Menu[] = [
     onClick: async ({ pageTitle }) => {
       const refers = await window.roam42.common.getBlocksReferringToThisPage(pageTitle);
       if (refers.length) {
-        if (await confirm(`当前页面有${refers.length}个引用，是否全部删除？`)) {
+        if (
+          await confirm(
+            navigator.language === "zh-CN"
+              ? `当前页面有${refers.length}个引用，是否全部删除？`
+              : `Current page has ${refers.length} references, remove all?`
+          )
+        ) {
           refers.forEach(async (a) => window.roam42.common.deleteBlock(a[0].uid));
         }
       } else {
         window.iziToast.info({
-          title: "该页面没有引用",
+          title: navigator.language === "zh-CN" ? "该页面没有引用" : "This page has no reference",
           position: "topCenter",
           timeout: 2000
         });
@@ -234,6 +253,7 @@ export let pageTitleMenu: Menu[] = [
       const refers = await window.roam42.common.getBlocksReferringToThisPage(pageTitle);
       if (!refers.length) {
         window.iziToast.info({
+          position: "topCenter",
           title: navigator.language === "zh-CN" ? "提取不到东西" : "Can't extract anything"
         });
         return;
@@ -285,10 +305,11 @@ export let pageTitleMenu: Menu[] = [
         .join("\n");
       await navigator.clipboard.writeText(res);
       window.iziToast.info({
+        position: "topCenter",
         title:
           navigator.language === "zh-CN"
             ? "提取成功，已复制到剪切板"
-            : "extract successfullly, Copied to clipboard!"
+            : "Extract successfullly, Copied to clipboard!"
       });
     }
   }
@@ -304,10 +325,6 @@ export let pageTitleMenu_Sidebar: Menu[] = [
   },
   ...pageTitleMenu
 ];
-
-export function flattenMenu(menu) {
-  return menu.flatMap((a) => (a.children ? flattenMenu(a.children) : a));
-}
 
 export function getMenuMap(menu: Menu[]) {
   const map = {};
@@ -448,11 +465,12 @@ export async function getMenu(path: Element[], clickArea: ClickArea, onClickArgs
             ...getMenuMap(pageTitleMenu),
             ...getMenuMap(pageTitleMenu_Sidebar)
           });
-          const diff = difference(internalMenu, userMenu).map((a) => `<%${a}%>`);
+          const diff = difference(internalMenu, userMenu).map((a) => `<%menu:${a}%>`);
           if (diff.length) {
             await yoyo.common.batchCreateBlocks(currentUid, 0, diff);
           } else {
             window.iziToast.info({
+              position: "topCenter",
               title:
                 navigator.language === "zh-CN"
                   ? "当前没有未使用的内置菜单"
@@ -462,6 +480,11 @@ export async function getMenu(path: Element[], clickArea: ClickArea, onClickArgs
         }
       }
     );
+  }
+
+  if (window.roamEnhance._plugins["metadata"].getMetadataMenu) {
+    const metaDataMenu = await window.roamEnhance._plugins["metadata"].getMetadataMenu();
+    metaDataMenu && menu.unshift(metaDataMenu);
   }
 
   return menu;

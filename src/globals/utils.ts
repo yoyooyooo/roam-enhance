@@ -16,15 +16,18 @@ export const patchBlockChildren: (
 ) => Promise<void> = async (uid, fn, options = {}) => {
   let { skipTop = true, depth = Infinity } = options;
   const blocks = await window.roam42.common.getBlockInfoByUID(uid, true);
+  let complete = false;
   const loop = (blocks: [[Roam.Block]] | Roam.Block[], depth: number, top = true) => {
-    if (!blocks) return false;
+    if (complete || !blocks) return false;
     blocks.forEach((a: Roam.Block | Roam.Block[]) => {
       const block = Array.isArray(a) ? a[0] : a;
       if (block.children && depth > 0) {
         loop(block.children, depth - 1, false);
       }
       if (skipTop ? !top : true) {
-        fn(block);
+        if (fn(block) === false) {
+          complete = true;
+        }
       }
     });
   };
@@ -66,3 +69,9 @@ export const getSelectBlockUids = () => {
 
   return [...new Set(ids)];
 };
+
+export function flattenBlocks(block: Roam.Block[], filter?: (block: Roam.Block) => boolean) {
+  return block.flatMap((a) =>
+    a.children ? flattenBlocks(a.children, filter) : filter && filter(a) === false ? [] : a
+  );
+}

@@ -8,17 +8,17 @@ export function confirm(message: string, options = {}) {
       id: "question",
       zindex: 999,
       title: message,
-      position: "center",
+      position: "topCenter",
       buttons: [
         [
-          "<button><b>YES</b></button>",
+          `<button><b>${navigator.language === "zh-CN" ? "是" : "YES"}</b></button>`,
           function (instance, toast) {
             instance.hide({ transitionOut: "fadeOut" }, toast, "true");
           },
           true
         ],
         [
-          "<button>NO</button>",
+          `<button>${navigator.language === "zh-CN" ? " 否" : "NO"}</button>`,
           function (instance, toast) {
             instance.hide({ transitionOut: "fadeOut" }, toast, "false");
           },
@@ -43,7 +43,7 @@ export function prompt(message: string, options = {}) {
       id: "inputs",
       zindex: 999,
       title: message,
-      position: "center",
+      position: "topCenter",
       drag: false,
       inputs: [
         [

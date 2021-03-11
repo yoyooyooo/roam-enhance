@@ -9,6 +9,17 @@ declare namespace Roam {
   }
 }
 
+type RoamEnhance = {
+  loaded?: boolean;
+  plugins?: ["metadata"?];
+  _plugins?: {
+    metadata?: {
+      getMetadataMenu: typeof import("./src/plugins/metadata/metadata").getMetadataMenu;
+    };
+  };
+  loaded?: Set<string>;
+};
+
 declare interface Window {
   roamjs?: {
     alerted: boolean;
@@ -57,4 +68,6 @@ declare interface Window {
     };
   };
   iziToast?: import("izitoast").IziToast;
+  roamEnhance?: RoamEnhance;
+  yoyo?: RoamEnhance;
 }

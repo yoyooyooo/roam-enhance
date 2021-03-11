@@ -33,24 +33,3 @@ export function retry(fn: any, name = "") {
 
   setTimeout(() => _retry(fn), 3000);
 }
-
-export function getValueInOrderIfError(fns: Function[], defaultValue: any) {
-  while (fns.length > 0) {
-    const fn = fns.shift();
-    try {
-      return typeof fn === "function" ? fn() : fn;
-    } catch (e) {}
-  }
-  return defaultValue;
-}
-
-export function getBlockUidFromId(id: string) {
-  return getValueInOrderIfError(
-    [
-      () => id.match(/(?<=-).{9}$(?=[^-]*$)/)[0],
-      () => (id.match(/uuid[^uuid]*(?=(uuid[^uuid]*){0}$)/) || id.match(/uuid.*$/))[0],
-      () => id.slice(-9)
-    ],
-    ""
-  );
-}

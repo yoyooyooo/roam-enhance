@@ -28,82 +28,98 @@ export const deepCreateBlock: (
     childrenKey?: string;
     shouldOrder?: boolean;
     startOrder?: number;
-  }
+    afterCreateBlock?: (templateBlock: any, uid: string) => void;
+    renderItem?: (x: string) => string;
+  } = {}
 ) => void = async (parentUid, array, options = {}) => {
   const {
     textKey = "text",
     childrenKey = "children",
     shouldOrder = false,
-    startOrder = 0
+    startOrder = 0,
+    afterCreateBlock,
+    renderItem = (x) => x
   } = options;
+  let afterCreateBlock_exit = false;
+
   async function loop(parentUid: string, menu: Menu[], startOrder: number) {
     // @ts-ignore
     const list = shouldOrder ? menu.sort((a, b) => a.order - b.order) : menu;
     for (let i = 0; i < list.length; i++) {
       if (!parentUid) return;
       const a = list[i];
-      const uid = await window.roam42.common.createBlock(parentUid, startOrder + i, a[textKey]);
-      if (a[childrenKey]) {
-        loop(uid, a[childrenKey], startOrder); // child sync is not necessary
+      const string = renderItem(a[textKey], a);
+      // filter
+      if (string) {
+        const uid = await window.roam42.common.createBlock(parentUid, startOrder + i, string);
+        if (afterCreateBlock_exit || afterCreateBlock?.(a, uid) === false)
+          afterCreateBlock_exit = true;
+        if (a[childrenKey]) {
+          loop(uid, a[childrenKey], startOrder); // child sync is not necessary
+        }
       }
     }
   }
   await loop(parentUid, array, startOrder);
 };
 
-// copy template block and its'children to one block's child
+// copy a template block's children to one block's child
 export const copyTemplateBlock = async (
   parentUid: string,
   templateUidOrBlocks: string | Roam.Block[],
-  startOrder = 0
+  options?: {
+    startOrder: number;
+    afterCreateBlock?: (templateBlock: any, uid: string) => void;
+    renderItem?: (x: string) => string;
+    childrenKey?: string;
+    textKey?: string;
+  } = {}
 ) => {
+  const { startOrder = 0, afterCreateBlock, renderItem, childrenKey, textKey } = options;
+
   if (typeof templateUidOrBlocks === "string") {
-    const info = await window.roam42.common.getBlockInfoByUID(templateUidOrBlocks);
+    const info = await window.roam42.common.getBlockInfoByUID(templateUidOrBlocks, true);
     if (info) {
-      deepCreateBlock(parentUid, info[0] as any, {
-        textKey: "string",
+      deepCreateBlock(parentUid, info[0][0].children as any, {
         shouldOrder: true,
-        startOrder
+        startOrder,
+        textKey: textKey || "string",
+        childrenKey: childrenKey || "children",
+        afterCreateBlock,
+        renderItem
       });
     }
   } else {
     deepCreateBlock(parentUid, templateUidOrBlocks as any, {
-      textKey: "string",
+      textKey: textKey || "text",
+      childrenKey: childrenKey || "children",
       shouldOrder: true,
-      startOrder
+      startOrder,
+      afterCreateBlock,
+      renderItem
     });
   }
 };
 
 // 当前页面标题，如果是聚焦模式，取第一个面包屑
-export const getCurrentPageTitle = () =>
+export const getCurrentPageTitle = (activeDOM = document.activeElement) =>
   utils.getValueInOrderIfError(
     [
       // 引用区看引用页面的标题
       () =>
-        document.activeElement.closest(".rm-ref-page-view").querySelector(".rm-ref-page-view-title")
-          .innerText,
+        activeDOM.closest(".rm-ref-page-view").querySelector(".rm-ref-page-view-title").innerText,
       // daily note
-      () =>
-        document.activeElement.closest(".roam-log-page").querySelector(".rm-title-display")
-          .innerText,
+      () => activeDOM.closest(".roam-log-page").querySelector(".rm-title-display").innerText,
       // 特定页面
-      () =>
-        document.activeElement.closest(".roam-article").querySelector(".rm-title-display")
-          .innerText,
+      () => activeDOM.closest(".roam-article").querySelector(".rm-title-display").innerText,
       // 聚焦模式看面包屑
-      () =>
-        document.activeElement.closest(".roam-article").querySelector(".rm-zoom-item").innerText,
+      () => activeDOM.closest(".roam-article").querySelector(".rm-zoom-item").innerText,
       // 侧边栏标题
-      () =>
-        document.activeElement.closest(".rm-sidebar-outline").querySelector(".rm-title-display")
-          .innerText,
+      () => activeDOM.closest(".rm-sidebar-outline").querySelector(".rm-title-display").innerText,
       // 侧边栏面包屑
-      () =>
-        document.activeElement.closest(".rm-sidebar-outline").querySelector(".rm-zoom-item")
-          .innerText
+      () => activeDOM.closest(".rm-sidebar-outline").querySelector(".rm-zoom-item").innerText
     ],
-    "xxx"
+    "404"
   );
 
 export const getCurrentBlockUid = () => {
@@ -237,7 +253,7 @@ export const outputListIntoOne = async ({
   renderItem = (x) => x,
   customOutput
 }) => {
-  if (output && output.length > 0) {
+  if (output?.length > 0) {
     order = order || (await getCurrentBlockInfo()).order || 99999;
     const _parentBlockUid = parentBlockUid || (await getParentBlockUid());
     const uid = await window.roam42.common.createBlock(_parentBlockUid, order, title);
@@ -246,6 +262,7 @@ export const outputListIntoOne = async ({
     } else {
       await batchCreateBlocks(uid, order, output, renderItem);
     }
+    return uid;
   } else {
     console.log("outputListIntoOne", "output 为空");
   }
