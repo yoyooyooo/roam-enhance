@@ -205,14 +205,14 @@ export let blockMenu: Menu[] = [
 
 export let pageTitleMenu: Menu[] = [
   {
-    text: "Clear current page",
-    key: "Clear current page",
+    text: "Clear current block/page",
+    key: "Clear current block/page",
     onClick: async ({ currentUid }) => {
       if (
         await yoyo.help.confirm(
           navigator.language === "zh-CN"
-            ? "确定清空当前页吗？"
-            : "Are you sure to clear the current page?"
+            ? "确定清空当前页/Block吗？"
+            : "Are you sure to clear the current block/page?"
         )
       ) {
         const info = await window.roam42.common.getBlockInfoByUID(currentUid, true);

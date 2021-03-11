@@ -115,15 +115,15 @@ You can copy code below to your `roam/enhance/menu` page
     - {{提取子级高亮}}
       - <%menu:Extract All children's highlight%>
 - **PageTitleMenu**
-  - {{清空当前页}}
-    - <%menu:Clear current page%>
+  - {{清空当前页/块}}
+    - <%menu:Clear current block/page%>
   - {{Delete all refering blocks}}
     - <%menu:Delete all refering blocks%>
   - {{Extract currentPage's refers}}
     - <%menu:Extract currentPage's refers%>
 - **PageTitleMenu_Sidebar**
-  - {{清空当前页}}
-    - <%menu:Clear current page%>
+  - {{清空当前页/块}}
+    - <%menu:Clear current block/page%>
   - {{Focus on page}}
     - <%menu:Focus on page%>
   - {{Delete all refering blocks}}
