@@ -20,7 +20,8 @@
     "rollup-plugin-styles": "^3.14.1",
     "rollup-plugin-uglify": "^6.0.4",
     "tslib": "^2.1.0",
-    "typescript": "^4.2.2"
+    "typescript": "^4.2.2",
+    "rollup-plugin-uglify-es": "^0.0.1"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",

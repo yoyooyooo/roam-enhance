@@ -1,10 +1,2497 @@
-!function(){"use strict";var o=e=>e.match(/((?<=#?\[\[)(.*?)(?=\]\]))|((?<=#)\w+)/g)||[],t=(e,t)=>{for(;0<e.length;){const n=e.shift();try{return"function"==typeof n?n():n}catch(e){}}return t},i=e=>t([()=>e.match(/(?<=-).{9}$(?=[^-]*$)/)[0],()=>(e.match(/uuid[^uuid]*(?=(uuid[^uuid]*){0}$)/)||e.match(/uuid.*$/))[0],()=>e.slice(-9)],""),r=e=>{if(!e||!e.length)return[];const t={};return e.forEach(e=>t[e]=e),Object.keys(t)},c=()=>{var e=[...document.querySelectorAll(".roam-block-container.block-highlight-blue")].map(e=>i(e.querySelector(".rm-block__input").id));return[...new Set(e)]},e=Object.freeze({__proto__:null,extractTags:o,removeTags:e=>e.replace(/(#\[\[(.*?)\]\])|(#\w+)/g,"").trim(),patchBlockChildren:async(e,o,t={})=>{var{skipTop:r=!0,depth:t=1/0}=t,e=await window.roam42.common.getBlockInfoByUID(e,!0);let a=!1;const i=(e,t,n=!0)=>{if(a||!e)return!1;e.forEach(e=>{e=Array.isArray(e)?e[0]:e;e.children&&0<t&&i(e.children,t-1,!1),r&&n||!1===o(e)&&(a=!0)})};i(e,t)},getValueInOrderIfError:t,getBlockUidFromId:i,unique:r,getSelectBlockUids:c,flattenBlocks:function t(e,n){return e.flatMap(e=>e.children?t(e.children,n):n&&!1===n(e)?[]:e)}}),n="object"==typeof global&&global&&global.Object===Object&&global,a="object"==typeof self&&self&&self.Object===Object&&self,l=n||a||Function("return this")(),s=l.Symbol,u=(n=Object.prototype).hasOwnProperty,d=n.toString,p=s?s.toStringTag:void 0,m=Object.prototype.toString,h="[object Null]",g="[object Undefined]",f=s?s.toStringTag:void 0;function w(e){return null==e?void 0===e?g:h:f&&f in Object(e)?function(e){var t=u.call(e,p),n=e[p];try{var o=!(e[p]=void 0)}catch(e){}var r=d.call(e);return o&&(t?e[p]=n:delete e[p]),r}(e):(e=e,m.call(e))}function y(e){var t=typeof e;return null!=e&&("object"==t||"function"==t)}var v="[object AsyncFunction]",b="[object Function]",k="[object GeneratorFunction]",_="[object Proxy]";function B(e){if(y(e)){e=w(e);return e==b||e==k||e==v||e==_}}var a=l["__core-js_shared__"],C=(n=/[^.]+$/.exec(a&&a.keys&&a.keys.IE_PROTO||""))?"Symbol(src)_1."+n:"",x=Function.prototype.toString,T=/^\[object .+?Constructor\]$/,a=Function.prototype,n=Object.prototype,a=a.toString,n=n.hasOwnProperty,z=RegExp("^"+a.call(n).replace(/[\\^$.*+?()[\]{}|]/g,"\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g,"$1.*?")+"$");function E(e){var t;return y(e)&&(t=e,!(C&&C in t))&&(B(e)?z:T).test(function(e){if(null!=e){try{return x.call(e)}catch(e){}try{return e+""}catch(e){}}return""}(e))}function O(e,t){t=t,t=null==(e=e)?void 0:e[t];return E(t)?t:void 0}var U=O(Object,"create"),$=Object.prototype.hasOwnProperty,j=Object.prototype.hasOwnProperty;function S(e){var t=-1,n=null==e?0:e.length;for(this.clear();++t<n;){var o=e[t];this.set(o[0],o[1])}}function N(e,t){for(var n,o,r=e.length;r--;)if((n=e[r][0])===(o=t)||n!=n&&o!=o)return r;return-1}S.prototype.clear=function(){this.__data__=U?U(null):{},this.size=0},S.prototype.delete=function(e){return e=this.has(e)&&delete this.__data__[e],this.size-=e?1:0,e},S.prototype.get=function(e){var t=this.__data__;if(U){var n=t[e];return"__lodash_hash_undefined__"===n?void 0:n}return $.call(t,e)?t[e]:void 0},S.prototype.has=function(e){var t=this.__data__;return U?void 0!==t[e]:j.call(t,e)},S.prototype.set=function(e,t){var n=this.__data__;return this.size+=this.has(e)?0:1,n[e]=U&&void 0===t?"__lodash_hash_undefined__":t,this};var P=Array.prototype.splice;function I(e){var t=-1,n=null==e?0:e.length;for(this.clear();++t<n;){var o=e[t];this.set(o[0],o[1])}}I.prototype.clear=function(){this.__data__=[],this.size=0},I.prototype.delete=function(e){var t=this.__data__;return!((e=N(t,e))<0)&&(e==t.length-1?t.pop():P.call(t,e,1),--this.size,!0)},I.prototype.get=function(e){var t=this.__data__;return(e=N(t,e))<0?void 0:t[e][1]},I.prototype.has=function(e){return-1<N(this.__data__,e)},I.prototype.set=function(e,t){var n=this.__data__,o=N(n,e);return o<0?(++this.size,n.push([e,t])):n[o][1]=t,this};var A=O(l,"Map");function M(e,t){var n,o=e.__data__;return("string"==(e=typeof(n=t))||"number"==e||"symbol"==e||"boolean"==e?"__proto__"!==n:null===n)?o["string"==typeof t?"string":"hash"]:o.map}function L(e){var t=-1,n=null==e?0:e.length;for(this.clear();++t<n;){var o=e[t];this.set(o[0],o[1])}}function D(e){var t=-1,n=null==e?0:e.length;for(this.__data__=new L;++t<n;)this.add(e[t])}function q(e){return e!=e}function R(e,t,n){return t==t?function(e,t,n){for(var o=n-1,r=e.length;++o<r;)if(e[o]===t)return o;return-1}(e,t,n):function(e,t,n,o){for(var r=e.length,a=n+(o?1:-1);o?a--:++a<r;)if(t(e[a],a,e))return a;return-1}(e,q,n)}function F(e,t){return!!(null==e?0:e.length)&&-1<R(e,t,0)}function K(e,t,n){for(var o=-1,r=null==e?0:e.length;++o<r;)if(n(t,e[o]))return!0;return!1}function H(e,t){return e.has(t)}function Y(e,t,n,o){var r,a=-1,i=F,c=!0,l=e.length,s=[],u=t.length;if(!l)return s;n&&(t=function(e,t){for(var n=-1,o=null==e?0:e.length,r=Array(o);++n<o;)r[n]=t(e[n],n,e);return r}(t,(r=n,function(e){return r(e)}))),o?(i=K,c=!1):200<=t.length&&(i=H,c=!1,t=new D(t));e:for(;++a<l;){var d=e[a],p=null==n?d:n(d),d=o||0!==d?d:0;if(c&&p==p){for(var m=u;m--;)if(t[m]===p)continue e;s.push(d)}else i(t,p,o)||s.push(d)}return s}function G(e){return null!=e&&"object"==typeof e}function J(e){return G(e)&&"[object Arguments]"==w(e)}L.prototype.clear=function(){this.size=0,this.__data__={hash:new S,map:new(A||I),string:new S}},L.prototype.delete=function(e){return e=M(this,e).delete(e),this.size-=e?1:0,e},L.prototype.get=function(e){return M(this,e).get(e)},L.prototype.has=function(e){return M(this,e).has(e)},L.prototype.set=function(e,t){var n=M(this,e),o=n.size;return n.set(e,t),this.size+=n.size==o?0:1,this},D.prototype.add=D.prototype.push=function(e){return this.__data__.set(e,"__lodash_hash_undefined__"),this},D.prototype.has=function(e){return this.__data__.has(e)};var V=(l=Object.prototype).hasOwnProperty,W=l.propertyIsEnumerable,X=J(function(){return arguments}())?J:function(e){return G(e)&&V.call(e,"callee")&&!W.call(e,"callee")},Q=Array.isArray,Z=s?s.isConcatSpreadable:void 0;function ee(e){return Q(e)||X(e)||!!(Z&&e&&e[Z])}function te(e,t,n,o,r){var a=-1,i=e.length;for(n=n||ee,r=r||[];++a<i;){var c=e[a];0<t&&n(c)?1<t?te(c,t-1,n,o,r):function(e,t){for(var n=-1,o=t.length,r=e.length;++n<o;)e[r+n]=t[n]}(r,c):o||(r[r.length]=c)}return r}function ne(e){return e}var oe=Math.max;function re(a,i,c){return i=oe(void 0===i?a.length-1:i,0),function(){for(var e=arguments,t=-1,n=oe(e.length-i,0),o=Array(n);++t<n;)o[t]=e[i+t];for(var t=-1,r=Array(i+1);++t<i;)r[t]=e[t];return r[i]=c(o),function(e,t,n){switch(n.length){case 0:return e.call(t);case 1:return e.call(t,n[0]);case 2:return e.call(t,n[0],n[1]);case 3:return e.call(t,n[0],n[1],n[2])}return e.apply(t,n)}(a,this,r)}}var ae,ie,ce,le=function(){try{var e=O(Object,"defineProperty");return e({},"",{}),e}catch(e){}}(),s=le?function(e,t){return le(e,"toString",{configurable:!0,enumerable:!1,value:(n=t,function(){return n}),writable:!0});var n}:ne,se=Date.now,n=(ae=s,ce=ie=0,function(){var e=se(),t=16-(e-ce);if(ce=e,0<t){if(800<=++ie)return arguments[0]}else ie=0;return ae.apply(void 0,arguments)}),ue=9007199254740991;function de(e){return null!=e&&("number"==typeof(t=e.length)&&-1<t&&t%1==0&&t<=ue)&&!B(e);var t}function pe(e){return G(e)&&de(e)}var me=n(re(l=function(e,t){return pe(e)?Y(e,te(t,1,pe,!0)):[]},Re,ne),l+""),s=Object.freeze({__proto__:null,testIfRoamDateAndConvert:e=>{try{return window.roam42.dateProcessing.testIfRoamDateAndConvert(e)}catch{return!1}}}),he=async(n,o=0,e,r=e=>e)=>{e.forEach(async(e,t)=>{await window.roam42.common.createBlock(n,t+o,`${r(e)}`)})},ge=async(e,t,n={})=>{const{textKey:c="text",childrenKey:l="children",shouldOrder:s=!1,startOrder:o=0,afterCreateBlock:u,renderItem:d=e=>e}=n;let p=!1;await async function t(n,e,o){var r=s?e.sort((e,t)=>e.order-t.order):e;for(let e=0;e<r.length;e++){if(!n)return;var a=r[e],i=d(a[c],a);i&&(i=await window.roam42.common.createBlock(n,o+e,i),!p&&!1!==(null===u||void 0===u?void 0:u(a,i))||(p=!0),a[l]&&t(i,a[l],o))}}(e,t,o)},fe=()=>{let t=null;var e;try{t=document.querySelector("textarea.rm-block-input").id}catch(e){t=document.activeElement.id}return t||(console.log("id 都获取不到"),window.roam42.help.displayMessage("id 都获取不到",2e3)),e=i(t),console.log("getCurrentBlockUid",{res:e,id:t}),e||window.roam42.help.displayMessage("获取不到当前 block uid",2e3),e},we=(e=document.activeElement)=>{try{return e.closest(".rm-block-children").closest(".roam-block-container")}catch(e){return console.log("getParentBlockNode error",e),null}},ye=async(e=document.activeElement)=>{try{return(await window.roam42.common.getDirectBlockParentUid(fe())).parentUID}catch(e){return console.log(e),window.roam42.help.displayMessage("getParentBlockUid 执行出错",2e3),null}},ve=e=>{try{return e.querySelector(".rm-block-children .roam-block-container:last-child").querySelector(".rm-block-main .rm-block__input").id.slice(-9)}catch(e){return console.log("getLastChildUid error",e),null}},be=async(e=fe(),t=!1)=>{var n=await window.roam42.common.getBlockInfoByUID(e,t);try{return n[0][0]}catch(e){console.log(n),window.roam42.help.displayMessage("getCurrentBlockInfo 执行出错",2e3)}},ke=async(e,t={})=>{var{isAsync:t=!1,deleteCurrentBlock:n=!1}=t,o=document.activeElement.value;t&&(document.activeElement.value+="fetching...");try{var r=fe(),a=await e({currentBlockContent:o,currentBlockUid:r});return n&&window.roam42.common.deleteBlock(r),document.activeElement.value=o,n||window.roam42.common.updateBlock(fe(),o),a}catch(e){console.log("outputBlocks error",e),roam42.help.displayMessage("outputBlocks 执行出错",2e3)}};function _e(e,t={}){return new Promise(o=>{window.iziToast.question({timeout:1e4,close:!1,overlay:!0,displayMode:1,id:"question",zindex:999,title:e,position:"topCenter",buttons:[[`<button><b>${"zh-CN"===navigator.language?"是":"YES"}</b></button>`,function(e,t){e.hide({transitionOut:"fadeOut"},t,"true")},!0],[`<button>${"zh-CN"===navigator.language?" 否":"NO"}</button>`,function(e,t){e.hide({transitionOut:"fadeOut"},t,"false")},!1]],onClosing:function(e,t,n){o("timeout"!==n&&JSON.parse(n))},...t})})}var Be={common:Object.freeze({__proto__:null,batchCreateBlocks:he,deepCreateBlock:ge,copyTemplateBlock:async(e,t,n={})=>{var{startOrder:o=0,afterCreateBlock:r,renderItem:a,childrenKey:i,textKey:c}=n;"string"==typeof t?(n=await window.roam42.common.getBlockInfoByUID(t,!0))&&ge(e,n[0][0].children,{shouldOrder:!0,startOrder:o,textKey:c||"string",childrenKey:i||"children",afterCreateBlock:r,renderItem:a}):ge(e,t,{textKey:c||"text",childrenKey:i||"children",shouldOrder:!0,startOrder:o,afterCreateBlock:r,renderItem:a})},getCurrentPageTitle:(e=document.activeElement)=>t([()=>e.closest(".rm-ref-page-view").querySelector(".rm-ref-page-view-title").innerText,()=>e.closest(".roam-log-page").querySelector(".rm-title-display").innerText,()=>e.closest(".roam-article").querySelector(".rm-title-display").innerText,()=>e.closest(".roam-article").querySelector(".rm-zoom-item").innerText,()=>e.closest(".rm-sidebar-outline").querySelector(".rm-title-display").innerText,()=>e.closest(".rm-sidebar-outline").querySelector(".rm-zoom-item").innerText],"404"),getCurrentBlockUid:fe,deleteCurrentBlock:async(e=fe())=>{e&&await window.roam42.common.deleteBlock(e)},getParentBlockNode:we,getParentBlockUid:ye,getLastChildUidByNode:ve,getLastChildUidByUid:async(e=ye())=>{try{const t=await window.roam42.common.getBlockInfoByUID(e,!0);return t[0][0].children.sort((e,t)=>e.sort-t.sort).slice(-1)[0].uid}catch(e){return console.log("getLastChildUid error",e),null}},getLastBilingBlockUid:async()=>{try{return ve(we())}catch(e){return console.log("getLastBilingBlockUid error",e),null}},getCurrentBlockInfo:be,outputBlocks:ke,updateCurrentBlock:async(e,t={})=>{var{isAsync:t=!1}=t,n=document.activeElement.value;t&&(document.activeElement.value+="fetching...");try{var o=fe(),r="function"==typeof e?await e({currentBlockContent:n,currentBlockUid:o}):e;return document.activeElement.value=r,window.roam42.common.updateBlock(o,r),r}catch(e){console.log("updateCurrentBlock error",e),window.roam42.help.displayMessage("updateCurrentBlock 执行出错",2e3)}},outputListIntoOne:async({title:e,output:t,parentBlockUid:n,order:o,renderItem:r=e=>e,customOutput:a})=>{if(0<(null==t?void 0:t.length)){o=o||(await be()).order||99999;n=n||await ye(),e=await window.roam42.common.createBlock(n,o,e);return a?a(e,o):await he(e,o,t,r),e}console.log("outputListIntoOne","output 为空")},outputBlocksRightHere:async(o,e={})=>{const{isAsync:t=!1,deleteCurrentBlock:n=!1,renderItem:r=e=>e,toChild:a=!1}=e;await ke(async({currentBlockUid:e})=>{var t=a?e:await ye(),n=a?99999:(await be(e)).order+1,e="function"==typeof o?await o({currentBlockUid:e}):o;Array.isArray(e)?await he(t,n,e,r):await window.roam42.common.createBlock(t,n,r(e))},{isAsync:t,deleteCurrentBlock:!a&&n})},getTags:async n=>{try{var e=(await window.roam42.common.getBlocksReferringToThisPage(n)||[]).reduce((e,t)=>[...e,t[0],...t[0].children&&new RegExp(String.raw`((^\[\[${n}\]\]$|)|(${n}\:\:))`).test(t[0].string)?t[0].children:[]],[]).reduce((e,t)=>[...e,...o(t.string)],[]);return e.length||window.roam42.help.displayMessage(`getOptions: ${n}获取不到索引`,2e3),r(e)}catch(e){console.log("getTags error",e),window.roam42.help.displayMessage("getTags 执行出错",2e3)}}}),utils:e,dateProcessing:s,help:Object.freeze({__proto__:null,confirm:_e,prompt:function(e,t={}){return new Promise(o=>{let r;window.iziToast.info({timeout:2e4,overlay:!0,displayMode:1,id:"inputs",zindex:999,title:e,position:"topCenter",drag:!1,inputs:[['<input type="text">',"keyup",function(e,t,n,o){r=n.value},!0]],buttons:[["<button><b>YES</b></button>",function(e,t){e.hide({transitionOut:"fadeOut"},t,r)},!1],["<button>NO</button>",function(e,t){e.hide({transitionOut:"fadeOut"},t,"")},!1]],onClosing:function(e,t,n){o("timeout"!==n&&n||"")},...t})})}})};const Ce=async(e,t,n,o,r)=>{var a,{currentUid:i,selectUids:c,target:l,pageTitle:s}=o,u=t.string.match(/^\`\`\`javascript\n([\s\S]*)\`\`\`$/);if(u){var d=u[1];const m=Object.getPrototypeOf(async function(){}).constructor;try{var p=await new m("$ctx","$currentUid","$selectUids","$target","$pageTitle",d)(r,i,c,l,s);return null!==(a=t.children)&&void 0!==a&&a.length||p?await window.roam42.common.createBlock(e,t.order,`${p||""}`):void 0}catch(e){return console.log(e),void window.iziToast.info({position:"topCenter",title:"zh-CN"===navigator.language?"执行错误":"task error"})}}u=t.string.match(/<%\s*menu:\s*(.*)\s*%>/);if(!u)return await window.roam42.common.createBlock(e,t.order,await window.roam42.smartBlocks.proccessBlockWithSmartness(t.string));{const h=n[u[1]];h?h.onClick&&h.onClick(o):window.iziToast.error({title:"zh-CN"===navigator.language?`不存在 menu: ${u[1]}`:`no menu named${u[1]} found`,position:"topCenter",timeout:3e3})}};var xe=[{text:"Delete",key:"Delete",children:[{text:"Delete block and its references",key:"Delete block and its references",onClick:async({currentUid:e,selectUids:t})=>{await _e("zh-CN"===navigator.language?"确定删除当前所选 block 及其所有块引用":"Sure to delete the current block and its all references??")&&[e,...t].forEach(async e=>{const t=await window.roam42.common.getBlocksReferringToThisBlockRef(e);0<t.length&&t.forEach(async e=>window.roam42.common.deleteBlock(e[0].uid)),window.roam42.common.deleteBlock(e)})}},{text:"Delete current block and embed block's refers",key:"Delete current block and embed block's refers",onClick:async({currentUid:e})=>{try{const n=await Be.common.getCurrentBlockInfo(e);var t=n.string.match(/\{\{\[\[embed\]\]\:\s+\(\(\(\((.*?)\)\)\)\)\}\}/);if(t){t=t[1];const o=await window.roam42.common.getBlocksReferringToThisBlockRef(t);0<o.length&&await _e(`该 block 包含有 embed，embed 原 block有${o.length}个块引用，是否一起删除`)&&(o.forEach(async e=>window.roam42.common.deleteBlock(e[0].uid)),window.roam42.common.deleteBlock(t),window.roam42.help.displayMessage(`删除${o.length}个引用`,2e3),window.iziToast.info({position:"topCenter",title:"zh-CN"===navigator.language?`删除${o.length}个引用`:`delete${o.length} references`}))}window.roam42.common.deleteBlock(e)}catch(e){console.log(e),window.iziToast.error({title:"zh-CN"===navigator.language?"删除出错":"Delete failed"})}}}]},{text:"Format",key:"Format",children:[{text:"Remove tags",key:"Remove tags",onClick:async({currentUid:e,selectUids:t})=>{[e,...t].forEach(async e=>{var t=await Be.common.getCurrentBlockInfo(e);await window.roam42.common.updateBlock(e,Be.utils.removeTags(t.string))})}}]},{text:"Format child blocks",key:"Format child blocks",children:[{text:"Embed to text",key:"Child embed to text",onClick:async({currentUid:e})=>{await Be.utils.patchBlockChildren(e,async e=>{var t=e.string.match(/\{\{\[\[embed\]\]\:\s+\(\(\(\((.*?)\)\)\)\)\}\}/),t=t&&t[1];t&&(t=await window.roam42.common.getBlockInfoByUID(t),window.roam42.common.updateBlock(e.uid,t[0][0].string))})}},{text:"Remove tags",key:"Child blocks remove tags",onClick:async({currentUid:e})=>{Be.utils.patchBlockChildren(e,e=>{var t=Be.utils.removeTags(e.string);t!==e.string&&window.roam42.common.updateBlock(e.uid,t)})}},{text:"Merge blocks",key:"Merge child blocks",onClick:async({currentUid:o})=>{var r=+window.prompt("zh-CN"===navigator.language?"每多少行为一组进行合并？":"How many lines into one?");if(r){var a=window.prompt("zh-CN"===navigator.language?" 前缀？":"prefix?");const e=await window.roam42.common.getBlockInfoByUID(o,!0);var i=e[0][0].children.sort((e,t)=>e.order-t.order);let t="",n=0;for(let e=0;e<i.length;e++){var c=i[e];window.roam42.common.deleteBlock(c.uid),t+=`${t?"\n":""}${c.string}`,(e>r-2&&(e+1)%r==0||e===i.length-1)&&(window.roam42.common.createBlock(o,n++,`${a}${t}`),t="")}}}}]},{text:"Cloze",key:"Cloze",children:[{text:"Expand all",key:"Expand all cloze",onClick:async({target:e})=>{e.closest(".roam-block-container").querySelectorAll(".rm-block-children .rm-paren > .rm-spacer").forEach(e=>e.click())}},{text:"Collapse all",key:"Collapse all cloze",onClick:async({target:e})=>{e.closest(".roam-block-container").querySelectorAll(".rm-block-children .rm-paren__paren").forEach(e=>e.click())}}]},{text:"Extract",children:[{text:"All children's highlight",key:"Extract All children's highlight",onClick:async({currentUid:e})=>{let t=[];await Be.utils.patchBlockChildren(e,e=>{e=e.string.match(/\^\^([\s\S]*?)\^\^/g);e&&t.push(...e)}),await navigator.clipboard.writeText(t.join("\n")),0<t.length?window.iziToast.success({title:"zh-CN"===navigator.language?"提取高亮成功，已复制到剪切板":"Extract successfully, Copied to clipboard!"}):window.iziToast.info({position:"topCenter",title:"zh-CN"===navigator.language?"提取不到高亮内容":"Can't extract anything"})}}]}],Te=[{text:"Clear current block/page",key:"Clear current block/page",onClick:async({currentUid:e})=>{if(await Be.help.confirm("zh-CN"===navigator.language?"确定清空当前页/Block吗？":"Are you sure to clear the current block/page?")){const t=await window.roam42.common.getBlockInfoByUID(e,!0);t[0][0].children.forEach(e=>{window.roam42.common.deleteBlock(e.uid)})}}},{text:"Delete all refering blocks",key:"Delete all refering blocks",onClick:async({pageTitle:e})=>{const t=await window.roam42.common.getBlocksReferringToThisPage(e);t.length?await _e("zh-CN"===navigator.language?`当前页面有${t.length}个引用，是否全部删除？`:`Current page has ${t.length} references, remove all?`)&&t.forEach(async e=>window.roam42.common.deleteBlock(e[0].uid)):window.iziToast.info({title:"zh-CN"===navigator.language?"该页面没有引用":"This page has no reference",position:"topCenter",timeout:2e3})}},{text:"Extract currentPage's refers",key:"Extract currentPage's refers",onClick:async({pageTitle:e})=>{const t=await window.roam42.common.getBlocksReferringToThisPage(e);if(t.length){var n=t.reduce((e,t)=>{return e[t[0].uid]=t,e},{});const o=await window.roam42.common.getPageNamesFromBlockUidList(t.map(e=>e[0].uid)),r=o.sort((e,t)=>+new Date(e[1].uid)&&+new Date(t[1].uid)&&+new Date(e[1].uid)>+new Date(t[1].uid)?1:-1).reduce((e,t,n)=>{var o=t[1].uid;return e[o]=[...e[o]||[],{...t[0],title:t[1].title}],e},{});e=Object.keys(r).map(e=>`${r[e][0].title}
-          ${r[e].map(e=>{e=e.uid;return"    "+function t(e,n=2){return`${e.string}
-              ${e.children?e.children.map(e=>"    ".repeat(n)+t(e,n+1)).join("\n"):""}`}(n[e][0])}).join("\n")}`).join("\n");await navigator.clipboard.writeText(e),window.iziToast.info({position:"topCenter",title:"zh-CN"===navigator.language?"提取成功，已复制到剪切板":"Extract successfullly, Copied to clipboard!"})}else window.iziToast.info({position:"topCenter",title:"zh-CN"===navigator.language?"提取不到东西":"Can't extract anything"})}}],ze=[{text:"Focus on page",key:"Focus on page",onClick:async({pageTitle:e})=>{await window.roam42.common.navigateUiTo(e)}},...Te];function Ee(e){const t={},n=e=>{e.forEach(e=>{e.children?n(e.children):t[e.key]=e})};return n(e),t}async function Oe(e,n){return e&&e.length?await Promise.all(e.map(async t=>{if(null===(e=t.children)||void 0===e||!e.length)return{text:t.string,onClick:()=>{window.iziToast.info({title:"zh-CN"===navigator.language?"该菜单没有配置执行任务":"This menu has no configuration",position:"topCenter",timeout:2e3})}};var e=t.string.match(/\{\{(.*)\}\}/);return e?{text:e[1],onClick:async e=>{await async function(e,r,a){var{currentUid:t,pageTitle:n}=a;let o;t?o=t:n&&(o=await window.roam42.common.getPageUidByTitle(n));const i=async(e,t)=>{for(const o of t.sort((e,t)=>e.order-t.order)){var n=await Ce(e,o,r,a,c);o.children&&i(n||e,o.children)}};let c={};await i(o,e),c={}}(t.children.sort((e,t)=>e.order-t.order),n,e)}}:{text:t.string,children:await Oe(t.children,n)}})):[]}async function Ue(e,t,n){const o=e.find(e=>e.string.includes(t));return o?await Oe(o&&o.children.sort((e,t)=>e.order-t.order)||[],Ee(n)):n}const $e={},je=(e,t="")=>e.map(e=>e.children&&e.children.length?`<li class="bp3-submenu">
+(function () {
+    'use strict';
+
+    // 提取字符串中的标签
+    const extractTags = (str) => {
+        return str.match(/((?<=#?\[\[)(.*?)(?=\]\]))|((?<=#)\w+)/g) || [];
+    };
+    // 移除字符串中的标签,只移除带#的tag，避免匹配到句子中合理的页面引用以及{{[[TODO]]}}
+    const removeTags = (str) => {
+        return str.replace(/(#\[\[(.*?)\]\])|(#\w+)/g, "").trim();
+    };
+    // 递归遍历子block
+    const patchBlockChildren = async (uid, fn, options = {}) => {
+        let { skipTop = true, depth = Infinity } = options;
+        const blocks = await window.roam42.common.getBlockInfoByUID(uid, true);
+        let complete = false;
+        const loop = (blocks, depth, top = true) => {
+            if (complete || !blocks)
+                return false;
+            blocks.forEach((a) => {
+                const block = Array.isArray(a) ? a[0] : a;
+                if (block.children && depth > 0) {
+                    loop(block.children, depth - 1, false);
+                }
+                if (skipTop ? !top : true) {
+                    if (fn(block) === false) {
+                        complete = true;
+                    }
+                }
+            });
+        };
+        loop(blocks, depth);
+    };
+    const getValueInOrderIfError = (fns, defaultValue) => {
+        while (fns.length > 0) {
+            const fn = fns.shift();
+            try {
+                return typeof fn === "function" ? fn() : fn;
+            }
+            catch (e) { }
+        }
+        return defaultValue;
+    };
+    const getBlockUidFromId = (id) => {
+        return getValueInOrderIfError([
+            () => id.match(/(?<=-).{9}$(?=[^-]*$)/)[0],
+            () => (id.match(/uuid[^uuid]*(?=(uuid[^uuid]*){0}$)/) || id.match(/uuid.*$/))[0],
+            () => id.slice(-9)
+        ], "");
+    };
+    const unique = (array) => {
+        if (!array || !array.length)
+            return [];
+        const temp = {};
+        array.forEach((k) => (temp[k] = k));
+        return Object.keys(temp);
+    };
+    const getSelectBlockUids = () => {
+        const ids = [
+            ...document.querySelectorAll(".roam-block-container.block-highlight-blue")
+        ].map((a) => getBlockUidFromId(a.querySelector(".rm-block__input").id));
+        return [...new Set(ids)];
+    };
+    function flattenBlocks(block, filter) {
+        return block.flatMap((a) => a.children ? flattenBlocks(a.children, filter) : filter && filter(a) === false ? [] : a);
+    }
+
+    var utils = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        extractTags: extractTags,
+        removeTags: removeTags,
+        patchBlockChildren: patchBlockChildren,
+        getValueInOrderIfError: getValueInOrderIfError,
+        getBlockUidFromId: getBlockUidFromId,
+        unique: unique,
+        getSelectBlockUids: getSelectBlockUids,
+        flattenBlocks: flattenBlocks
+    });
+
+    function addScript(src, id) {
+        const old = document.getElementById(id);
+        old && old.remove();
+        const s = document.createElement("script");
+        s.src = src;
+        id && (s.id = id);
+        s.async = true;
+        s.type = "text/javascript";
+        document.getElementsByTagName("head")[0].appendChild(s);
+    }
+    function retry(fn, name = "") {
+        let n = 0;
+        function _retry(fn) {
+            var _a;
+            try {
+                fn();
+            }
+            catch (e) {
+                console.log("error", e);
+                n < 5 && setTimeout(() => _retry(++n), 3000);
+                n > 5 && ((_a = window.roam42) === null || _a === void 0 ? void 0 : _a.help.displayMessage(`${name}加载失败`, 2000));
+            }
+        }
+        setTimeout(() => _retry(fn), 3000);
+    }
+
+    /** Detect free variable `global` from Node.js. */
+    var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+    /** Detect free variable `self`. */
+    var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+    /** Used as a reference to the global object. */
+    var root = freeGlobal || freeSelf || Function('return this')();
+
+    /** Built-in value references. */
+    var Symbol = root.Symbol;
+
+    /** Used for built-in method references. */
+    var objectProto$5 = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$4 = objectProto$5.hasOwnProperty;
+
+    /**
+     * Used to resolve the
+     * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+     * of values.
+     */
+    var nativeObjectToString$1 = objectProto$5.toString;
+
+    /** Built-in value references. */
+    var symToStringTag$1 = Symbol ? Symbol.toStringTag : undefined;
+
+    /**
+     * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
+     *
+     * @private
+     * @param {*} value The value to query.
+     * @returns {string} Returns the raw `toStringTag`.
+     */
+    function getRawTag(value) {
+      var isOwn = hasOwnProperty$4.call(value, symToStringTag$1),
+          tag = value[symToStringTag$1];
+
+      try {
+        value[symToStringTag$1] = undefined;
+        var unmasked = true;
+      } catch (e) {}
+
+      var result = nativeObjectToString$1.call(value);
+      if (unmasked) {
+        if (isOwn) {
+          value[symToStringTag$1] = tag;
+        } else {
+          delete value[symToStringTag$1];
+        }
+      }
+      return result;
+    }
+
+    /** Used for built-in method references. */
+    var objectProto$4 = Object.prototype;
+
+    /**
+     * Used to resolve the
+     * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+     * of values.
+     */
+    var nativeObjectToString = objectProto$4.toString;
+
+    /**
+     * Converts `value` to a string using `Object.prototype.toString`.
+     *
+     * @private
+     * @param {*} value The value to convert.
+     * @returns {string} Returns the converted string.
+     */
+    function objectToString(value) {
+      return nativeObjectToString.call(value);
+    }
+
+    /** `Object#toString` result references. */
+    var nullTag = '[object Null]',
+        undefinedTag = '[object Undefined]';
+
+    /** Built-in value references. */
+    var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
+
+    /**
+     * The base implementation of `getTag` without fallbacks for buggy environments.
+     *
+     * @private
+     * @param {*} value The value to query.
+     * @returns {string} Returns the `toStringTag`.
+     */
+    function baseGetTag(value) {
+      if (value == null) {
+        return value === undefined ? undefinedTag : nullTag;
+      }
+      return (symToStringTag && symToStringTag in Object(value))
+        ? getRawTag(value)
+        : objectToString(value);
+    }
+
+    /**
+     * Checks if `value` is the
+     * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+     * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+     *
+     * @static
+     * @memberOf _
+     * @since 0.1.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+     * @example
+     *
+     * _.isObject({});
+     * // => true
+     *
+     * _.isObject([1, 2, 3]);
+     * // => true
+     *
+     * _.isObject(_.noop);
+     * // => true
+     *
+     * _.isObject(null);
+     * // => false
+     */
+    function isObject(value) {
+      var type = typeof value;
+      return value != null && (type == 'object' || type == 'function');
+    }
+
+    /** `Object#toString` result references. */
+    var asyncTag = '[object AsyncFunction]',
+        funcTag = '[object Function]',
+        genTag = '[object GeneratorFunction]',
+        proxyTag = '[object Proxy]';
+
+    /**
+     * Checks if `value` is classified as a `Function` object.
+     *
+     * @static
+     * @memberOf _
+     * @since 0.1.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is a function, else `false`.
+     * @example
+     *
+     * _.isFunction(_);
+     * // => true
+     *
+     * _.isFunction(/abc/);
+     * // => false
+     */
+    function isFunction(value) {
+      if (!isObject(value)) {
+        return false;
+      }
+      // The use of `Object#toString` avoids issues with the `typeof` operator
+      // in Safari 9 which returns 'object' for typed arrays and other constructors.
+      var tag = baseGetTag(value);
+      return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+    }
+
+    /** Used to detect overreaching core-js shims. */
+    var coreJsData = root['__core-js_shared__'];
+
+    /** Used to detect methods masquerading as native. */
+    var maskSrcKey = (function() {
+      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
+      return uid ? ('Symbol(src)_1.' + uid) : '';
+    }());
+
+    /**
+     * Checks if `func` has its source masked.
+     *
+     * @private
+     * @param {Function} func The function to check.
+     * @returns {boolean} Returns `true` if `func` is masked, else `false`.
+     */
+    function isMasked(func) {
+      return !!maskSrcKey && (maskSrcKey in func);
+    }
+
+    /** Used for built-in method references. */
+    var funcProto$1 = Function.prototype;
+
+    /** Used to resolve the decompiled source of functions. */
+    var funcToString$1 = funcProto$1.toString;
+
+    /**
+     * Converts `func` to its source code.
+     *
+     * @private
+     * @param {Function} func The function to convert.
+     * @returns {string} Returns the source code.
+     */
+    function toSource(func) {
+      if (func != null) {
+        try {
+          return funcToString$1.call(func);
+        } catch (e) {}
+        try {
+          return (func + '');
+        } catch (e) {}
+      }
+      return '';
+    }
+
+    /**
+     * Used to match `RegExp`
+     * [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).
+     */
+    var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+
+    /** Used to detect host constructors (Safari). */
+    var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+    /** Used for built-in method references. */
+    var funcProto = Function.prototype,
+        objectProto$3 = Object.prototype;
+
+    /** Used to resolve the decompiled source of functions. */
+    var funcToString = funcProto.toString;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$3 = objectProto$3.hasOwnProperty;
+
+    /** Used to detect if a method is native. */
+    var reIsNative = RegExp('^' +
+      funcToString.call(hasOwnProperty$3).replace(reRegExpChar, '\\$&')
+      .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+    );
+
+    /**
+     * The base implementation of `_.isNative` without bad shim checks.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is a native function,
+     *  else `false`.
+     */
+    function baseIsNative(value) {
+      if (!isObject(value) || isMasked(value)) {
+        return false;
+      }
+      var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
+      return pattern.test(toSource(value));
+    }
+
+    /**
+     * Gets the value at `key` of `object`.
+     *
+     * @private
+     * @param {Object} [object] The object to query.
+     * @param {string} key The key of the property to get.
+     * @returns {*} Returns the property value.
+     */
+    function getValue(object, key) {
+      return object == null ? undefined : object[key];
+    }
+
+    /**
+     * Gets the native function at `key` of `object`.
+     *
+     * @private
+     * @param {Object} object The object to query.
+     * @param {string} key The key of the method to get.
+     * @returns {*} Returns the function if it's native, else `undefined`.
+     */
+    function getNative(object, key) {
+      var value = getValue(object, key);
+      return baseIsNative(value) ? value : undefined;
+    }
+
+    /* Built-in method references that are verified to be native. */
+    var nativeCreate = getNative(Object, 'create');
+
+    /**
+     * Removes all key-value entries from the hash.
+     *
+     * @private
+     * @name clear
+     * @memberOf Hash
+     */
+    function hashClear() {
+      this.__data__ = nativeCreate ? nativeCreate(null) : {};
+      this.size = 0;
+    }
+
+    /**
+     * Removes `key` and its value from the hash.
+     *
+     * @private
+     * @name delete
+     * @memberOf Hash
+     * @param {Object} hash The hash to modify.
+     * @param {string} key The key of the value to remove.
+     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+     */
+    function hashDelete(key) {
+      var result = this.has(key) && delete this.__data__[key];
+      this.size -= result ? 1 : 0;
+      return result;
+    }
+
+    /** Used to stand-in for `undefined` hash values. */
+    var HASH_UNDEFINED$2 = '__lodash_hash_undefined__';
+
+    /** Used for built-in method references. */
+    var objectProto$2 = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$2 = objectProto$2.hasOwnProperty;
+
+    /**
+     * Gets the hash value for `key`.
+     *
+     * @private
+     * @name get
+     * @memberOf Hash
+     * @param {string} key The key of the value to get.
+     * @returns {*} Returns the entry value.
+     */
+    function hashGet(key) {
+      var data = this.__data__;
+      if (nativeCreate) {
+        var result = data[key];
+        return result === HASH_UNDEFINED$2 ? undefined : result;
+      }
+      return hasOwnProperty$2.call(data, key) ? data[key] : undefined;
+    }
+
+    /** Used for built-in method references. */
+    var objectProto$1 = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$1 = objectProto$1.hasOwnProperty;
+
+    /**
+     * Checks if a hash value for `key` exists.
+     *
+     * @private
+     * @name has
+     * @memberOf Hash
+     * @param {string} key The key of the entry to check.
+     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+     */
+    function hashHas(key) {
+      var data = this.__data__;
+      return nativeCreate ? (data[key] !== undefined) : hasOwnProperty$1.call(data, key);
+    }
+
+    /** Used to stand-in for `undefined` hash values. */
+    var HASH_UNDEFINED$1 = '__lodash_hash_undefined__';
+
+    /**
+     * Sets the hash `key` to `value`.
+     *
+     * @private
+     * @name set
+     * @memberOf Hash
+     * @param {string} key The key of the value to set.
+     * @param {*} value The value to set.
+     * @returns {Object} Returns the hash instance.
+     */
+    function hashSet(key, value) {
+      var data = this.__data__;
+      this.size += this.has(key) ? 0 : 1;
+      data[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED$1 : value;
+      return this;
+    }
+
+    /**
+     * Creates a hash object.
+     *
+     * @private
+     * @constructor
+     * @param {Array} [entries] The key-value pairs to cache.
+     */
+    function Hash(entries) {
+      var index = -1,
+          length = entries == null ? 0 : entries.length;
+
+      this.clear();
+      while (++index < length) {
+        var entry = entries[index];
+        this.set(entry[0], entry[1]);
+      }
+    }
+
+    // Add methods to `Hash`.
+    Hash.prototype.clear = hashClear;
+    Hash.prototype['delete'] = hashDelete;
+    Hash.prototype.get = hashGet;
+    Hash.prototype.has = hashHas;
+    Hash.prototype.set = hashSet;
+
+    /**
+     * Removes all key-value entries from the list cache.
+     *
+     * @private
+     * @name clear
+     * @memberOf ListCache
+     */
+    function listCacheClear() {
+      this.__data__ = [];
+      this.size = 0;
+    }
+
+    /**
+     * Performs a
+     * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+     * comparison between two values to determine if they are equivalent.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Lang
+     * @param {*} value The value to compare.
+     * @param {*} other The other value to compare.
+     * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+     * @example
+     *
+     * var object = { 'a': 1 };
+     * var other = { 'a': 1 };
+     *
+     * _.eq(object, object);
+     * // => true
+     *
+     * _.eq(object, other);
+     * // => false
+     *
+     * _.eq('a', 'a');
+     * // => true
+     *
+     * _.eq('a', Object('a'));
+     * // => false
+     *
+     * _.eq(NaN, NaN);
+     * // => true
+     */
+    function eq(value, other) {
+      return value === other || (value !== value && other !== other);
+    }
+
+    /**
+     * Gets the index at which the `key` is found in `array` of key-value pairs.
+     *
+     * @private
+     * @param {Array} array The array to inspect.
+     * @param {*} key The key to search for.
+     * @returns {number} Returns the index of the matched value, else `-1`.
+     */
+    function assocIndexOf(array, key) {
+      var length = array.length;
+      while (length--) {
+        if (eq(array[length][0], key)) {
+          return length;
+        }
+      }
+      return -1;
+    }
+
+    /** Used for built-in method references. */
+    var arrayProto = Array.prototype;
+
+    /** Built-in value references. */
+    var splice = arrayProto.splice;
+
+    /**
+     * Removes `key` and its value from the list cache.
+     *
+     * @private
+     * @name delete
+     * @memberOf ListCache
+     * @param {string} key The key of the value to remove.
+     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+     */
+    function listCacheDelete(key) {
+      var data = this.__data__,
+          index = assocIndexOf(data, key);
+
+      if (index < 0) {
+        return false;
+      }
+      var lastIndex = data.length - 1;
+      if (index == lastIndex) {
+        data.pop();
+      } else {
+        splice.call(data, index, 1);
+      }
+      --this.size;
+      return true;
+    }
+
+    /**
+     * Gets the list cache value for `key`.
+     *
+     * @private
+     * @name get
+     * @memberOf ListCache
+     * @param {string} key The key of the value to get.
+     * @returns {*} Returns the entry value.
+     */
+    function listCacheGet(key) {
+      var data = this.__data__,
+          index = assocIndexOf(data, key);
+
+      return index < 0 ? undefined : data[index][1];
+    }
+
+    /**
+     * Checks if a list cache value for `key` exists.
+     *
+     * @private
+     * @name has
+     * @memberOf ListCache
+     * @param {string} key The key of the entry to check.
+     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+     */
+    function listCacheHas(key) {
+      return assocIndexOf(this.__data__, key) > -1;
+    }
+
+    /**
+     * Sets the list cache `key` to `value`.
+     *
+     * @private
+     * @name set
+     * @memberOf ListCache
+     * @param {string} key The key of the value to set.
+     * @param {*} value The value to set.
+     * @returns {Object} Returns the list cache instance.
+     */
+    function listCacheSet(key, value) {
+      var data = this.__data__,
+          index = assocIndexOf(data, key);
+
+      if (index < 0) {
+        ++this.size;
+        data.push([key, value]);
+      } else {
+        data[index][1] = value;
+      }
+      return this;
+    }
+
+    /**
+     * Creates an list cache object.
+     *
+     * @private
+     * @constructor
+     * @param {Array} [entries] The key-value pairs to cache.
+     */
+    function ListCache(entries) {
+      var index = -1,
+          length = entries == null ? 0 : entries.length;
+
+      this.clear();
+      while (++index < length) {
+        var entry = entries[index];
+        this.set(entry[0], entry[1]);
+      }
+    }
+
+    // Add methods to `ListCache`.
+    ListCache.prototype.clear = listCacheClear;
+    ListCache.prototype['delete'] = listCacheDelete;
+    ListCache.prototype.get = listCacheGet;
+    ListCache.prototype.has = listCacheHas;
+    ListCache.prototype.set = listCacheSet;
+
+    /* Built-in method references that are verified to be native. */
+    var Map = getNative(root, 'Map');
+
+    /**
+     * Removes all key-value entries from the map.
+     *
+     * @private
+     * @name clear
+     * @memberOf MapCache
+     */
+    function mapCacheClear() {
+      this.size = 0;
+      this.__data__ = {
+        'hash': new Hash,
+        'map': new (Map || ListCache),
+        'string': new Hash
+      };
+    }
+
+    /**
+     * Checks if `value` is suitable for use as unique object key.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is suitable, else `false`.
+     */
+    function isKeyable(value) {
+      var type = typeof value;
+      return (type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean')
+        ? (value !== '__proto__')
+        : (value === null);
+    }
+
+    /**
+     * Gets the data for `map`.
+     *
+     * @private
+     * @param {Object} map The map to query.
+     * @param {string} key The reference key.
+     * @returns {*} Returns the map data.
+     */
+    function getMapData(map, key) {
+      var data = map.__data__;
+      return isKeyable(key)
+        ? data[typeof key == 'string' ? 'string' : 'hash']
+        : data.map;
+    }
+
+    /**
+     * Removes `key` and its value from the map.
+     *
+     * @private
+     * @name delete
+     * @memberOf MapCache
+     * @param {string} key The key of the value to remove.
+     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+     */
+    function mapCacheDelete(key) {
+      var result = getMapData(this, key)['delete'](key);
+      this.size -= result ? 1 : 0;
+      return result;
+    }
+
+    /**
+     * Gets the map value for `key`.
+     *
+     * @private
+     * @name get
+     * @memberOf MapCache
+     * @param {string} key The key of the value to get.
+     * @returns {*} Returns the entry value.
+     */
+    function mapCacheGet(key) {
+      return getMapData(this, key).get(key);
+    }
+
+    /**
+     * Checks if a map value for `key` exists.
+     *
+     * @private
+     * @name has
+     * @memberOf MapCache
+     * @param {string} key The key of the entry to check.
+     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+     */
+    function mapCacheHas(key) {
+      return getMapData(this, key).has(key);
+    }
+
+    /**
+     * Sets the map `key` to `value`.
+     *
+     * @private
+     * @name set
+     * @memberOf MapCache
+     * @param {string} key The key of the value to set.
+     * @param {*} value The value to set.
+     * @returns {Object} Returns the map cache instance.
+     */
+    function mapCacheSet(key, value) {
+      var data = getMapData(this, key),
+          size = data.size;
+
+      data.set(key, value);
+      this.size += data.size == size ? 0 : 1;
+      return this;
+    }
+
+    /**
+     * Creates a map cache object to store key-value pairs.
+     *
+     * @private
+     * @constructor
+     * @param {Array} [entries] The key-value pairs to cache.
+     */
+    function MapCache(entries) {
+      var index = -1,
+          length = entries == null ? 0 : entries.length;
+
+      this.clear();
+      while (++index < length) {
+        var entry = entries[index];
+        this.set(entry[0], entry[1]);
+      }
+    }
+
+    // Add methods to `MapCache`.
+    MapCache.prototype.clear = mapCacheClear;
+    MapCache.prototype['delete'] = mapCacheDelete;
+    MapCache.prototype.get = mapCacheGet;
+    MapCache.prototype.has = mapCacheHas;
+    MapCache.prototype.set = mapCacheSet;
+
+    /** Used to stand-in for `undefined` hash values. */
+    var HASH_UNDEFINED = '__lodash_hash_undefined__';
+
+    /**
+     * Adds `value` to the array cache.
+     *
+     * @private
+     * @name add
+     * @memberOf SetCache
+     * @alias push
+     * @param {*} value The value to cache.
+     * @returns {Object} Returns the cache instance.
+     */
+    function setCacheAdd(value) {
+      this.__data__.set(value, HASH_UNDEFINED);
+      return this;
+    }
+
+    /**
+     * Checks if `value` is in the array cache.
+     *
+     * @private
+     * @name has
+     * @memberOf SetCache
+     * @param {*} value The value to search for.
+     * @returns {number} Returns `true` if `value` is found, else `false`.
+     */
+    function setCacheHas(value) {
+      return this.__data__.has(value);
+    }
+
+    /**
+     *
+     * Creates an array cache object to store unique values.
+     *
+     * @private
+     * @constructor
+     * @param {Array} [values] The values to cache.
+     */
+    function SetCache(values) {
+      var index = -1,
+          length = values == null ? 0 : values.length;
+
+      this.__data__ = new MapCache;
+      while (++index < length) {
+        this.add(values[index]);
+      }
+    }
+
+    // Add methods to `SetCache`.
+    SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
+    SetCache.prototype.has = setCacheHas;
+
+    /**
+     * The base implementation of `_.findIndex` and `_.findLastIndex` without
+     * support for iteratee shorthands.
+     *
+     * @private
+     * @param {Array} array The array to inspect.
+     * @param {Function} predicate The function invoked per iteration.
+     * @param {number} fromIndex The index to search from.
+     * @param {boolean} [fromRight] Specify iterating from right to left.
+     * @returns {number} Returns the index of the matched value, else `-1`.
+     */
+    function baseFindIndex(array, predicate, fromIndex, fromRight) {
+      var length = array.length,
+          index = fromIndex + (fromRight ? 1 : -1);
+
+      while ((fromRight ? index-- : ++index < length)) {
+        if (predicate(array[index], index, array)) {
+          return index;
+        }
+      }
+      return -1;
+    }
+
+    /**
+     * The base implementation of `_.isNaN` without support for number objects.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is `NaN`, else `false`.
+     */
+    function baseIsNaN(value) {
+      return value !== value;
+    }
+
+    /**
+     * A specialized version of `_.indexOf` which performs strict equality
+     * comparisons of values, i.e. `===`.
+     *
+     * @private
+     * @param {Array} array The array to inspect.
+     * @param {*} value The value to search for.
+     * @param {number} fromIndex The index to search from.
+     * @returns {number} Returns the index of the matched value, else `-1`.
+     */
+    function strictIndexOf(array, value, fromIndex) {
+      var index = fromIndex - 1,
+          length = array.length;
+
+      while (++index < length) {
+        if (array[index] === value) {
+          return index;
+        }
+      }
+      return -1;
+    }
+
+    /**
+     * The base implementation of `_.indexOf` without `fromIndex` bounds checks.
+     *
+     * @private
+     * @param {Array} array The array to inspect.
+     * @param {*} value The value to search for.
+     * @param {number} fromIndex The index to search from.
+     * @returns {number} Returns the index of the matched value, else `-1`.
+     */
+    function baseIndexOf(array, value, fromIndex) {
+      return value === value
+        ? strictIndexOf(array, value, fromIndex)
+        : baseFindIndex(array, baseIsNaN, fromIndex);
+    }
+
+    /**
+     * A specialized version of `_.includes` for arrays without support for
+     * specifying an index to search from.
+     *
+     * @private
+     * @param {Array} [array] The array to inspect.
+     * @param {*} target The value to search for.
+     * @returns {boolean} Returns `true` if `target` is found, else `false`.
+     */
+    function arrayIncludes(array, value) {
+      var length = array == null ? 0 : array.length;
+      return !!length && baseIndexOf(array, value, 0) > -1;
+    }
+
+    /**
+     * This function is like `arrayIncludes` except that it accepts a comparator.
+     *
+     * @private
+     * @param {Array} [array] The array to inspect.
+     * @param {*} target The value to search for.
+     * @param {Function} comparator The comparator invoked per element.
+     * @returns {boolean} Returns `true` if `target` is found, else `false`.
+     */
+    function arrayIncludesWith(array, value, comparator) {
+      var index = -1,
+          length = array == null ? 0 : array.length;
+
+      while (++index < length) {
+        if (comparator(value, array[index])) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /**
+     * A specialized version of `_.map` for arrays without support for iteratee
+     * shorthands.
+     *
+     * @private
+     * @param {Array} [array] The array to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @returns {Array} Returns the new mapped array.
+     */
+    function arrayMap(array, iteratee) {
+      var index = -1,
+          length = array == null ? 0 : array.length,
+          result = Array(length);
+
+      while (++index < length) {
+        result[index] = iteratee(array[index], index, array);
+      }
+      return result;
+    }
+
+    /**
+     * The base implementation of `_.unary` without support for storing metadata.
+     *
+     * @private
+     * @param {Function} func The function to cap arguments for.
+     * @returns {Function} Returns the new capped function.
+     */
+    function baseUnary(func) {
+      return function(value) {
+        return func(value);
+      };
+    }
+
+    /**
+     * Checks if a `cache` value for `key` exists.
+     *
+     * @private
+     * @param {Object} cache The cache to query.
+     * @param {string} key The key of the entry to check.
+     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+     */
+    function cacheHas(cache, key) {
+      return cache.has(key);
+    }
+
+    /** Used as the size to enable large array optimizations. */
+    var LARGE_ARRAY_SIZE = 200;
+
+    /**
+     * The base implementation of methods like `_.difference` without support
+     * for excluding multiple arrays or iteratee shorthands.
+     *
+     * @private
+     * @param {Array} array The array to inspect.
+     * @param {Array} values The values to exclude.
+     * @param {Function} [iteratee] The iteratee invoked per element.
+     * @param {Function} [comparator] The comparator invoked per element.
+     * @returns {Array} Returns the new array of filtered values.
+     */
+    function baseDifference(array, values, iteratee, comparator) {
+      var index = -1,
+          includes = arrayIncludes,
+          isCommon = true,
+          length = array.length,
+          result = [],
+          valuesLength = values.length;
+
+      if (!length) {
+        return result;
+      }
+      if (iteratee) {
+        values = arrayMap(values, baseUnary(iteratee));
+      }
+      if (comparator) {
+        includes = arrayIncludesWith;
+        isCommon = false;
+      }
+      else if (values.length >= LARGE_ARRAY_SIZE) {
+        includes = cacheHas;
+        isCommon = false;
+        values = new SetCache(values);
+      }
+      outer:
+      while (++index < length) {
+        var value = array[index],
+            computed = iteratee == null ? value : iteratee(value);
+
+        value = (comparator || value !== 0) ? value : 0;
+        if (isCommon && computed === computed) {
+          var valuesIndex = valuesLength;
+          while (valuesIndex--) {
+            if (values[valuesIndex] === computed) {
+              continue outer;
+            }
+          }
+          result.push(value);
+        }
+        else if (!includes(values, computed, comparator)) {
+          result.push(value);
+        }
+      }
+      return result;
+    }
+
+    /**
+     * Appends the elements of `values` to `array`.
+     *
+     * @private
+     * @param {Array} array The array to modify.
+     * @param {Array} values The values to append.
+     * @returns {Array} Returns `array`.
+     */
+    function arrayPush(array, values) {
+      var index = -1,
+          length = values.length,
+          offset = array.length;
+
+      while (++index < length) {
+        array[offset + index] = values[index];
+      }
+      return array;
+    }
+
+    /**
+     * Checks if `value` is object-like. A value is object-like if it's not `null`
+     * and has a `typeof` result of "object".
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+     * @example
+     *
+     * _.isObjectLike({});
+     * // => true
+     *
+     * _.isObjectLike([1, 2, 3]);
+     * // => true
+     *
+     * _.isObjectLike(_.noop);
+     * // => false
+     *
+     * _.isObjectLike(null);
+     * // => false
+     */
+    function isObjectLike(value) {
+      return value != null && typeof value == 'object';
+    }
+
+    /** `Object#toString` result references. */
+    var argsTag = '[object Arguments]';
+
+    /**
+     * The base implementation of `_.isArguments`.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+     */
+    function baseIsArguments(value) {
+      return isObjectLike(value) && baseGetTag(value) == argsTag;
+    }
+
+    /** Used for built-in method references. */
+    var objectProto = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty = objectProto.hasOwnProperty;
+
+    /** Built-in value references. */
+    var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+
+    /**
+     * Checks if `value` is likely an `arguments` object.
+     *
+     * @static
+     * @memberOf _
+     * @since 0.1.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+     *  else `false`.
+     * @example
+     *
+     * _.isArguments(function() { return arguments; }());
+     * // => true
+     *
+     * _.isArguments([1, 2, 3]);
+     * // => false
+     */
+    var isArguments = baseIsArguments(function() { return arguments; }()) ? baseIsArguments : function(value) {
+      return isObjectLike(value) && hasOwnProperty.call(value, 'callee') &&
+        !propertyIsEnumerable.call(value, 'callee');
+    };
+
+    /**
+     * Checks if `value` is classified as an `Array` object.
+     *
+     * @static
+     * @memberOf _
+     * @since 0.1.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is an array, else `false`.
+     * @example
+     *
+     * _.isArray([1, 2, 3]);
+     * // => true
+     *
+     * _.isArray(document.body.children);
+     * // => false
+     *
+     * _.isArray('abc');
+     * // => false
+     *
+     * _.isArray(_.noop);
+     * // => false
+     */
+    var isArray = Array.isArray;
+
+    /** Built-in value references. */
+    var spreadableSymbol = Symbol ? Symbol.isConcatSpreadable : undefined;
+
+    /**
+     * Checks if `value` is a flattenable `arguments` object or array.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is flattenable, else `false`.
+     */
+    function isFlattenable(value) {
+      return isArray(value) || isArguments(value) ||
+        !!(spreadableSymbol && value && value[spreadableSymbol]);
+    }
+
+    /**
+     * The base implementation of `_.flatten` with support for restricting flattening.
+     *
+     * @private
+     * @param {Array} array The array to flatten.
+     * @param {number} depth The maximum recursion depth.
+     * @param {boolean} [predicate=isFlattenable] The function invoked per iteration.
+     * @param {boolean} [isStrict] Restrict to values that pass `predicate` checks.
+     * @param {Array} [result=[]] The initial result value.
+     * @returns {Array} Returns the new flattened array.
+     */
+    function baseFlatten(array, depth, predicate, isStrict, result) {
+      var index = -1,
+          length = array.length;
+
+      predicate || (predicate = isFlattenable);
+      result || (result = []);
+
+      while (++index < length) {
+        var value = array[index];
+        if (depth > 0 && predicate(value)) {
+          if (depth > 1) {
+            // Recursively flatten arrays (susceptible to call stack limits).
+            baseFlatten(value, depth - 1, predicate, isStrict, result);
+          } else {
+            arrayPush(result, value);
+          }
+        } else if (!isStrict) {
+          result[result.length] = value;
+        }
+      }
+      return result;
+    }
+
+    /**
+     * This method returns the first argument it receives.
+     *
+     * @static
+     * @since 0.1.0
+     * @memberOf _
+     * @category Util
+     * @param {*} value Any value.
+     * @returns {*} Returns `value`.
+     * @example
+     *
+     * var object = { 'a': 1 };
+     *
+     * console.log(_.identity(object) === object);
+     * // => true
+     */
+    function identity(value) {
+      return value;
+    }
+
+    /**
+     * A faster alternative to `Function#apply`, this function invokes `func`
+     * with the `this` binding of `thisArg` and the arguments of `args`.
+     *
+     * @private
+     * @param {Function} func The function to invoke.
+     * @param {*} thisArg The `this` binding of `func`.
+     * @param {Array} args The arguments to invoke `func` with.
+     * @returns {*} Returns the result of `func`.
+     */
+    function apply(func, thisArg, args) {
+      switch (args.length) {
+        case 0: return func.call(thisArg);
+        case 1: return func.call(thisArg, args[0]);
+        case 2: return func.call(thisArg, args[0], args[1]);
+        case 3: return func.call(thisArg, args[0], args[1], args[2]);
+      }
+      return func.apply(thisArg, args);
+    }
+
+    /* Built-in method references for those with the same name as other `lodash` methods. */
+    var nativeMax = Math.max;
+
+    /**
+     * A specialized version of `baseRest` which transforms the rest array.
+     *
+     * @private
+     * @param {Function} func The function to apply a rest parameter to.
+     * @param {number} [start=func.length-1] The start position of the rest parameter.
+     * @param {Function} transform The rest array transform.
+     * @returns {Function} Returns the new function.
+     */
+    function overRest(func, start, transform) {
+      start = nativeMax(start === undefined ? (func.length - 1) : start, 0);
+      return function() {
+        var args = arguments,
+            index = -1,
+            length = nativeMax(args.length - start, 0),
+            array = Array(length);
+
+        while (++index < length) {
+          array[index] = args[start + index];
+        }
+        index = -1;
+        var otherArgs = Array(start + 1);
+        while (++index < start) {
+          otherArgs[index] = args[index];
+        }
+        otherArgs[start] = transform(array);
+        return apply(func, this, otherArgs);
+      };
+    }
+
+    /**
+     * Creates a function that returns `value`.
+     *
+     * @static
+     * @memberOf _
+     * @since 2.4.0
+     * @category Util
+     * @param {*} value The value to return from the new function.
+     * @returns {Function} Returns the new constant function.
+     * @example
+     *
+     * var objects = _.times(2, _.constant({ 'a': 1 }));
+     *
+     * console.log(objects);
+     * // => [{ 'a': 1 }, { 'a': 1 }]
+     *
+     * console.log(objects[0] === objects[1]);
+     * // => true
+     */
+    function constant(value) {
+      return function() {
+        return value;
+      };
+    }
+
+    var defineProperty = (function() {
+      try {
+        var func = getNative(Object, 'defineProperty');
+        func({}, '', {});
+        return func;
+      } catch (e) {}
+    }());
+
+    /**
+     * The base implementation of `setToString` without support for hot loop shorting.
+     *
+     * @private
+     * @param {Function} func The function to modify.
+     * @param {Function} string The `toString` result.
+     * @returns {Function} Returns `func`.
+     */
+    var baseSetToString = !defineProperty ? identity : function(func, string) {
+      return defineProperty(func, 'toString', {
+        'configurable': true,
+        'enumerable': false,
+        'value': constant(string),
+        'writable': true
+      });
+    };
+
+    /** Used to detect hot functions by number of calls within a span of milliseconds. */
+    var HOT_COUNT = 800,
+        HOT_SPAN = 16;
+
+    /* Built-in method references for those with the same name as other `lodash` methods. */
+    var nativeNow = Date.now;
+
+    /**
+     * Creates a function that'll short out and invoke `identity` instead
+     * of `func` when it's called `HOT_COUNT` or more times in `HOT_SPAN`
+     * milliseconds.
+     *
+     * @private
+     * @param {Function} func The function to restrict.
+     * @returns {Function} Returns the new shortable function.
+     */
+    function shortOut(func) {
+      var count = 0,
+          lastCalled = 0;
+
+      return function() {
+        var stamp = nativeNow(),
+            remaining = HOT_SPAN - (stamp - lastCalled);
+
+        lastCalled = stamp;
+        if (remaining > 0) {
+          if (++count >= HOT_COUNT) {
+            return arguments[0];
+          }
+        } else {
+          count = 0;
+        }
+        return func.apply(undefined, arguments);
+      };
+    }
+
+    /**
+     * Sets the `toString` method of `func` to return `string`.
+     *
+     * @private
+     * @param {Function} func The function to modify.
+     * @param {Function} string The `toString` result.
+     * @returns {Function} Returns `func`.
+     */
+    var setToString = shortOut(baseSetToString);
+
+    /**
+     * The base implementation of `_.rest` which doesn't validate or coerce arguments.
+     *
+     * @private
+     * @param {Function} func The function to apply a rest parameter to.
+     * @param {number} [start=func.length-1] The start position of the rest parameter.
+     * @returns {Function} Returns the new function.
+     */
+    function baseRest(func, start) {
+      return setToString(overRest(func, start, identity), func + '');
+    }
+
+    /** Used as references for various `Number` constants. */
+    var MAX_SAFE_INTEGER = 9007199254740991;
+
+    /**
+     * Checks if `value` is a valid array-like length.
+     *
+     * **Note:** This method is loosely based on
+     * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+     * @example
+     *
+     * _.isLength(3);
+     * // => true
+     *
+     * _.isLength(Number.MIN_VALUE);
+     * // => false
+     *
+     * _.isLength(Infinity);
+     * // => false
+     *
+     * _.isLength('3');
+     * // => false
+     */
+    function isLength(value) {
+      return typeof value == 'number' &&
+        value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+    }
+
+    /**
+     * Checks if `value` is array-like. A value is considered array-like if it's
+     * not a function and has a `value.length` that's an integer greater than or
+     * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+     * @example
+     *
+     * _.isArrayLike([1, 2, 3]);
+     * // => true
+     *
+     * _.isArrayLike(document.body.children);
+     * // => true
+     *
+     * _.isArrayLike('abc');
+     * // => true
+     *
+     * _.isArrayLike(_.noop);
+     * // => false
+     */
+    function isArrayLike(value) {
+      return value != null && isLength(value.length) && !isFunction(value);
+    }
+
+    /**
+     * This method is like `_.isArrayLike` except that it also checks if `value`
+     * is an object.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is an array-like object,
+     *  else `false`.
+     * @example
+     *
+     * _.isArrayLikeObject([1, 2, 3]);
+     * // => true
+     *
+     * _.isArrayLikeObject(document.body.children);
+     * // => true
+     *
+     * _.isArrayLikeObject('abc');
+     * // => false
+     *
+     * _.isArrayLikeObject(_.noop);
+     * // => false
+     */
+    function isArrayLikeObject(value) {
+      return isObjectLike(value) && isArrayLike(value);
+    }
+
+    /**
+     * Creates an array of `array` values not included in the other given arrays
+     * using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+     * for equality comparisons. The order and references of result values are
+     * determined by the first array.
+     *
+     * **Note:** Unlike `_.pullAll`, this method returns a new array.
+     *
+     * @static
+     * @memberOf _
+     * @since 0.1.0
+     * @category Array
+     * @param {Array} array The array to inspect.
+     * @param {...Array} [values] The values to exclude.
+     * @returns {Array} Returns the new array of filtered values.
+     * @see _.without, _.xor
+     * @example
+     *
+     * _.difference([2, 1], [2, 3]);
+     * // => [1]
+     */
+    var difference = baseRest(function(array, values) {
+      return isArrayLikeObject(array)
+        ? baseDifference(array, baseFlatten(values, 1, isArrayLikeObject, true))
+        : [];
+    });
+
+    /** Error message constants. */
+    var FUNC_ERROR_TEXT = 'Expected a function';
+
+    /**
+     * Creates a function that memoizes the result of `func`. If `resolver` is
+     * provided, it determines the cache key for storing the result based on the
+     * arguments provided to the memoized function. By default, the first argument
+     * provided to the memoized function is used as the map cache key. The `func`
+     * is invoked with the `this` binding of the memoized function.
+     *
+     * **Note:** The cache is exposed as the `cache` property on the memoized
+     * function. Its creation may be customized by replacing the `_.memoize.Cache`
+     * constructor with one whose instances implement the
+     * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)
+     * method interface of `clear`, `delete`, `get`, `has`, and `set`.
+     *
+     * @static
+     * @memberOf _
+     * @since 0.1.0
+     * @category Function
+     * @param {Function} func The function to have its output memoized.
+     * @param {Function} [resolver] The function to resolve the cache key.
+     * @returns {Function} Returns the new memoized function.
+     * @example
+     *
+     * var object = { 'a': 1, 'b': 2 };
+     * var other = { 'c': 3, 'd': 4 };
+     *
+     * var values = _.memoize(_.values);
+     * values(object);
+     * // => [1, 2]
+     *
+     * values(other);
+     * // => [3, 4]
+     *
+     * object.a = 2;
+     * values(object);
+     * // => [1, 2]
+     *
+     * // Modify the result cache.
+     * values.cache.set(object, ['a', 'b']);
+     * values(object);
+     * // => ['a', 'b']
+     *
+     * // Replace `_.memoize.Cache`.
+     * _.memoize.Cache = WeakMap;
+     */
+    function memoize(func, resolver) {
+      if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
+        throw new TypeError(FUNC_ERROR_TEXT);
+      }
+      var memoized = function() {
+        var args = arguments,
+            key = resolver ? resolver.apply(this, args) : args[0],
+            cache = memoized.cache;
+
+        if (cache.has(key)) {
+          return cache.get(key);
+        }
+        var result = func.apply(this, args);
+        memoized.cache = cache.set(key, result) || cache;
+        return result;
+      };
+      memoized.cache = new (memoize.Cache || MapCache);
+      return memoized;
+    }
+
+    // Expose `MapCache`.
+    memoize.Cache = MapCache;
+
+    const testIfRoamDateAndConvert = (dateStr) => {
+        try {
+            return window.roam42.dateProcessing.testIfRoamDateAndConvert(dateStr);
+        }
+        catch {
+            return false;
+        }
+    };
+
+    var dateProcessing = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        testIfRoamDateAndConvert: testIfRoamDateAndConvert
+    });
+
+    // @ts-nocheck
+    const batchCreateBlocks = async (parent_uid, starting_block_order = 0, string_array_to_insert, renderItem = (x) => x) => {
+        string_array_to_insert.forEach(async (item, counter) => {
+            await window.roam42.common.createBlock(parent_uid, counter + starting_block_order, `${renderItem(item)}`);
+        });
+    };
+    const deepCreateBlock = async (parentUid, array, options = {}) => {
+        const { textKey = "text", childrenKey = "children", shouldOrder = false, startOrder = 0, afterCreateBlock, renderItem = (x) => x } = options;
+        let afterCreateBlock_exit = false;
+        async function loop(parentUid, menu, startOrder) {
+            // @ts-ignore
+            const list = shouldOrder ? menu.sort((a, b) => a.order - b.order) : menu;
+            for (let i = 0; i < list.length; i++) {
+                if (!parentUid)
+                    return;
+                const a = list[i];
+                const string = renderItem(a[textKey], a);
+                // filter
+                if (string) {
+                    const uid = await window.roam42.common.createBlock(parentUid, startOrder + i, string);
+                    if (afterCreateBlock_exit || (afterCreateBlock === null || afterCreateBlock === void 0 ? void 0 : afterCreateBlock(a, uid)) === false)
+                        afterCreateBlock_exit = true;
+                    if (a[childrenKey]) {
+                        loop(uid, a[childrenKey], startOrder); // child sync is not necessary
+                    }
+                }
+            }
+        }
+        await loop(parentUid, array, startOrder);
+    };
+    // copy a template block's children to one block's child
+    const copyTemplateBlock = async (parentUid, templateUidOrBlocks, options = {}) => {
+        const { startOrder = 0, afterCreateBlock, renderItem, childrenKey, textKey } = options;
+        if (typeof templateUidOrBlocks === "string") {
+            const info = await window.roam42.common.getBlockInfoByUID(templateUidOrBlocks, true);
+            if (info) {
+                deepCreateBlock(parentUid, info[0][0].children, {
+                    shouldOrder: true,
+                    startOrder,
+                    textKey: textKey || "string",
+                    childrenKey: childrenKey || "children",
+                    afterCreateBlock,
+                    renderItem
+                });
+            }
+        }
+        else {
+            deepCreateBlock(parentUid, templateUidOrBlocks, {
+                textKey: textKey || "text",
+                childrenKey: childrenKey || "children",
+                shouldOrder: true,
+                startOrder,
+                afterCreateBlock,
+                renderItem
+            });
+        }
+    };
+    // 当前页面标题，如果是聚焦模式，取第一个面包屑
+    const getCurrentPageTitle = (activeDOM = document.activeElement) => getValueInOrderIfError([
+        // 引用区看引用页面的标题
+        () => activeDOM.closest(".rm-ref-page-view").querySelector(".rm-ref-page-view-title").innerText,
+        // daily note
+        () => activeDOM.closest(".roam-log-page").querySelector(".rm-title-display").innerText,
+        // 特定页面
+        () => activeDOM.closest(".roam-article").querySelector(".rm-title-display").innerText,
+        // 聚焦模式看面包屑
+        () => activeDOM.closest(".roam-article").querySelector(".rm-zoom-item").innerText,
+        // 侧边栏标题
+        () => activeDOM.closest(".rm-sidebar-outline").querySelector(".rm-title-display").innerText,
+        // 侧边栏面包屑
+        () => activeDOM.closest(".rm-sidebar-outline").querySelector(".rm-zoom-item").innerText
+    ], "404");
+    const getCurrentBlockUid = () => {
+        let id = null;
+        let res = null;
+        try {
+            id = document.querySelector("textarea.rm-block-input").id;
+        }
+        catch (e) {
+            id = document.activeElement.id;
+        }
+        if (!id) {
+            console.log("id 都获取不到");
+            window.roam42.help.displayMessage("id 都获取不到", 2000);
+        }
+        res = getBlockUidFromId(id);
+        console.log("getCurrentBlockUid", { res, id });
+        !res && window.roam42.help.displayMessage("获取不到当前 block uid", 2000);
+        return res;
+    };
+    const deleteCurrentBlock = async (uid = getCurrentBlockUid()) => {
+        if (uid) {
+            await window.roam42.common.deleteBlock(uid);
+        }
+    };
+    const getParentBlockNode = (dom = document.activeElement) => {
+        try {
+            return dom.closest(".rm-block-children").closest(".roam-block-container");
+        }
+        catch (e) {
+            console.log("getParentBlockNode error", e);
+            return null;
+        }
+    };
+    const getParentBlockUid = async (dom = document.activeElement) => {
+        try {
+            return (await window.roam42.common.getDirectBlockParentUid(getCurrentBlockUid())).parentUID;
+        }
+        catch (e) {
+            console.log(e);
+            window.roam42.help.displayMessage("getParentBlockUid 执行出错", 2000);
+            return null;
+        }
+    };
+    // 当前 block 的最后一个子 block 的 uid
+    const getLastChildUidByNode = (containerNode) => {
+        try {
+            return containerNode
+                .querySelector(".rm-block-children .roam-block-container:last-child")
+                .querySelector(".rm-block-main .rm-block__input")
+                .id.slice(-9);
+        }
+        catch (e) {
+            console.log("getLastChildUid error", e);
+            return null;
+        }
+    };
+    const getLastChildUidByUid = async (parentBlockUid = getParentBlockUid()) => {
+        try {
+            const childrenContent = await window.roam42.common.getBlockInfoByUID(parentBlockUid, true);
+            return childrenContent[0][0].children.sort((a, b) => a.sort - b.sort).slice(-1)[0].uid;
+        }
+        catch (e) {
+            console.log("getLastChildUid error", e);
+            return null;
+        }
+    };
+    // 需要 focus，当前 block 的最后一个相邻兄弟节点的 uid
+    const getLastBilingBlockUid = async () => {
+        try {
+            return getLastChildUidByNode(getParentBlockNode());
+        }
+        catch (e) {
+            console.log("getLastBilingBlockUid error", e);
+            return null;
+        }
+    };
+    // 当前 block 信息，主要获取 order 用，为了能在当前位置插入 block
+    const getCurrentBlockInfo = async (currentBlockUid = getCurrentBlockUid(), withChild = false) => {
+        const currentBlockInfo = await window.roam42.common.getBlockInfoByUID(currentBlockUid, withChild);
+        try {
+            return currentBlockInfo[0][0];
+        }
+        catch (e) {
+            console.log(currentBlockInfo);
+            window.roam42.help.displayMessage("getCurrentBlockInfo 执行出错", 2000);
+        }
+    };
+    // 处理前后的当前 block 状态，包括异步文案的显示与重置
+    const outputBlocks = async (fn, options = {}) => {
+        const { isAsync = false, deleteCurrentBlock = false } = options;
+        const prevValue = document.activeElement.value;
+        isAsync && (document.activeElement.value += "fetching...");
+        try {
+            const currentBlockUid = getCurrentBlockUid();
+            const res = await fn({ currentBlockContent: prevValue, currentBlockUid });
+            deleteCurrentBlock && window.roam42.common.deleteBlock(currentBlockUid);
+            document.activeElement.value = prevValue;
+            !deleteCurrentBlock && window.roam42.common.updateBlock(getCurrentBlockUid(), prevValue);
+            return res;
+        }
+        catch (e) {
+            console.log("outputBlocks error", e);
+            roam42.help.displayMessage("outputBlocks 执行出错", 2000);
+        }
+    };
+    const updateCurrentBlock = async (fn, options = {}) => {
+        const { isAsync = false } = options;
+        const prevValue = document.activeElement.value;
+        isAsync && (document.activeElement.value += "fetching...");
+        try {
+            const currentBlockUid = getCurrentBlockUid();
+            const res = typeof fn === "function" ? await fn({ currentBlockContent: prevValue, currentBlockUid }) : fn;
+            document.activeElement.value = res;
+            window.roam42.common.updateBlock(currentBlockUid, res);
+            return res;
+        }
+        catch (e) {
+            console.log("updateCurrentBlock error", e);
+            window.roam42.help.displayMessage("updateCurrentBlock 执行出错", 2000);
+        }
+    };
+    const outputListIntoOne = async ({ title, output, parentBlockUid, order, sleep = 50, renderItem = (x) => x, customOutput }) => {
+        if ((output === null || output === void 0 ? void 0 : output.length) > 0) {
+            order = order || (await getCurrentBlockInfo()).order || 99999;
+            const _parentBlockUid = parentBlockUid || (await getParentBlockUid());
+            const uid = await window.roam42.common.createBlock(_parentBlockUid, order, title);
+            if (customOutput) {
+                customOutput(uid, order);
+            }
+            else {
+                await batchCreateBlocks(uid, order, output, renderItem);
+            }
+            return uid;
+        }
+        else {
+            console.log("outputListIntoOne", "output 为空");
+        }
+    };
+    // [当前位置/当前位置的子级] 插入 block，传入数组可批量
+    const outputBlocksRightHere = async (string0, options = {}) => {
+        const { isAsync = false, deleteCurrentBlock = false, renderItem = (x) => x, toChild = false // 是否插入到当前 block 的子级
+         } = options;
+        await outputBlocks(async ({ currentBlockUid }) => {
+            const uid = toChild ? currentBlockUid : await getParentBlockUid();
+            const order = toChild ? 99999 : (await getCurrentBlockInfo(currentBlockUid)).order + 1;
+            let string = typeof string0 === "function" ? await string0({ currentBlockUid }) : string0;
+            if (Array.isArray(string)) {
+                await batchCreateBlocks(uid, order, string, renderItem);
+            }
+            else {
+                await window.roam42.common.createBlock(uid, order, renderItem(string));
+            }
+        }, { isAsync, deleteCurrentBlock: toChild ? false : deleteCurrentBlock });
+    };
+    // 收集某个 key 相关的标签列表
+    const getTags = async (tagName) => {
+        try {
+            const refers = await window.roam42.common.getBlocksReferringToThisPage(tagName);
+            const tags = (refers || [])
+                .reduce((memo, r) => {
+                // 合并当前行或者直系子层级包含的所有 tag
+                return [
+                    ...memo,
+                    r[0],
+                    ...(r[0].children &&
+                        new RegExp(String.raw `((^\[\[${tagName}\]\]$|)|(${tagName}\:\:))`).test(r[0].string)
+                        ? r[0].children
+                        : [])
+                ];
+            }, [])
+                .reduce((memo, a) => {
+                return [...memo, ...extractTags(a.string)];
+            }, []);
+            if (!tags.length) {
+                window.roam42.help.displayMessage(`getOptions: ${tagName}获取不到索引`, 2000);
+            }
+            return unique(tags);
+        }
+        catch (e) {
+            console.log("getTags error", e);
+            window.roam42.help.displayMessage("getTags 执行出错", 2000);
+        }
+    };
+
+    var common = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        batchCreateBlocks: batchCreateBlocks,
+        deepCreateBlock: deepCreateBlock,
+        copyTemplateBlock: copyTemplateBlock,
+        getCurrentPageTitle: getCurrentPageTitle,
+        getCurrentBlockUid: getCurrentBlockUid,
+        deleteCurrentBlock: deleteCurrentBlock,
+        getParentBlockNode: getParentBlockNode,
+        getParentBlockUid: getParentBlockUid,
+        getLastChildUidByNode: getLastChildUidByNode,
+        getLastChildUidByUid: getLastChildUidByUid,
+        getLastBilingBlockUid: getLastBilingBlockUid,
+        getCurrentBlockInfo: getCurrentBlockInfo,
+        outputBlocks: outputBlocks,
+        updateCurrentBlock: updateCurrentBlock,
+        outputListIntoOne: outputListIntoOne,
+        outputBlocksRightHere: outputBlocksRightHere,
+        getTags: getTags
+    });
+
+    function confirm(message, options = {}) {
+        return new Promise((resolve) => {
+            window.iziToast.question({
+                timeout: 10000,
+                close: false,
+                overlay: true,
+                displayMode: 1,
+                id: "question",
+                zindex: 999,
+                title: message,
+                position: "topCenter",
+                buttons: [
+                    [
+                        `<button><b>${navigator.language === "zh-CN" ? "是" : "YES"}</b></button>`,
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "true");
+                        },
+                        true
+                    ],
+                    [
+                        `<button>${navigator.language === "zh-CN" ? " 否" : "NO"}</button>`,
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "false");
+                        },
+                        false
+                    ]
+                ],
+                onClosing: function (instance, toast, closedBy) {
+                    resolve(closedBy === "timeout" ? false : JSON.parse(closedBy));
+                },
+                ...options
+            });
+        });
+    }
+    function prompt(message, options = {}) {
+        return new Promise((resolve) => {
+            let res;
+            window.iziToast.info({
+                timeout: 20000,
+                overlay: true,
+                displayMode: 1,
+                id: "inputs",
+                zindex: 999,
+                title: message,
+                position: "topCenter",
+                drag: false,
+                inputs: [
+                    [
+                        '<input type="text">',
+                        "keyup",
+                        function (instance, toast, input, e) {
+                            res = input.value;
+                        },
+                        true
+                    ]
+                ],
+                buttons: [
+                    [
+                        "<button><b>YES</b></button>",
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, res);
+                        },
+                        false
+                    ],
+                    [
+                        "<button>NO</button>",
+                        function (instance, toast) {
+                            instance.hide({ transitionOut: "fadeOut" }, toast, "");
+                        },
+                        false
+                    ]
+                ],
+                onClosing: function (instance, toast, closedBy) {
+                    resolve((closedBy !== "timeout" && closedBy) || "");
+                },
+                ...options
+            });
+        });
+    }
+
+    var help = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        confirm: confirm,
+        prompt: prompt
+    });
+
+    var roamEnhance = { common, utils, dateProcessing, help };
+
+    const processBlock = async (parentUid, block, menuMap, onClickArgs, $ctx) => {
+        var _a;
+        const { currentUid, selectUids, target, pageTitle } = onClickArgs;
+        const js = block.string.match(/^\`\`\`javascript\n([\s\S]*)\`\`\`$/);
+        if (js) {
+            const code = js[1];
+            const AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
+            try {
+                const result = await new AsyncFunction("$ctx", "$currentUid", "$selectUids", "$target", "$pageTitle", code)($ctx, currentUid, selectUids, target, pageTitle);
+                if (((_a = block.children) === null || _a === void 0 ? void 0 : _a.length) || result) {
+                    return await window.roam42.common.createBlock(parentUid, block.order, `${result || ""}`);
+                }
+                return;
+            }
+            catch (e) {
+                console.log(e);
+                window.iziToast.info({
+                    position: "topCenter",
+                    title: navigator.language === "zh-CN" ? "执行错误" : "task error"
+                });
+                return;
+            }
+        }
+        const internalMenu = block.string.match(/<%\s*menu:\s*(.*)\s*%>/);
+        if (internalMenu) {
+            const menu = menuMap[internalMenu[1]];
+            if (menu) {
+                menu.onClick && menu.onClick(onClickArgs);
+            }
+            else {
+                window.iziToast.error({
+                    title: navigator.language === "zh-CN"
+                        ? `不存在 menu: ${internalMenu[1]}`
+                        : `no menu named${internalMenu[1]} found`,
+                    position: "topCenter",
+                    timeout: 3000
+                });
+            }
+            return;
+        }
+        return await window.roam42.common.createBlock(parentUid, block.order, await window.roam42.smartBlocks.proccessBlockWithSmartness(block.string));
+    };
+    async function runTasksByBlocks(blocks, menuMap, onClickArgs) {
+        const { currentUid, selectUids, target, pageTitle } = onClickArgs;
+        let finalUid;
+        if (currentUid) {
+            finalUid = currentUid;
+        }
+        else if (pageTitle) {
+            finalUid = await window.roam42.common.getPageUidByTitle(pageTitle);
+        }
+        const runTasks = async (parentUid, blocks) => {
+            for (const block of blocks.sort((a, b) => a.order - b.order)) {
+                const uid = await processBlock(parentUid, block, menuMap, onClickArgs, $ctx);
+                if (block.children) {
+                    runTasks(uid || parentUid, block.children); // child sync is not necessary
+                }
+            }
+        };
+        let $ctx = {};
+        await runTasks(finalUid, blocks);
+        $ctx = {};
+    }
+
+    let commonMenu = [
+        {
+            text: "All children's highlight",
+            key: "Extract All children's highlight",
+            onClick: async ({ currentUid }) => {
+                let highlights = [];
+                await roamEnhance.utils.patchBlockChildren(currentUid, (a) => {
+                    const m = a.string.match(/\^\^([\s\S]*?)\^\^/g);
+                    m && highlights.push(...m);
+                });
+                await navigator.clipboard.writeText(highlights.join("\n"));
+                if (highlights.length > 0) {
+                    window.iziToast.success({
+                        title: navigator.language === "zh-CN"
+                            ? "提取高亮成功，已复制到剪切板"
+                            : "Extract successfully, Copied to clipboard!"
+                    });
+                }
+                else {
+                    window.iziToast.info({
+                        position: "topCenter",
+                        title: navigator.language === "zh-CN" ? "提取不到高亮内容" : "Can't extract anything"
+                    });
+                }
+            }
+        }
+    ];
+    let blockMenu = [
+        ...commonMenu,
+        {
+            text: "Delete",
+            key: "Delete",
+            children: [
+                {
+                    text: "Delete block and its references",
+                    key: "Delete block and its references",
+                    onClick: async ({ currentUid, selectUids }) => {
+                        if (await confirm(navigator.language === "zh-CN"
+                            ? `确定删除当前所选 block 及其所有块引用`
+                            : `Sure to delete the current block and its all references??`)) {
+                            [currentUid, ...selectUids].forEach(async (uid) => {
+                                const refers = await window.roam42.common.getBlocksReferringToThisBlockRef(uid);
+                                if (refers.length > 0) {
+                                    refers.forEach(async (a) => window.roam42.common.deleteBlock(a[0].uid));
+                                }
+                                window.roam42.common.deleteBlock(uid);
+                            });
+                        }
+                    }
+                },
+                {
+                    text: "Delete current block and embed block's refers",
+                    key: "Delete current block and embed block's refers",
+                    onClick: async ({ currentUid }) => {
+                        try {
+                            const info = await roamEnhance.common.getCurrentBlockInfo(currentUid);
+                            const embed = info.string.match(/\{\{\[\[embed\]\]\:\s+\(\(\(\((.*?)\)\)\)\)\}\}/);
+                            if (embed) {
+                                const originUid = embed[1];
+                                const refers = await window.roam42.common.getBlocksReferringToThisBlockRef(originUid);
+                                if (refers.length > 0 &&
+                                    (await confirm(`该 block 包含有 embed，embed 原 block有${refers.length}个块引用，是否一起删除`))) {
+                                    refers.forEach(async (a) => window.roam42.common.deleteBlock(a[0].uid));
+                                    window.roam42.common.deleteBlock(originUid);
+                                    window.roam42.help.displayMessage(`删除${refers.length}个引用`, 2000);
+                                    window.iziToast.info({
+                                        position: "topCenter",
+                                        title: navigator.language === "zh-CN"
+                                            ? `删除${refers.length}个引用`
+                                            : `delete${refers.length} references`
+                                    });
+                                }
+                            }
+                            window.roam42.common.deleteBlock(currentUid);
+                        }
+                        catch (e) {
+                            console.log(e);
+                            window.iziToast.error({
+                                title: navigator.language === "zh-CN" ? "删除出错" : "Delete failed"
+                            });
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            text: "Format",
+            key: "Format",
+            children: [
+                {
+                    text: "Remove tags",
+                    key: "Remove tags",
+                    onClick: async ({ currentUid, selectUids }) => {
+                        [currentUid, ...selectUids].forEach(async (uid) => {
+                            const a = await roamEnhance.common.getCurrentBlockInfo(uid);
+                            await window.roam42.common.updateBlock(uid, roamEnhance.utils.removeTags(a.string));
+                        });
+                    }
+                }
+            ]
+        },
+        {
+            text: "Format child blocks",
+            key: "Format child blocks",
+            children: [
+                {
+                    text: "Embed to text",
+                    key: "Child embed to text",
+                    onClick: async ({ currentUid }) => {
+                        await roamEnhance.utils.patchBlockChildren(currentUid, async (a) => {
+                            const m = a.string.match(/\{\{\[\[embed\]\]\:\s+\(\(\(\((.*?)\)\)\)\)\}\}/);
+                            const originUid = m && m[1];
+                            if (originUid) {
+                                const originInfo = await window.roam42.common.getBlockInfoByUID(originUid);
+                                window.roam42.common.updateBlock(a.uid, originInfo[0][0].string);
+                            }
+                        });
+                    }
+                },
+                {
+                    text: "Remove tags",
+                    key: "Child blocks remove tags",
+                    onClick: async ({ currentUid }) => {
+                        roamEnhance.utils.patchBlockChildren(currentUid, (a) => {
+                            const newString = roamEnhance.utils.removeTags(a.string);
+                            if (newString !== a.string) {
+                                window.roam42.common.updateBlock(a.uid, newString);
+                            }
+                        });
+                    }
+                },
+                {
+                    text: "Merge blocks",
+                    key: "Merge child blocks",
+                    onClick: async ({ currentUid }) => {
+                        const count = +window.prompt(navigator.language === "zh-CN" ? "每多少行为一组进行合并？" : "How many lines into one?");
+                        if (count) {
+                            const prefix = window.prompt(navigator.language === "zh-CN" ? " 前缀？" : "prefix?");
+                            const currentBlockInfo = await window.roam42.common.getBlockInfoByUID(currentUid, true);
+                            const childBlocks = currentBlockInfo[0][0].children.sort((a, b) => a.order - b.order);
+                            let temp = "";
+                            let bundleIndex = 0;
+                            for (let i = 0; i < childBlocks.length; i++) {
+                                const a = childBlocks[i];
+                                window.roam42.common.deleteBlock(a.uid);
+                                temp += `${!!temp ? "\n" : ""}${a.string}`;
+                                if ((i > count - 2 && (i + 1) % count === 0) || i === childBlocks.length - 1) {
+                                    window.roam42.common.createBlock(currentUid, bundleIndex++, `${prefix}${temp}`);
+                                    temp = "";
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            text: "Cloze",
+            key: "Cloze",
+            children: [
+                {
+                    text: "Expand all",
+                    key: "Expand all cloze",
+                    onClick: async ({ target }) => {
+                        target
+                            .closest(".roam-block-container")
+                            .querySelectorAll(".rm-block-children .rm-paren > .rm-spacer")
+                            .forEach((a) => a.click());
+                    }
+                },
+                {
+                    text: "Collapse all",
+                    key: "Collapse all cloze",
+                    onClick: async ({ target }) => {
+                        target
+                            .closest(".roam-block-container")
+                            .querySelectorAll(".rm-block-children .rm-paren__paren")
+                            .forEach((a) => a.click());
+                    }
+                }
+            ]
+        }
+    ];
+    let pageTitleMenu = [
+        ...commonMenu,
+        {
+            text: "Clear current block/page",
+            key: "Clear current block/page",
+            onClick: async ({ currentUid }) => {
+                if (await roamEnhance.help.confirm(navigator.language === "zh-CN"
+                    ? "确定清空当前页/Block吗？"
+                    : "Are you sure to clear the current block/page?")) {
+                    const info = await window.roam42.common.getBlockInfoByUID(currentUid, true);
+                    info[0][0].children.forEach((a) => {
+                        window.roam42.common.deleteBlock(a.uid);
+                    });
+                }
+            }
+        },
+        {
+            text: "Delete all refering blocks",
+            key: "Delete all refering blocks",
+            onClick: async ({ pageTitle }) => {
+                const refers = await window.roam42.common.getBlocksReferringToThisPage(pageTitle);
+                if (refers.length) {
+                    if (await confirm(navigator.language === "zh-CN"
+                        ? `当前页面有${refers.length}个引用，是否全部删除？`
+                        : `Current page has ${refers.length} references, remove all?`)) {
+                        refers.forEach(async (a) => window.roam42.common.deleteBlock(a[0].uid));
+                    }
+                }
+                else {
+                    window.iziToast.info({
+                        title: navigator.language === "zh-CN" ? "该页面没有引用" : "This page has no reference",
+                        position: "topCenter",
+                        timeout: 2000
+                    });
+                }
+            }
+        },
+        {
+            text: "Extract currentPage's refers",
+            key: "Extract currentPage's refers",
+            onClick: async ({ pageTitle }) => {
+                const refers = await window.roam42.common.getBlocksReferringToThisPage(pageTitle);
+                if (!refers.length) {
+                    window.iziToast.info({
+                        position: "topCenter",
+                        title: navigator.language === "zh-CN" ? "提取不到东西" : "Can't extract anything"
+                    });
+                    return;
+                }
+                function getContentWithChildren(item, depth = 2) {
+                    return `${item.string}
+              ${item.children
+                    ? item.children
+                        .map((a) => "    ".repeat(depth) + getContentWithChildren(a, depth + 1))
+                        .join("\n")
+                    : ""}`;
+                }
+                const refersByUid = refers.reduce((memo, a) => {
+                    const uid = a[0].uid;
+                    memo[uid] = a;
+                    return memo;
+                }, {});
+                const pageNames = await window.roam42.common.getPageNamesFromBlockUidList(refers.map((a) => a[0].uid));
+                const groupByPageUid = pageNames
+                    .sort((a, b) => !!+new Date(a[1].uid) &&
+                    !!+new Date(b[1].uid) &&
+                    +new Date(a[1].uid) > +new Date(b[1].uid)
+                    ? 1
+                    : -1)
+                    .reduce((memo, a, i) => {
+                    const uid = a[1].uid;
+                    memo[uid] = [...(memo[uid] || []), { ...a[0], title: a[1].title }];
+                    return memo;
+                }, {});
+                const res = Object.keys(groupByPageUid)
+                    .map((uid) => {
+                    return `${groupByPageUid[uid][0].title}
+          ${groupByPageUid[uid]
+                    .map((a) => {
+                    const blockUid = a.uid;
+                    return "    " + getContentWithChildren(refersByUid[blockUid][0]);
+                })
+                    .join("\n")}`;
+                })
+                    .join("\n");
+                await navigator.clipboard.writeText(res);
+                window.iziToast.info({
+                    position: "topCenter",
+                    title: navigator.language === "zh-CN"
+                        ? "提取成功，已复制到剪切板"
+                        : "Extract successfullly, Copied to clipboard!"
+                });
+            }
+        }
+    ];
+    let pageTitleMenu_Sidebar = [
+        ...commonMenu,
+        {
+            text: "Focus on page",
+            key: "Focus on page",
+            onClick: async ({ pageTitle }) => {
+                await window.roam42.common.navigateUiTo(pageTitle);
+            }
+        },
+        ...pageTitleMenu
+    ];
+    const getMenuMap = memoize((menu) => {
+        const map = {};
+        const loop = (menu) => {
+            menu.forEach((a) => {
+                if (a.children) {
+                    loop(a.children);
+                }
+                else {
+                    map[a.key] = a;
+                }
+            });
+        };
+        loop(menu);
+        return map;
+    });
+    async function getMergeMenu(userBlocks, menuMap) {
+        if (!userBlocks || !userBlocks.length)
+            return [];
+        return await Promise.all(userBlocks.map(async (userBlock) => {
+            var _a;
+            if (!((_a = userBlock.children) === null || _a === void 0 ? void 0 : _a.length)) {
+                return {
+                    text: userBlock.string,
+                    onClick: () => {
+                        window.iziToast.info({
+                            title: navigator.language === "zh-CN"
+                                ? "该菜单没有配置执行任务"
+                                : "This menu has no configuration",
+                            position: "topCenter",
+                            timeout: 2000
+                        });
+                    }
+                };
+            }
+            const m = userBlock.string.match(/\{\{(.*)\}\}/);
+            if (m) {
+                return {
+                    text: m[1],
+                    onClick: async (onClickArgs) => {
+                        await runTasksByBlocks(userBlock.children.sort((a, b) => a.order - b.order), menuMap, onClickArgs);
+                    }
+                };
+            }
+            return {
+                text: userBlock.string,
+                children: await getMergeMenu(userBlock.children, menuMap)
+            };
+        }));
+    }
+    async function getMergeMenuOfPage(pageBlocks, key, menu) {
+        const info = pageBlocks.find((a) => a.string.includes(key));
+        if (info) {
+            const menuBlocks = (info && info.children.sort((a, b) => a.order - b.order)) || [];
+            return await getMergeMenu(menuBlocks, getMenuMap(menu));
+        }
+        else {
+            return menu;
+        }
+    }
+    async function getMenu(path, clickArea, onClickArgs) {
+        const pageUid = await window.roam42.common.getPageUidByTitle("roam/enhance/menu");
+        let blocks;
+        if (pageUid) {
+            const info = await window.roam42.common.getBlockInfoByUID(pageUid, true);
+            if (info) {
+                blocks = info[0][0].children.sort((a, b) => a.order - b.order);
+            }
+        }
+        if (!blocks)
+            return;
+        if (clickArea === "block") {
+            return (await getMergeMenuOfPage(blocks, "BlockMenu", blockMenu));
+        }
+        let menu;
+        if (clickArea === "pageTitle") {
+            menu = await getMergeMenuOfPage(blocks, "PageTitleMenu", pageTitleMenu);
+        }
+        else if (clickArea === "pageTitle_sidebar") {
+            menu = await getMergeMenuOfPage(blocks, "PageTitleMenu_Sidebar", pageTitleMenu_Sidebar);
+        }
+        if (onClickArgs.pageTitle === "roam/enhance/menu") {
+            menu.push({
+                text: "Pull all build-in menu",
+                onClick: async () => {
+                    const pageUid = await window.roam42.common.getPageUidByTitle("roam/enhance/menu");
+                    const insertTemplateMenu = (menu) => {
+                        return menu.map((a) => {
+                            if (a.children) {
+                                return { ...a, children: insertTemplateMenu(a.children) };
+                            }
+                            else {
+                                return { ...a, text: `{{${a.text}}}`, children: [{ text: `<%menu:${a.key}%>` }] };
+                            }
+                        });
+                    };
+                    deepCreateBlock(pageUid, [
+                        { text: "**BlockMenu**", children: insertTemplateMenu(blockMenu) },
+                        { text: "**PageTitleMenu**", children: insertTemplateMenu(pageTitleMenu) },
+                        {
+                            text: "**PageTitleMenu_Sidebar**",
+                            children: insertTemplateMenu(pageTitleMenu_Sidebar)
+                        }
+                    ]);
+                }
+            }, {
+                text: "Pull unused build-in menu",
+                onClick: async ({ currentUid }) => {
+                    const userMenu = [];
+                    await roamEnhance.utils.patchBlockChildren(currentUid, (a) => {
+                        const m = a.string.match(/<%\s*menu:\s*(.*)\s*%>/);
+                        m && userMenu.push(m[1]);
+                    });
+                    const internalMenu = Object.keys({
+                        ...getMenuMap(blockMenu),
+                        ...getMenuMap(pageTitleMenu),
+                        ...getMenuMap(pageTitleMenu_Sidebar)
+                    });
+                    const diff = difference(internalMenu, userMenu).map((a) => `<%menu:${a}%>`);
+                    if (diff.length) {
+                        await roamEnhance.common.batchCreateBlocks(currentUid, 0, diff);
+                    }
+                    else {
+                        window.iziToast.info({
+                            position: "topCenter",
+                            title: navigator.language === "zh-CN"
+                                ? "当前没有未使用的内置菜单"
+                                : "No unused build-in menu found"
+                        });
+                    }
+                }
+            });
+        }
+        if (window.roamEnhance._plugins["metadata"].getMetadataMenu) {
+            try {
+                const metaDataMenu = await window.roamEnhance._plugins["metadata"].getMetadataMenu();
+                metaDataMenu && menu.unshift(metaDataMenu);
+            }
+            catch (e) {
+                console.log(`[plugin error:metadata]`, e);
+            }
+        }
+        return menu;
+    }
+
+    const onClickMap = {};
+    const getMenuHTML = (menu, parentText = "") => {
+        return menu
+            .map((a) => {
+            if (a.children && a.children.length) {
+                return `<li class="bp3-submenu">
                         <span class="bp3-popover-wrapper">
                             <span class="bp3-popover-target">
-                                <a class="bp3-menu-item" tabindex="0" data-key="${t+e.text}">
-                                    <div class="bp3-text-overflow-ellipsis bp3-fill">${e.text}</div>
+                                <a class="bp3-menu-item" tabindex="0" data-key="${parentText + a.text}">
+                                    <div class="bp3-text-overflow-ellipsis bp3-fill">${a.text}</div>
                                     <span icon="caret-right" class="bp3-icon bp3-icon-caret-right">
                                         <svg data-icon="caret-right" width="16" height="16" viewBox="0 0 16 16">
                                             <desc>caret-right</desc><path d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 006 4.5v7a.495.495 0 00.83.37l4-3.5c.1-.09.17-.22.17-.37z" fill-rule="evenodd">
@@ -18,15 +2505,153 @@
                                     <div class="bp3-popover bp3-minimal bp3-submenu" style="transform-origin: left center;">
                                         <div class="bp3-popover-content">
                                             <ul class="bp3-menu">
-                                                ${je(e.children,t+(e.key||e.text))}
+                                                ${getMenuHTML(a.children, parentText + (a.key || a.text))}
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </span>
-                    </li>`:($e[t+(e.key||e.text)]=e.onClick,`<li>
-                        <a class="bp3-menu-item bp3-popover-dismiss" data-key="${t+(e.key||e.text)}">
-                            <div class="bp3-text-overflow-ellipsis bp3-fill">${e.text}</div>
+                    </li>`;
+            }
+            else {
+                onClickMap[parentText + (a.key || a.text)] = a.onClick;
+                return `<li>
+                        <a class="bp3-menu-item bp3-popover-dismiss" data-key="${parentText + (a.key || a.text)}">
+                            <div class="bp3-text-overflow-ellipsis bp3-fill">${a.text}</div>
                         </a>
-                    </li>`)).join("");let Se,Ne;document.addEventListener("mousedown",e=>{Se=e.clientX,Ne=e.clientY});const Pe=new MutationObserver(async(n,e)=>{if(!!n.find(e=>"childList"===e.type&&("bp3-context-menu"===e.target.className||"bp3-context-menu-popover-target"===e.target.className))){let t=n.find(e=>"childList"===e.type&&0<e.addedNodes.length&&"bp3-portal"===e.target.className);if(t){const o=document.elementsFromPoint(Se,Ne),r={};let e=null;r.target=o[1];const a=o.find(e=>e.classList.contains("rm-block-main"));a&&(r.currentUid=i(a.querySelector(".rm-block__input").id),e="block");n=o.find(e=>e.classList.contains("rm-title-display"));n&&(r.pageTitle=n.innerText,r.currentUid=await window.roam42.common.getPageUidByTitle(r.pageTitle),e=o.find(e=>e.classList.contains("sidebar-content"))?"pageTitle_sidebar":"pageTitle");n=await async function(t,n){var e=await window.roam42.common.getPageUidByTitle("roam/enhance/menu");let o;if(e){const r=await window.roam42.common.getBlockInfoByUID(e,!0);r&&(o=r[0][0].children.sort((e,t)=>e.order-t.order))}if(o){if("block"===t)return await Ue(o,"BlockMenu",xe);let e;return"pageTitle"===t?e=await Ue(o,"PageTitleMenu",Te):"pageTitle_sidebar"===t&&(e=await Ue(o,"PageTitleMenu_Sidebar",ze)),"roam/enhance/menu"===n.pageTitle&&e.push({text:"Pull all build-in menu",onClick:async()=>{var e=await window.roam42.common.getPageUidByTitle("roam/enhance/menu");const t=e=>e.map(e=>e.children?{...e,children:t(e.children)}:{...e,text:`{{${e.text}}}`,children:[{text:`<%menu:${e.key}%>`}]});ge(e,[{text:"**BlockMenu**",children:t(xe)},{text:"**PageTitleMenu**",children:t(Te)},{text:"**PageTitleMenu_Sidebar**",children:t(ze)}])}},{text:"Pull unused build-in menu",onClick:async({currentUid:e})=>{const t=[];await Be.utils.patchBlockChildren(e,e=>{e=e.string.match(/<%\s*menu:\s*(.*)\s*%>/);e&&t.push(e[1])});var n=Object.keys({...Ee(xe),...Ee(Te),...Ee(ze)}),n=me(n,t).map(e=>`<%menu:${e}%>`);n.length?await Be.common.batchCreateBlocks(e,0,n):window.iziToast.info({position:"topCenter",title:"zh-CN"===navigator.language?"当前没有未使用的内置菜单":"No unused build-in menu found"})}}),!window.roamEnhance._plugins.metadata.getMetadataMenu||(n=await window.roamEnhance._plugins.metadata.getMetadataMenu())&&e.unshift(n),e}}((o,e),r);r.selectUids=c(),n&&function(e,t,o){const n=document.createElement("template");n.innerHTML=je(t),[...n.content.childNodes].forEach(e=>{e.addEventListener("click",async e=>{const t=e.target;if(t.classList.contains("bp3-menu-item")||t.classList.contains("bp3-fill")&&t.classList.contains("bp3-text-overflow-ellipsis")){const n=$e[t.closest(".bp3-menu-item").dataset.key];if(n)try{await n(o)}catch(e){console.log(e),window.iziToast.error({title:"操作失败",position:"topCenter",timeout:3e3})}}}),[...e.querySelectorAll(".bp3-popover-wrapper")].forEach(e=>{e.addEventListener("mouseenter",async e=>{const t=e.target;t.parentNode.classList.contains("bp3-submenu")&&(t.querySelector(".bp3-popover-target").classList.add("bp3-popover-open"),t.querySelector(".bp3-overlay").classList.add("bp3-overlay-open"))}),e.addEventListener("mouseleave",async e=>{const t=e.target;t.parentNode.classList.contains("bp3-submenu")&&(t.querySelector(".bp3-popover-target").classList.remove("bp3-popover-open"),t.querySelector(".bp3-overlay").classList.remove("bp3-overlay-open"))})})});const r=document.createElement("li");r.className="bp3-menu-divider",n.content.childNodes[n.content.childNodes.length-1].after(r),e.prepend(n.content)}(t.target.querySelector("ul.bp3-menu"),n,r)}}});!function(e,o=""){let r=0;setTimeout(()=>function t(e){var n;try{e()}catch(e){console.log("error",e),r<5&&setTimeout(()=>t(++r),3e3),5<r&&null!==(n=window.roam42)&&void 0!==n&&n.help.displayMessage(`${o}加载失败`,2e3)}}(e),3e3)}(()=>{Pe.observe(document.body,{attributes:!1,childList:!0,subtree:!0})});var Ie,Ae,Me,Le,De,qe,n=[],Re=[];function Fe(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),Ie.attributes)for(var t=Object.keys(Ie.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],Ie.attributes[t[n]]);var o="prepend"==Ae?"afterbegin":"beforeend";return Me.insertAdjacentElement(o,e),e}Ie={},(l=".bp3-submenu .bp3-overlay:not(.bp3-overlay-open) {\n  display: none;\n}\n.bp3-submenu > .bp3-popover-wrapper {\n  position: relative;\n}\n.iziToast > .iziToast-body .iziToast-buttons {\n  float: none;\n  text-align: center;\n  margin-left: -28px;\n}\n.iziToast > .iziToast-body .iziToast-icon {\n  top: 20px;\n}\n.iziToast-buttons .iziToast-buttons-child {\n  top: 6px;\n}\n")&&"undefined"!=typeof document&&(Ae=!0===Ie.prepend?"prepend":"append",e=!0===Ie.singleTag,Me="string"==typeof Ie.container?document.querySelector(Ie.container):document.getElementsByTagName("head")[0],Le=e?(-1===(Le=n.indexOf(Me))&&(Le=n.push(Me)-1,Re[Le]={}),Re[Le]&&Re[Le][Ae]?Re[Le][Ae]:Re[Le][Ae]=Fe()):Fe(),65279===l.charCodeAt(0)&&(l=l.substring(1)),Le.styleSheet?Le.styleSheet.cssText+=l:Le.appendChild(document.createTextNode(l))),null!==(s=window.roamEnhance)&&void 0!==s&&s.loaded||(window.roamEnhance=Object.assign(window.roamEnhance,Be),qe=window.roamEnhance.host=document.currentScript.src.replace("main.js",""),window.roamEnhance._plugins={},null!==(s=window.roamEnhance)&&void 0!==s&&s.plugins.length&&null!==(De=window.roamEnhance)&&void 0!==De&&De.plugins.forEach(e=>{!function(e,t){const n=document.getElementById(t);n&&n.remove();const o=document.createElement("script");o.src=e,t&&(o.id=t),o.async=!0,o.type="text/javascript",document.getElementsByTagName("head")[0].appendChild(o)}(`${qe}plugins/${e}.js`,e)}),window.roamEnhance.loaded=!0,window.yoyo=window.roamEnhance)}();
+                    </li>`;
+            }
+        })
+            .join("");
+    };
+    function mergeMenuToDOM(menuDOM, menu, onClickArgs) {
+        const addItem = document.createElement("template");
+        addItem.innerHTML = getMenuHTML(menu);
+        [...addItem.content.childNodes].forEach((a) => {
+            a.addEventListener("click", async (e) => {
+                const target = e.target;
+                if (target.classList.contains("bp3-menu-item") ||
+                    (target.classList.contains("bp3-fill") &&
+                        target.classList.contains("bp3-text-overflow-ellipsis"))) {
+                    const onClick = onClickMap[target.closest(".bp3-menu-item").dataset.key];
+                    if (onClick) {
+                        try {
+                            await onClick(onClickArgs);
+                        }
+                        catch (e) {
+                            console.log(e);
+                            window.iziToast.error({
+                                title: "操作失败",
+                                position: "topCenter",
+                                timeout: 3000
+                            });
+                        }
+                    }
+                }
+            });
+            [...a.querySelectorAll(".bp3-popover-wrapper")].forEach((a) => {
+                a.addEventListener("mouseenter", async (e) => {
+                    const target = e.target;
+                    if (target.parentNode.classList.contains("bp3-submenu")) {
+                        target.querySelector(".bp3-popover-target").classList.add("bp3-popover-open");
+                        target.querySelector(".bp3-overlay").classList.add("bp3-overlay-open");
+                    }
+                });
+                a.addEventListener("mouseleave", async (e) => {
+                    const target = e.target;
+                    if (target.parentNode.classList.contains("bp3-submenu")) {
+                        target.querySelector(".bp3-popover-target").classList.remove("bp3-popover-open");
+                        target.querySelector(".bp3-overlay").classList.remove("bp3-overlay-open");
+                    }
+                });
+            });
+        });
+        const divider = document.createElement("li");
+        divider.className = "bp3-menu-divider";
+        addItem.content.childNodes[addItem.content.childNodes.length - 1].after(divider);
+        menuDOM.prepend(addItem.content);
+    }
+
+    let mouseX;
+    let mouseY;
+    document.addEventListener("mousedown", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+    const observer = new MutationObserver(async (mutationsList, observer) => {
+        const isContextMenu = !!mutationsList.find((m) => m.type === "childList" &&
+            (m.target.className === "bp3-context-menu" ||
+                m.target.className === "bp3-context-menu-popover-target"));
+        if (isContextMenu) {
+            // close right click menu
+            // if (
+            //   mutationsList.find(
+            //     (m) =>
+            //       m.type === "childList" && m.removedNodes.length > 0 && m.target.className === "bp3-portal"
+            //   )
+            // ) {
+            //   console.log("关闭");
+            // }
+            let portalMutation = mutationsList.find((m) => m.type === "childList" &&
+                m.addedNodes.length > 0 &&
+                m.target.className === "bp3-portal");
+            // open right click menu
+            if (portalMutation) {
+                const path = document.elementsFromPoint(mouseX, mouseY);
+                const onClickArgs = {};
+                let clickArea = null;
+                onClickArgs.target = path[1]; // the closest element over mouse, path[0] is overlay
+                // click on block
+                const rmBlockMainDOM = path.find((a) => a.classList.contains("rm-block-main"));
+                if (rmBlockMainDOM) {
+                    onClickArgs.currentUid = getBlockUidFromId(rmBlockMainDOM.querySelector(".rm-block__input").id);
+                    clickArea = "block";
+                }
+                // click on page title
+                const pageTitleDOM = path.find((a) => a.classList.contains("rm-title-display"));
+                if (pageTitleDOM) {
+                    onClickArgs.pageTitle = pageTitleDOM.innerText;
+                    onClickArgs.currentUid = await window.roam42.common.getPageUidByTitle(onClickArgs.pageTitle);
+                    if (path.find((a) => a.classList.contains("sidebar-content"))) {
+                        clickArea = "pageTitle_sidebar";
+                    }
+                    else {
+                        clickArea = "pageTitle";
+                    }
+                }
+                const menu = await getMenu(path, clickArea, onClickArgs);
+                onClickArgs.selectUids = getSelectBlockUids();
+                menu &&
+                    mergeMenuToDOM(portalMutation.target.querySelector("ul.bp3-menu"), menu, onClickArgs);
+            }
+        }
+    });
+    retry(() => {
+        observer.observe(document.body, {
+            attributes: false,
+            childList: true,
+            subtree: true
+        });
+    });
+
+    var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
+
+    var css = ".bp3-submenu .bp3-overlay:not(.bp3-overlay-open) {\n  display: none;\n}\n.bp3-submenu > .bp3-popover-wrapper {\n  position: relative;\n}\n.iziToast > .iziToast-body .iziToast-buttons {\n  float: none;\n  text-align: center;\n  margin-left: -28px;\n}\n.iziToast > .iziToast-body .iziToast-icon {\n  top: 20px;\n}\n.iziToast-buttons .iziToast-buttons-child {\n  top: 6px;\n}\n";
+    n(css,{});
+
+    var _a, _b;
+    if (!((_a = window.roamEnhance) === null || _a === void 0 ? void 0 : _a.loaded)) {
+        window.roamEnhance = Object.assign(window.roamEnhance, roamEnhance);
+        const host = (window.roamEnhance.host = document.currentScript.src.replace("main.js", ""));
+        window.roamEnhance._plugins = {};
+        if ((_b = window.roamEnhance) === null || _b === void 0 ? void 0 : _b.plugins.length) {
+            window.roamEnhance.plugins.forEach((pluginName) => {
+                addScript(`${host}plugins/${pluginName}.js`, pluginName);
+            });
+        }
+        window.roamEnhance.loaded = true;
+        window.yoyo = window.roamEnhance;
+    }
+
+}());

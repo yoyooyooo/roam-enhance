@@ -485,8 +485,12 @@ export async function getMenu(path: Element[], clickArea: ClickArea, onClickArgs
   }
 
   if (window.roamEnhance._plugins["metadata"].getMetadataMenu) {
-    const metaDataMenu = await window.roamEnhance._plugins["metadata"].getMetadataMenu();
-    metaDataMenu && menu.unshift(metaDataMenu);
+    try {
+      const metaDataMenu = await window.roamEnhance._plugins["metadata"].getMetadataMenu();
+      metaDataMenu && menu.unshift(metaDataMenu);
+    } catch (e) {
+      console.log(`[plugin error:metadata]`, e);
+    }
   }
 
   return menu;

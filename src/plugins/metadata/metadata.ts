@@ -6,11 +6,11 @@ export async function getMetadataMenu(): Promise<Menu | null> {
   const uid = await window.roam42.common.getPageUidByTitle("roam/enhance/metadata");
   if (uid) {
     const info = await window.roam42.common.getBlockInfoByUID(uid, true);
-    const setting = info[0][0].children.find((a) => a.string.includes("setting"));
-    const data = info[0][0].children.find((a) => a.string.includes("data"));
+    const menu = info[0][0].children.find((a) => /^\s*menu\s*$/.test(a.string));
+    const data = info[0][0].children.find((a) => /^\s*menu\s+type\s*$/.test(a.string));
     return {
       text: "Metadata",
-      children: setting.children.map((s) => {
+      children: menu?.children.map((s) => {
         const text = s.string.replace("[[", "").replace("]]", "");
         return {
           text,
@@ -19,25 +19,23 @@ export async function getMetadataMenu(): Promise<Menu | null> {
               const tagBlockList = await Promise.all(
                 s.children
                   .sort((a, b) => a.order - b.order)
-                  .flatMap(async (s) => {
+                  .map(async (s) => {
                     if (/\(\(.*\)\)/.test(s.string)) {
                       const uid = s.string.match(/\(\((.*)\)\)/)[1];
                       const info = await window.roam42.common.getBlockInfoByUID(uid, true);
                       return info[0][0];
                     } else {
-                      return (
-                        data.children.find(
-                          (d) =>
-                            s.string.replace("[[", "").replace("]]", "") ===
-                            d.string.replace("[[", "").replace("]]", "")
-                        ) || []
+                      return data?.children.find(
+                        (d) =>
+                          s.string.replace("[[", "").replace("]]", "") ===
+                          d.string.replace("[[", "").replace("]]", "")
                       );
                     }
                   })
               );
               render(getSingleDOM("metadata"), {
                 open: true,
-                tagBlockList,
+                tagBlockList: tagBlockList.filter(Boolean),
                 clickArgs,
                 menuText: text
               });

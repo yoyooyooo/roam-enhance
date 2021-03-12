@@ -510,6 +510,13 @@ colorette@^1.2.1, colorette@^1.2.2:
   resolved "https://registry.npm.taobao.org/colorette/download/colorette-1.2.2.tgz?cache=0&sync_timestamp=1614259838969&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcolorette%2Fdownload%2Fcolorette-1.2.2.tgz#cbcc79d5e99caea2dbf10eb3a26fd8b3e6acfa94"
   integrity sha1-y8x51emcrqLb8Q6zom/Ys+as+pQ=
 
+commander@~2.9.0:
+  version "2.9.0"
+  resolved "https://registry.npm.taobao.org/commander/download/commander-2.9.0.tgz#9c99094176e12240cb22d6c5146098400fe0f7d4"
+  integrity sha1-nJkJQXbhIkDLItbFFGCYQA/g99Q=
+  dependencies:
+    graceful-readlink ">= 1.0.0"
+
 commondir@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
@@ -901,6 +908,11 @@ graceful-fs@^4.1.6, graceful-fs@^4.2.0:
   version "4.2.6"
   resolved "https://registry.npm.taobao.org/graceful-fs/download/graceful-fs-4.2.6.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fgraceful-fs%2Fdownload%2Fgraceful-fs-4.2.6.tgz#ff040b2b0853b23c3d31027523706f1885d76bee"
   integrity sha1-/wQLKwhTsjw9MQJ1I3BvGIXXa+4=
+
+"graceful-readlink@>= 1.0.0":
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/graceful-readlink/download/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
+  integrity sha1-TK+tdrxi8C+gObL5Tpo906ORpyU=
 
 has-bigints@^1.0.0:
   version "1.0.0"
@@ -2299,6 +2311,13 @@ rollup-plugin-styles@^3.14.1:
     source-map "^0.7.3"
     tslib "^2.1.0"
 
+rollup-plugin-uglify-es@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.npm.taobao.org/rollup-plugin-uglify-es/download/rollup-plugin-uglify-es-0.0.1.tgz#e45644f2b685a59abdb9363407207a03a7b5a9b7"
+  integrity sha1-5FZE8raFpZq9uTY0ByB6A6e1qbc=
+  dependencies:
+    uglify-es "3.0.3"
+
 rollup-plugin-uglify@^6.0.4:
   version "6.0.4"
   resolved "https://registry.yarnpkg.com/rollup-plugin-uglify/-/rollup-plugin-uglify-6.0.4.tgz#65a0959d91586627f1e46a7db966fd504ec6c4e6"
@@ -2362,6 +2381,11 @@ source-map@^0.7.3:
   version "0.7.3"
   resolved "https://registry.npm.taobao.org/source-map/download/source-map-0.7.3.tgz?cache=0&sync_timestamp=1606747929782&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsource-map%2Fdownload%2Fsource-map-0.7.3.tgz#5302f8169031735226544092e64981f751750383"
   integrity sha1-UwL4FpAxc1ImVECS5kmB91F1A4M=
+
+source-map@~0.5.1:
+  version "0.5.7"
+  resolved "https://registry.npm.taobao.org/source-map/download/source-map-0.5.7.tgz?cache=0&sync_timestamp=1606747929782&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsource-map%2Fdownload%2Fsource-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
+  integrity sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w=
 
 sourcemap-codec@^1.4.4:
   version "1.4.8"
@@ -2481,10 +2505,25 @@ typescript@^4.2.2:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.2.tgz#1450f020618f872db0ea17317d16d8da8ddb8c4c"
   integrity sha512-tbb+NVrLfnsJy3M59lsDgrzWIflR4d4TIUjz+heUnHZwdF7YsrMTKoRERiIvI2lvBG95dfpLxB21WZhys1bgaQ==
 
+uglify-es@3.0.3:
+  version "3.0.3"
+  resolved "https://registry.npm.taobao.org/uglify-es/download/uglify-es-3.0.3.tgz#63cc84aa9468b34973a4887787c64c01a8a87576"
+  integrity sha1-Y8yEqpRos0lzpIh3h8ZMAaiodXY=
+  dependencies:
+    commander "~2.9.0"
+    source-map "~0.5.1"
+  optionalDependencies:
+    uglify-to-browserify "~1.0.0"
+
 uglify-js@^3.4.9:
   version "3.12.8"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.12.8.tgz#a82e6e53c9be14f7382de3d068ef1e26e7d4aaf8"
   integrity sha512-fvBeuXOsvqjecUtF/l1dwsrrf5y2BCUk9AOJGzGcm6tE7vegku5u/YvqjyDaAGr422PLoLnrxg3EnRvTqsdC1w==
+
+uglify-to-browserify@~1.0.0:
+  version "1.0.2"
+  resolved "https://registry.npm.taobao.org/uglify-to-browserify/download/uglify-to-browserify-1.0.2.tgz#6e0924d6bda6b5afe349e39a6d632850a0f882b7"
+  integrity sha1-bgkk1r2mta/jSeOabWMoUKD4grc=
 
 unbox-primitive@^1.0.0:
   version "1.0.0"
