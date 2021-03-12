@@ -39,7 +39,7 @@ export const processBlock = async (
   if (internalMenu) {
     const menu = menuMap[internalMenu[1]];
     if (menu) {
-      menu.onClick && menu.onClick(onClickArgs);
+      menu.onClick?.(onClickArgs);
     } else {
       window.iziToast.error({
         title:
@@ -61,7 +61,7 @@ export const processBlock = async (
 };
 
 export async function runTasksByBlocks(blocks, menuMap, onClickArgs) {
-  const { currentUid, selectUids, target, pageTitle } = onClickArgs;
+  const { currentUid, pageTitle } = onClickArgs;
   let finalUid;
   if (currentUid) {
     finalUid = currentUid;

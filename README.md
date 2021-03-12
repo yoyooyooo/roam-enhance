@@ -85,7 +85,24 @@ By default, all menu options are wrapped with {{}}, when click a block'bullet, i
 
 ### Relationship with roam42
 
-Now，partially compatible with roam42.For some reason,you can use some of roam42's commands that are not output blocks, such as `<%DATE%>`,You can't use such command like `<%TODOOVERDUE:20%>`.
+Now，partially compatible with roam42. For some reason,you can use some of roam42's commands that are not output blocks, such as `<%DATE:2021-06-06%>`, and You can't use commands that automatically output content in roam42,such like `<%TODOOVERDUE:20%>`.
+
+So your custom menu could look like this:
+
+- {{demo}}
+  - <%JA:return '===> '%><%DATE:2021-06-06%>
+
+If you do not use `<%JA:%>` but use \`\`\`javascript\`\`\` directly, you will get some convenience, you can use some variables starting with $ in javascript code directly:
+
+```javascript
+console.log("$ctx", "$currentUid", "$selectUids", "$target", "$pageTitle");
+```
+
+- $ctx: task's context, you can save your variables to it,it will be cleared after the task is completed.
+- $currentUid: the uid of the currently clicked page or block
+- $selectUids: the uid of the currently clicked page or block
+- $target: the element currently clicked
+- $pageTitle: the currently clicked page title
 
 ### `roam/enhance/menu` demo
 
@@ -141,3 +158,7 @@ You can copy code below to your `roam/enhance/menu` page
 Some features that have helped me personally, if you are interested, feel free to try.
 
 ## metadata
+
+```
+
+```
