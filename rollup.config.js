@@ -1,10 +1,9 @@
-import uglify from "rollup-plugin-uglify-es";
-import { nodeResolve } from "@rollup/plugin-node-resolve";
-import css from "rollup-plugin-import-css";
-import styles from "rollup-plugin-styles";
 import commonjs from "@rollup/plugin-commonjs";
-import typescript from "@rollup/plugin-typescript";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
+import typescript from "@rollup/plugin-typescript";
+import styles from "rollup-plugin-styles";
+import { terser } from "rollup-plugin-terser";
 
 const plugins = [
   typescript({ sourceMap: false }),
@@ -16,7 +15,7 @@ const plugins = [
     preventAssignment: true,
     "process.env.NODE_ENV": '"production"'
   }),
-  uglify()
+  terser()
 ];
 
 export default [
