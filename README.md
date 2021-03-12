@@ -158,7 +158,3 @@ You can copy code below to your `roam/enhance/menu` page
 Some features that have helped me personally, if you are interested, feel free to try.
 
 ## metadata
-
-```
-
-```

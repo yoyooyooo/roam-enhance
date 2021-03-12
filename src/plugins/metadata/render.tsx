@@ -1,13 +1,15 @@
 import "antd/dist/antd.css";
 import Button from "antd/es/button";
 import Cascader from "antd/es/cascader";
-import Select from "antd/es/select";
-import Modal from "antd/es/modal/Modal";
 import TextArea from "antd/es/input/TextArea";
-import React, { useState, useMemo } from "react";
+import Modal from "antd/es/modal/Modal";
+import Select from "antd/es/select";
+import differenceBy from "lodash-es/differenceBy";
+import React, { useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import { ClickArgs } from "../../contextmenu/types";
 import { extractTags, flattenBlocks } from "../../globals/utils";
+import { Setting } from "./metadata";
 
 function getOptions(blocks: Roam.Block[]) {
   return (
@@ -33,14 +35,15 @@ const Component: React.FC<{
   tagBlockList: Roam.Block[];
   clickArgs: ClickArgs;
   menuText: string;
-}> = ({ open: open0 = true, dom, tagBlockList, clickArgs, menuText }) => {
+  setting: Setting;
+}> = ({ open: open0 = true, dom, tagBlockList, clickArgs, menuText, setting }) => {
   const [open, setOpen] = useState(open0);
   const [tagMap, setTagMap] = useState<Record<string, string | string[]>>({});
   const flattenTagsMap = useMemo(() => {
     const res: Record<string, Roam.Block[]> = {};
     tagBlockList.forEach((a) => {
       if (a.children?.length) {
-        res[a.string.replace("[[", "").replace("]]", "")] = flattenBlocks(a.children);
+        res[a.string] = flattenBlocks(a.children);
       }
     });
     return res;
@@ -52,7 +55,7 @@ const Component: React.FC<{
       visible={open}
       onOk={async () => {
         const list = tagBlockList.flatMap((block) => {
-          const key = block.string.replace("[[", "").replace("]]", "");
+          const key = block.string;
           const tags = tagMap[key];
           return !!tags?.length
             ? `${key}: ${typeof tags === "string" ? tags : tags.map((t) => `#[[${t}]]`).join(" ")}`
@@ -64,7 +67,11 @@ const Component: React.FC<{
             0,
             `{{[[${menuText}]]}}`
           );
-          window.roam42.common.createBlock(uid, 0, list.join("\n"));
+          if (setting.outputToOneBlock) {
+            window.roam42.common.createBlock(uid, 0, list.join("\n"));
+          } else {
+            window.roam42.common.batchCreateBlocks(uid, 0, list);
+          }
           window.roam42.common.createBlock(clickArgs.currentUid, 1, "---");
         }
         setOpen(false);
@@ -146,13 +153,14 @@ const Component: React.FC<{
                   style={{ width: "100%" }}
                   value={tagMap[key]}
                   onChange={(value) => {
-                    console.log("onChange", value);
                     setTagMap((map) => {
                       return { ...map, [key]: value };
                     });
                   }}
                 >
-                  {flattenTagsMap[key].map((tag) => {
+                  {differenceBy(flattenTagsMap[key], tagMap[key], (a) =>
+                    (a?.string || a).replace("[[", "").replace("]]", "")
+                  ).map((tag) => {
                     const text = extractTags(tag.string)[0] || tag.string;
                     return (
                       <Select.Option key={text} value={text}>
@@ -170,7 +178,7 @@ const Component: React.FC<{
   );
 };
 
-export function render(dom: HTMLElement, { open, tagBlockList, clickArgs, menuText }) {
+export function render(dom: HTMLElement, { open, tagBlockList, clickArgs, menuText, setting }) {
   ReactDOM.render(
     <Component
       open={open}
@@ -178,6 +186,7 @@ export function render(dom: HTMLElement, { open, tagBlockList, clickArgs, menuTe
       tagBlockList={tagBlockList}
       clickArgs={clickArgs}
       menuText={menuText}
+      setting={setting}
     />,
     dom
   );

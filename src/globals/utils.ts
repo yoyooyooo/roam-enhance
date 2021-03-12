@@ -71,7 +71,8 @@ export const getSelectBlockUids = () => {
 };
 
 export function flattenBlocks(block: Roam.Block[], filter?: (block: Roam.Block) => boolean) {
-  return block.flatMap((a) =>
-    a.children ? flattenBlocks(a.children, filter) : filter && filter(a) === false ? [] : a
-  );
+  return block.flatMap((a) => [
+    ...((a.children && flattenBlocks(a.children, filter)) || []),
+    ...(filter?.(a) === false ? [] : [a])
+  ]);
 }

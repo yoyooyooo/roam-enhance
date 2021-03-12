@@ -55,6 +55,7 @@ declare interface Window {
       getPageUidByTitle: (title: string) => Promise<string>;
       getBlockInfoByUID: (uid: string, withChild?: boolean) => Promise<[[Roam.Block]] | null>;
       createBlock: (uid: string, order: number, string: string) => Promise<string>;
+      batchCreateBlocks: (uid: string, order: number, array: string[]) => Promise<void>;
       updateBlock: (uid: string, string: string) => Promise<void>;
       deleteBlock: (uid: string) => Promise<void>;
       getDirectBlockParentUid: (
