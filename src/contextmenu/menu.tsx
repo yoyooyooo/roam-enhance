@@ -1,4 +1,5 @@
 import difference from "lodash-es/difference";
+import memorize from "lodash-es/memoize";
 import yoyo from "../globals";
 import { deepCreateBlock } from "../globals/common";
 import { confirm } from "../globals/help";
@@ -327,7 +328,7 @@ export let pageTitleMenu_Sidebar: Menu[] = [
   ...pageTitleMenu
 ];
 
-export function getMenuMap(menu: Menu[]) {
+export const getMenuMap = memorize((menu: Menu[]) => {
   const map = {};
   const loop = (menu: Menu[]) => {
     menu.forEach((a) => {
@@ -340,7 +341,7 @@ export function getMenuMap(menu: Menu[]) {
   };
   loop(menu);
   return map;
-}
+});
 
 export async function getMergeMenu(userBlocks: Roam.Block[], menuMap: Record<string, Menu>) {
   if (!userBlocks || !userBlocks.length) return [];
