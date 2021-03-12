@@ -9,7 +9,7 @@ if (!window.roamEnhance?.loaded) {
   const host = (window.roamEnhance.host = document.currentScript.src.replace("main.js", ""));
   window.roamEnhance._plugins = {};
   if (window.roamEnhance?.plugins.length) {
-    window.roamEnhance?.plugins.forEach((pluginName) => {
+    window.roamEnhance.plugins.forEach((pluginName) => {
       addScript(`${host}plugins/${pluginName}.js`, pluginName);
     });
   }

@@ -5,7 +5,36 @@ import { confirm } from "../globals/help";
 import { runTasksByBlocks } from "./task";
 import { ClickArea, ClickArgs, Menu } from "./types";
 
+export let commonMenu: Menu[] = [
+  {
+    text: "All children's highlight",
+    key: "Extract All children's highlight",
+    onClick: async ({ currentUid }) => {
+      let highlights = [];
+      await yoyo.utils.patchBlockChildren(currentUid, (a) => {
+        const m = a.string.match(/\^\^([\s\S]*?)\^\^/g);
+        m && highlights.push(...m);
+      });
+      await navigator.clipboard.writeText(highlights.join("\n"));
+      if (highlights.length > 0) {
+        window.iziToast.success({
+          title:
+            navigator.language === "zh-CN"
+              ? "提取高亮成功，已复制到剪切板"
+              : "Extract successfully, Copied to clipboard!"
+        });
+      } else {
+        window.iziToast.info({
+          position: "topCenter",
+          title: navigator.language === "zh-CN" ? "提取不到高亮内容" : "Can't extract anything"
+        });
+      }
+    }
+  }
+];
+
 export let blockMenu: Menu[] = [
+  ...commonMenu,
   {
     text: "Delete",
     key: "Delete",
@@ -170,40 +199,11 @@ export let blockMenu: Menu[] = [
         }
       }
     ]
-  },
-  {
-    text: "Extract",
-    children: [
-      {
-        text: "All children's highlight",
-        key: "Extract All children's highlight",
-        onClick: async ({ currentUid }) => {
-          let highlights = [];
-          await yoyo.utils.patchBlockChildren(currentUid, (a) => {
-            const m = a.string.match(/\^\^([\s\S]*?)\^\^/g);
-            m && highlights.push(...m);
-          });
-          await navigator.clipboard.writeText(highlights.join("\n"));
-          if (highlights.length > 0) {
-            window.iziToast.success({
-              title:
-                navigator.language === "zh-CN"
-                  ? "提取高亮成功，已复制到剪切板"
-                  : "Extract successfully, Copied to clipboard!"
-            });
-          } else {
-            window.iziToast.info({
-              position: "topCenter",
-              title: navigator.language === "zh-CN" ? "提取不到高亮内容" : "Can't extract anything"
-            });
-          }
-        }
-      }
-    ]
   }
 ];
 
 export let pageTitleMenu: Menu[] = [
+  ...commonMenu,
   {
     text: "Clear current block/page",
     key: "Clear current block/page",
@@ -316,6 +316,7 @@ export let pageTitleMenu: Menu[] = [
 ];
 
 export let pageTitleMenu_Sidebar: Menu[] = [
+  ...commonMenu,
   {
     text: "Focus on page",
     key: "Focus on page",

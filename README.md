@@ -63,6 +63,7 @@ By default, all menu options are wrapped with {{}}, when click a block'bullet, i
 ### build-in menu
 
 - BlockMenu
+  - <%menu:Extract All children's highlight%>
   - <%menu:Delete block and its references%>
   - <%menu:Delete current block and embed block's refers%>
   - <%menu:Remove tags%>
@@ -71,14 +72,14 @@ By default, all menu options are wrapped with {{}}, when click a block'bullet, i
   - <%menu:Collapse all cloze%>
   - <%menu:Expand all cloze%>
 - PageTitleMenu
-  - <%menu:Clear current page%>
   - <%menu:Extract All children's highlight%>
+  - <%menu:Clear current page%>
   - <%menu:Delete all refering blocks%>
   - <%menu:Extract currentPage's refers%>
 - PageTitleMenu_Sidebar
+  - <%menu:Extract All children's highlight%>
   - <%menu:Focus on page%>
   - <%menu:Clear current page%>
-  - <%menu:Extract All children's highlight%>
   - <%menu:Delete all refering blocks%>
   - <%menu:Extract currentPage's refers%>
 
@@ -115,14 +116,15 @@ You can copy code below to your `roam/enhance/menu` page
     - {{提取子级高亮}}
       - <%menu:Extract All children's highlight%>
 - **PageTitleMenu**
-  - {{清空当前页/块}}
+  - {{清空当前页}}
     - <%menu:Clear current block/page%>
   - {{Delete all refering blocks}}
     - <%menu:Delete all refering blocks%>
-  - {{Extract currentPage's refers}}
-    - <%menu:Extract currentPage's refers%>
+  - Extract
+    - {{提取子级高亮}}
+      - <%menu:Extract All children's highlight%>
 - **PageTitleMenu_Sidebar**
-  - {{清空当前页/块}}
+  - {{清空当前页}}
     - <%menu:Clear current block/page%>
   - {{Focus on page}}
     - <%menu:Focus on page%>
@@ -130,3 +132,6 @@ You can copy code below to your `roam/enhance/menu` page
     - <%menu:Delete all refering blocks%>
   - {{Extract currentPage's refers}}
     - <%menu:Extract currentPage's refers%>
+  - Extract
+    - {{提取子级高亮}}
+      - <%menu:Extract All children's highlight%>
