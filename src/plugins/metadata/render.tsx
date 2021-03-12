@@ -71,8 +71,8 @@ const Component: React.FC<{
       }}
       onCancel={() => setOpen(false)}
       afterClose={() => ReactDOM.unmountComponentAtNode(dom) && dom.parentNode?.removeChild(dom)}
-      okText='确定'
-      cancelText='取消'
+      okText={navigator.language === "zh-CN" ? "确定" : "OK"}
+      cancelText={navigator.language === "zh-CN" ? "取消" : "Cancel"}
     >
       {tagBlockList.map((block) => {
         const key = block.string.replace("[[", "").replace("]]", "");
@@ -114,7 +114,7 @@ const Component: React.FC<{
                   }}
                 >
                   <Button type='primary' size='small' style={{ marginLeft: 8 }}>
-                    选择标签
+                    {navigator.language === "zh-CN" ? "选择标签" : "Select tags"}
                   </Button>
                 </Cascader>
               </h4>
