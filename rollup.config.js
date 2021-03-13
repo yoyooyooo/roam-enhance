@@ -2,6 +2,8 @@ import commonjs from "@rollup/plugin-commonjs";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 import typescript from "@rollup/plugin-typescript";
+import fs from "fs";
+import { camelCase } from "lodash";
 import styles from "rollup-plugin-styles";
 import { terser } from "rollup-plugin-terser";
 
@@ -18,6 +20,8 @@ const plugins = [
   terser()
 ];
 
+const pluginPaths = fs.readdirSync("./src/plugins");
+
 export default [
   {
     input: "src/index.ts",
@@ -28,13 +32,13 @@ export default [
     },
     plugins
   },
-  {
-    input: "src/plugins/metadata/index.ts",
+  ...pluginPaths.map((pluginName) => ({
+    input: `src/plugins/${pluginName}/index.ts`,
     output: {
-      file: "dist/plugins/metadata.js",
+      file: `dist/plugins/${pluginName}.js`,
       format: "iife",
-      name: "metadata"
+      name: camelCase(pluginName)
     },
     plugins
-  }
+  }))
 ];

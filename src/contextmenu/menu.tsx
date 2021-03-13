@@ -521,5 +521,9 @@ export async function getMenu(path: Element[], clickArea: ClickArea, onClickArgs
     }
   }
 
+  window.roamEnhance.registerMenu?.forEach((fn) => {
+    fn(menu, clickArea, onClickArgs);
+  });
+
   return menu;
 }

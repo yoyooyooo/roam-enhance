@@ -9,6 +9,12 @@ declare namespace Roam {
   }
 }
 
+type registerMenu = (
+  menu: import("./src/contextmenu/types").Menu[],
+  clickArea: import("./src/contextmenu/types").ClickArea,
+  onClickArgs: import("./src/contextmenu/types").ClickArgs
+) => void;
+
 type RoamEnhance = {
   loaded?: boolean;
   plugins?: ["metadata"?];
@@ -18,7 +24,8 @@ type RoamEnhance = {
     };
   };
   loaded?: Set<string>;
-};
+  registerMenu: Set<registerMenu>;
+} & typeof import("./src/globals").default;
 
 declare interface Window {
   roamjs?: {

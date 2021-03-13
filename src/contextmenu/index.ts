@@ -1,5 +1,4 @@
 import { getBlockUidFromId, getSelectBlockUids } from "../globals/utils";
-import { retry } from "../utils/common";
 import { getMenu } from "./menu";
 import { ClickArea } from "./types";
 import { mergeMenuToDOM } from "./utils";
@@ -77,10 +76,10 @@ const observer = new MutationObserver(async (mutationsList, observer) => {
   }
 });
 
-retry(() => {
-  observer.observe(document.body, {
-    attributes: false,
-    childList: true,
-    subtree: true
-  });
+observer.observe(document.body, {
+  attributes: false,
+  childList: true,
+  subtree: true
 });
+
+window.roamEnhance.registerMenu = new Set();
