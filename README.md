@@ -162,4 +162,4 @@ Some features that have helped me personally, if you are interested, feel free t
 Some features that have helped me personally, if you are interested, feel free to try.
 First, go to [[roam/enhance/metadata]]，just like [[roam/enhance/menu]]， all menu options are wrapped with `{{}}`
 
-<img src="http://github.com/yoyooyooo/roam-enhance/blob/master/images/metadata_1.png?raw=true" height="200" alt="click on block bullet"/>
+<img src="http://github.com/yoyooyooo/roam-enhance/blob/master/images/metadata_1.gif?raw=true" height="200" alt="click on block bullet"/>
