@@ -58,7 +58,13 @@ const Component: React.FC<{
           const key = block.string;
           const tags = tagMap[key];
           return !!tags?.length
-            ? `${key}: ${typeof tags === "string" ? tags : tags.map((t) => `#[[${t}]]`).join(" ")}`
+            ? `${
+                setting.outputToOneBlock && setting.linkedKey
+                  ? `[[${key}]]`
+                  : !setting.outputToOneBlock && setting.linkedKey
+                  ? `${key}:`
+                  : key
+              }: ${typeof tags === "string" ? tags : tags.map((t) => `#[[${t}]]`).join(" ")}`
             : [];
         });
         if (list.length) {

@@ -4,11 +4,13 @@ import { getSingleDOM } from "../../utils/dom";
 
 export interface Setting {
   outputToOneBlock?: boolean;
+  linkedKey?: boolean;
 }
 
 function getSetting(setting: Roam.Block[]) {
   const defaultSetting: Setting = {
-    outputToOneBlock: true
+    outputToOneBlock: true,
+    linkedKey: false
   };
   setting.forEach((a) => {
     const [key, v] = a.string.trim().split(/\s+/);
@@ -28,6 +30,7 @@ export async function getMetadataMenu(): Promise<Menu | null> {
     if (!menu?.children) return;
     const _setting = info[0][0].children.find((a) => /^\s*setting\s*$/.test(a.string));
     const setting = _setting?.children ? getSetting(_setting.children) : {};
+
     return {
       text: "Metadata",
       children: menu?.children.map((s) => {
