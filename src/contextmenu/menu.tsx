@@ -113,6 +113,34 @@ export let blockMenu: Menu[] = [
             await window.roam42.common.updateBlock(uid, yoyo.utils.removeTags(a.string));
           });
         }
+      },
+      {
+        text: "Split block",
+        key: "Split block",
+        onClick: async ({ currentUid }) => {
+          const info = await window.roam42.common.getBlockInfoByUID(currentUid);
+          const { parentUID } = await window.roam42.common.getDirectBlockParentUid(currentUid);
+          const stringList = info[0][0].string.split("\n");
+          window.roam42.common.deleteBlock(info[0][0].uid);
+          await window.roam42.common.batchCreateBlocks(parentUID, info[0][0].order, stringList);
+        }
+      },
+      {
+        text: "Merge blocks",
+        key: "Merge blocks",
+        onClick: async ({ selectUids }) => {
+          if (selectUids.length < 2) return;
+          const strings = await Promise.all(
+            selectUids.map(async (uid) => {
+              window.roam42.common.deleteBlock(uid);
+              return (await window.roam42.common.getBlockInfoByUID(uid))[0][0].string;
+            })
+          );
+          const { order, parentUID } = await window.roam42.common.getDirectBlockParentUid(
+            selectUids[0]
+          );
+          window.roam42.common.createBlock(parentUID, order, strings.join("\n"));
+        }
       }
     ]
   },

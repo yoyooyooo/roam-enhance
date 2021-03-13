@@ -67,10 +67,12 @@ By default, all menu options are wrapped with {{}}, when click a block'bullet, i
   - <%menu:Delete block and its references%>
   - <%menu:Delete current block and embed block's refers%>
   - <%menu:Remove tags%>
-  - <%menu:child blocks remove tags%>
+  - <%menu:Child blocks remove tags%>
   - <%menu:Child embed to text%>
   - <%menu:Collapse all cloze%>
   - <%menu:Expand all cloze%>
+  - <%menu:Merge blocks%>
+  - <%menu:Split block%>
 - PageTitleMenu
   - <%menu:Extract All children's highlight%>
   - <%menu:Clear current page%>
