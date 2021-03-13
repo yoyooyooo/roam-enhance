@@ -106,52 +106,7 @@ console.log("$ctx", "$currentUid", "$selectUids", "$target", "$pageTitle");
 
 ### `roam/enhance/menu` demo
 
-You can copy code below to your `roam/enhance/menu` page
-
-- **BlockMenu**
-  - Delete
-    - {{删除当前行及其所有引用}}
-      - <%menu:Delete block and its references%>
-    - {{删除当前行及其 embed 的所有引用}}
-      - <%menu:Delete current block and embed block's refers%>
-  - Format
-    - {{删除标签}}
-      - <%menu:Remove tags%>
-  - Format child blocks
-    - {{Embed => text}}
-      - <%menu:Child embed to text%>
-    - {{删除标签}}
-      - <%menu:Child blocks remove tags%>
-    - {{合并子 block}}
-      - <%menu:Merge child blocks%>
-  - Cloze
-    - {{展开所有}}
-      - <%menu:Expand all cloze%>
-    - {{收缩所有}}
-      - <%menu:Collapse all cloze%>
-  - Extract
-    - {{提取子级高亮}}
-      - <%menu:Extract All children's highlight%>
-- **PageTitleMenu**
-  - {{清空当前页}}
-    - <%menu:Clear current block/page%>
-  - {{Delete all refering blocks}}
-    - <%menu:Delete all refering blocks%>
-  - Extract
-    - {{提取子级高亮}}
-      - <%menu:Extract All children's highlight%>
-- **PageTitleMenu_Sidebar**
-  - {{清空当前页}}
-    - <%menu:Clear current block/page%>
-  - {{Focus on page}}
-    - <%menu:Focus on page%>
-  - {{Delete all refering blocks}}
-    - <%menu:Delete all refering blocks%>
-  - {{Extract currentPage's refers}}
-    - <%menu:Extract currentPage's refers%>
-  - Extract
-    - {{提取子级高亮}}
-      - <%menu:Extract All children's highlight%>
+https://roamresearch.com/#/app/roam-enhance/page/0wvmci2X2
 
 # Personal feature
 
