@@ -128,7 +128,7 @@ export let blockMenu: Menu[] = [
       {
         text: "Merge blocks",
         key: "Merge blocks",
-        onClick: async ({ selectUids }) => {
+        onClick: async ({ currentUid, selectUids }) => {
           if (selectUids.length < 2) return;
           const strings = await Promise.all(
             selectUids.map(async (uid) => {
@@ -137,9 +137,9 @@ export let blockMenu: Menu[] = [
             })
           );
           const { order, parentUID } = await window.roam42.common.getDirectBlockParentUid(
-            selectUids[0]
+            currentUid
           );
-          window.roam42.common.createBlock(parentUID, order, strings.join("\n"));
+          window.roam42.common.createBlock(parentUID, order + 1, strings.join("\n"));
         }
       }
     ]
