@@ -317,7 +317,6 @@ export let pageTitleMenu: Menu[] = [
 ];
 
 export let pageTitleMenu_Sidebar: Menu[] = [
-  ...commonMenu,
   {
     text: "Focus on page",
     key: "Focus on page",
@@ -325,6 +324,7 @@ export let pageTitleMenu_Sidebar: Menu[] = [
       await window.roam42.common.navigateUiTo(pageTitle);
     }
   },
+  ...commonMenu,
   ...pageTitleMenu
 ];
 

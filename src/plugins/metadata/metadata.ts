@@ -25,9 +25,9 @@ export async function getMetadataMenu(): Promise<Menu | null> {
   if (uid) {
     const info = await window.roam42.common.getBlockInfoByUID(uid, true);
     const menu = info[0][0].children.find((a) => /^\s*menu\s*$/.test(a.string));
-    const _setting = info[0][0].children.find((a) => /^\s*setting\s*$/.test(a.string));
-    const setting = getSetting(_setting.children);
     if (!menu?.children) return;
+    const _setting = info[0][0].children.find((a) => /^\s*setting\s*$/.test(a.string));
+    const setting = _setting?.children ? getSetting(_setting.children) : {};
     return {
       text: "Metadata",
       children: menu?.children.map((s) => {

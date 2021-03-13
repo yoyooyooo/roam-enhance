@@ -1,4 +1,4 @@
-enhance roam research
+enhance roam research, [Quick start](https://roamresearch.com/#/app/roam-enhance/page/sG3F86-49)
 
 # before install
 
@@ -158,3 +158,8 @@ You can copy code below to your `roam/enhance/menu` page
 Some features that have helped me personally, if you are interested, feel free to try.
 
 ## metadata
+
+Some features that have helped me personally, if you are interested, feel free to try.
+First, go to [[roam/enhance/metadata]]，just like [[roam/enhance/menu]]， all menu options are wrapped with `{{}}`
+
+<img src="http://github.com/yoyooyooo/roam-enhance/blob/master/images/metadata_1.png?raw=true" height="200" alt="click on block bullet"/>
