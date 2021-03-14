@@ -13,18 +13,12 @@ type registerMenu = (
   menu: import("./src/contextmenu/types").Menu[],
   clickArea: import("./src/contextmenu/types").ClickArea,
   onClickArgs: import("./src/contextmenu/types").ClickArgs
-) => void;
+) => void | Promise<void>;
 
 type RoamEnhance = {
   loaded?: boolean;
   plugins?: ["metadata"?];
-  _plugins?: {
-    metadata?: {
-      ctx: {
-        getMetadataMenu: typeof import("./src/plugins/metadata/metadata").getMetadataMenu;
-      };
-    };
-  };
+  _plugins?: {};
   loaded?: Set<string>;
   contextMenu: {
     registerMenu: Set<registerMenu>;
