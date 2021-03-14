@@ -1,0 +1,10 @@
+.chang-font-button::before {
+  margin: 0;
+  font-size: 13px !important;
+}
+
+.chang-font-button {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: text-top;
+}
