@@ -27,7 +27,7 @@ if (!window.roamEnhance?.loaded) {
     });
 
     window.roamEnhance.plugins.forEach((pluginName) => {
-      addScript(`${host}plugins/${pluginName}.js`, pluginName, true);
+      addScript(`${host}plugins/${pluginName}.js`, pluginName, false);
     });
   }
 
