@@ -1,4 +1,6 @@
 import { getMetadataMenu } from "./metadata";
 import "./index.css";
 
-window.roamEnhance._plugins["metadata"] = { getMetadataMenu };
+window.roamEnhance.loader.registerPlugin("metadata", {
+  ctx: { getMetadataMenu }
+});

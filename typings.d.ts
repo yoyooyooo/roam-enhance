@@ -20,11 +20,19 @@ type RoamEnhance = {
   plugins?: ["metadata"?];
   _plugins?: {
     metadata?: {
-      getMetadataMenu: typeof import("./src/plugins/metadata/metadata").getMetadataMenu;
+      ctx: {
+        getMetadataMenu: typeof import("./src/plugins/metadata/metadata").getMetadataMenu;
+      };
     };
   };
   loaded?: Set<string>;
-  registerMenu: Set<registerMenu>;
+  contextMenu: {
+    registerMenu: Set<registerMenu>;
+  };
+  libs: {
+    react: typeof import("react");
+    ReactDOM: typeof import("react-dom");
+  };
 } & typeof import("./src/globals").default;
 
 declare interface Window {

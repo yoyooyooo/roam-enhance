@@ -512,16 +512,16 @@ export async function getMenu(path: Element[], clickArea: ClickArea, onClickArgs
     );
   }
 
-  if (window.roamEnhance._plugins.metadata?.getMetadataMenu) {
+  if (window.roamEnhance._plugins.metadata?.ctx?.getMetadataMenu) {
     try {
-      const metaDataMenu = await window.roamEnhance._plugins.metadata.getMetadataMenu();
+      const metaDataMenu = await window.roamEnhance._plugins.metadata.ctx.getMetadataMenu();
       metaDataMenu && menu.unshift(metaDataMenu);
     } catch (e) {
       console.log(`[plugin error:metadata]`, e);
     }
   }
 
-  window.roamEnhance.registerMenu?.forEach((fn) => {
+  window.roamEnhance.contextMenu.registerMenu?.forEach((fn) => {
     fn(menu, clickArea, onClickArgs);
   });
 

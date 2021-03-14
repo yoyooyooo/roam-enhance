@@ -1,10 +1,10 @@
-export function addScript(src: string, id: string) {
+export function addScript(src: string, id: string, async = true) {
   const old = document.getElementById(id);
   old && old.remove();
   const s = document.createElement("script");
   s.src = src;
   id && (s.id = id);
-  s.async = true;
+  s.async = async;
   s.type = "text/javascript";
   document.getElementsByTagName("head")[0].appendChild(s);
 }

@@ -1,15 +1,12 @@
-import "antd/dist/antd.css";
-import Button from "antd/es/button";
-import Cascader from "antd/es/cascader";
-import TextArea from "antd/es/input/TextArea";
-import Modal from "antd/es/modal/Modal";
-import Select from "antd/es/select";
+// import "antd/dist/antd.css";
+import { Button, Cascader, Input, Modal, Select } from "antd";
 import differenceBy from "lodash-es/differenceBy";
 import React, { useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import { ClickArgs } from "../../contextmenu/types";
-import { extractTags, flattenBlocks } from "../../globals/utils";
 import { Setting } from "./metadata";
+
+const { extractTags, flattenBlocks } = window.roamEnhance.utils;
 
 function getOptions(blocks: Roam.Block[]) {
   return (
@@ -94,7 +91,7 @@ const Component: React.FC<{
             <React.Fragment key={key}>
               <h4 style={{ marginTop: 12 }}>{key}</h4>
               <div>
-                <TextArea
+                <Input.TextArea
                   onChange={(e) => {
                     setTagMap((map) => ({
                       ...map,
@@ -184,7 +181,12 @@ const Component: React.FC<{
   );
 };
 
+const Test = () => {
+  return <>ttttttt</>;
+};
+
 export function render(dom: HTMLElement, { open, tagBlockList, clickArgs, menuText, setting }) {
+  // ReactDOM.render(<Test />, clickArgs.target);
   ReactDOM.render(
     <Component
       open={open}

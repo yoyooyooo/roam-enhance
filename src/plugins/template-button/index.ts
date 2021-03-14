@@ -21,7 +21,7 @@ observer.observe(document.body, {
   const info = await window.roam42.common.getBlockInfoByUID(pageUid, true);
   let buttonBlocks = info[0][0].children;
 
-  window.roamEnhance.registerMenu.add((menu, clickArea, onClickArgs) => {
+  window.roamEnhance.contextMenu.registerMenu.add((menu, clickArea, onClickArgs) => {
     if (onClickArgs.pageTitle === "roam/enhance/template-button") {
       menu.unshift({
         text: navigator.language === "zh-CN" ? "刷新配置" : "refresh configure",
