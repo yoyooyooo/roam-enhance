@@ -4,7 +4,7 @@ const videoMap = new Map<RegExp, (...args: any[]) => string>()
   .set(
     /https\:\/\/www\.bilibili\.com\/video\/([^\s]*)/,
     (m, id) =>
-      `//player.bilibili.com/player.html?bvid=${id}&amp;page=1&amp;high_quality=1&amp;as_wide=1&amp;allowfullscreen=true`
+      `https://player.bilibili.com/player.html?bvid=${id}&page=1&high_quality=1&as_wide=1&allowfullscreen=true`
   )
   .set(
     /https\:\/\/www\.ixigua\.com\/([^\s]*)/,
