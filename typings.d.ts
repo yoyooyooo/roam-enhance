@@ -65,6 +65,7 @@ declare interface Window {
     };
     common: {
       sleep: (ms: number) => Promise<void>;
+      simulateMouseClick: (el: HTMLElement) => void;
       navigateUiTo: (title: string) => void;
       getPageUidByTitle: (title: string) => Promise<string>;
       getBlockInfoByUID: (uid: string, withChild?: boolean) => Promise<[[Roam.Block]] | null>;
