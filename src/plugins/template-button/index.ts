@@ -21,7 +21,7 @@ retry(async () => {
   const pageUid = await window.roam42.common.getPageUidByTitle("roam/enhance/template-button");
 
   const info = await window.roam42.common.getBlockInfoByUID(pageUid, true);
-  let buttonBlocks = info[0][0].children;
+  let buttonBlocks = info?.[0][0].children;
 
   window.roamEnhance.contextMenu.registerMenu.add((menu, clickArea, onClickArgs) => {
     if (onClickArgs.pageTitle === "roam/enhance/template-button") {
@@ -29,7 +29,7 @@ retry(async () => {
         text: navigator.language === "zh-CN" ? "刷新配置" : "refresh configure",
         onClick: async () => {
           const info = await window.roam42.common.getBlockInfoByUID(pageUid, true);
-          buttonBlocks = info[0][0].children;
+          buttonBlocks = info?.[0][0].children;
         }
       });
     }
