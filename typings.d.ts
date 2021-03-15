@@ -29,6 +29,10 @@ type RoamEnhance = {
   };
 } & typeof import("./src/globals").default;
 
+declare interface document {
+  arrive: typeof import("arrive");
+}
+
 declare interface Window {
   roamjs?: {
     alerted: boolean;
@@ -60,6 +64,7 @@ declare interface Window {
       testIfRoamDateAndConvert: (s: string) => string;
     };
     common: {
+      sleep: (ms: number) => Promise<void>;
       navigateUiTo: (title: string) => void;
       getPageUidByTitle: (title: string) => Promise<string>;
       getBlockInfoByUID: (uid: string, withChild?: boolean) => Promise<[[Roam.Block]] | null>;

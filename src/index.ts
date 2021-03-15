@@ -6,7 +6,8 @@ import { addScript } from "./utils/common";
 
 if (!window.roamEnhance?.loaded) {
   const dependencyMap = {
-    metadata: ["react", "react-dom"]
+    metadata: ["react", "react-dom"],
+    video: ["arrive"]
   };
 
   window.roamEnhance = Object.assign(window.roamEnhance || {}, roamEnhance);

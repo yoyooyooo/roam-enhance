@@ -51,7 +51,8 @@ const pluginPaths = fs.readdirSync("./src/plugins");
 const libGlobals = {
   // antd: "window.roamEnhance.libs.antd",
   react: "window.roamEnhance.libs.React",
-  "react-dom": "window.roamEnhance.libs.ReactDOM"
+  "react-dom": "window.roamEnhance.libs.ReactDOM",
+  arrive: "arrive"
 };
 
 export default [

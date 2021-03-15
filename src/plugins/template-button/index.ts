@@ -1,3 +1,5 @@
+import { retry } from "../../utils/common";
+
 const observer = new MutationObserver((mutationsList, observer) => {
   for (let mutation of mutationsList) {
     if (mutation.type === "childList") {
@@ -15,7 +17,7 @@ observer.observe(document.body, {
   subtree: true
 });
 
-(async () => {
+retry(async () => {
   const pageUid = await window.roam42.common.getPageUidByTitle("roam/enhance/template-button");
 
   const info = await window.roam42.common.getBlockInfoByUID(pageUid, true);
@@ -67,4 +69,4 @@ observer.observe(document.body, {
       }
     });
   });
-})();
+}, "template-button");
