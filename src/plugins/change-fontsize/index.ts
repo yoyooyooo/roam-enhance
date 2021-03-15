@@ -3,9 +3,10 @@ import "./index.css";
 
 retry(() => {
   ((id) => {
-    let fontSize =
-      +getComputedStyle(document.documentElement).getPropertyValue("--font-size").match(/\d+/)[0] ||
-      14;
+    let fontSize = +getComputedStyle(document.documentElement)
+      .getPropertyValue("font-size")
+      .match(/\d+/)[0];
+    document.body.style.fontSize = `clamp(10px, var(--font-size, "${fontSize}px"), 25px)`;
     function changeFontSize(isAdd: boolean, widthStep = 20) {
       document.documentElement.style.setProperty(
         "--font-size",
