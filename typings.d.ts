@@ -16,14 +16,15 @@ type registerMenu = (
 ) => void | Promise<void>;
 
 type RoamEnhance = {
-  loaded?: boolean;
+  dependencyMap?: Record<string, string[]>;
   plugins?: ["metadata"?];
   _plugins?: {};
   loaded?: Set<string>;
-  contextMenu: {
-    registerMenu: Set<registerMenu>;
+  host?: string;
+  contextMenu?: {
+    registerMenu?: Set<registerMenu>;
   };
-  libs: {
+  libs?: {
     react: typeof import("react");
     ReactDOM: typeof import("react-dom");
   };

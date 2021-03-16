@@ -1,59 +1,59 @@
-import { retry } from "../../utils/common";
+import { runPlugin } from "../../utils/common";
 
-const videoMap = new Map<RegExp, (...args: any[]) => string>()
-  .set(
-    /https\:\/\/www\.bilibili\.com\/video\/([^\s]*)/,
-    (m, id) =>
-      `https://player.bilibili.com/player.html?bvid=${id}&page=1&high_quality=1&as_wide=1&allowfullscreen=true`
-  )
-  .set(
-    /https\:\/\/www\.ixigua\.com\/([^\s]*)/,
-    (m, id) => `https://www.ixigua.com/iframe/${id}?autoplay=0&amp;startTime=0`
-  )
-  .set(
-    /https\:\/\/v\.youku\.com\/v_show\/id_([^\s]*)\.html/,
-    (m, id) => `https://player.youku.com/embed/${id}`
-  )
-  .set(
-    /https\:\/\/v\.qq\.com\/x\/page\/([^\s]*).html/,
-    (m, id) => `https://v.qq.com/txp/iframe/player.html?vid=${id}`
-  );
+runPlugin("video", () => {
+  const videoMap = new Map<RegExp, (...args: any[]) => string>()
+    .set(
+      /https\:\/\/www\.bilibili\.com\/video\/([^\s]*)/,
+      (m, id) =>
+        `https://player.bilibili.com/player.html?bvid=${id}&page=1&high_quality=1&as_wide=1&allowfullscreen=true`
+    )
+    .set(
+      /https\:\/\/www\.ixigua\.com\/([^\s]*)/,
+      (m, id) => `https://www.ixigua.com/iframe/${id}?autoplay=0&amp;startTime=0`
+    )
+    .set(
+      /https\:\/\/v\.youku\.com\/v_show\/id_([^\s]*)\.html/,
+      (m, id) => `https://player.youku.com/embed/${id}`
+    )
+    .set(
+      /https\:\/\/v\.qq\.com\/x\/page\/([^\s]*).html/,
+      (m, id) => `https://v.qq.com/txp/iframe/player.html?vid=${id}`
+    );
 
-function getVideoUrl(string: string): [string, RegExp] | [] {
-  const r = [...videoMap.keys()].find((r) => r.test(string));
-  if (r) {
-    const m = string.match(r);
-    return [videoMap.get(r)(...m), r];
+  function getVideoUrl(string: string): [string, RegExp] | [] {
+    const r = [...videoMap.keys()].find((r) => r.test(string));
+    if (r) {
+      const m = string.match(r);
+      return [videoMap.get(r)(...m), r];
+    }
+    return [];
   }
-  return [];
-}
 
-async function getClosestBlockInfo(el: HTMLElement) {
-  const id = el.closest("div.rm-block__input").id;
-  const uid = window.roamEnhance.utils.getBlockUidFromId(id);
-  const info = await window.roam42.common.getBlockInfoByUID(uid);
-  return info[0][0];
-}
+  async function getClosestBlockInfo(el: HTMLElement) {
+    const id = el.closest("div.rm-block__input").id;
+    const uid = window.roamEnhance.utils.getBlockUidFromId(id);
+    const info = await window.roam42.common.getBlockInfoByUID(uid);
+    return info[0][0];
+  }
 
-// @ts-ignore
-window.roamEnhance.__resetVideoBlock = async function (el: HTMLButtonElement) {
-  const { string, uid } = await getClosestBlockInfo(el);
-  await window.roam42.common.updateBlock(
-    uid,
-    string.replace(/\{\{videoo\:\s*(.*)\}\}/, (m, url) => url)
-  );
-};
-//@ts-ignore
-window.roamEnhance.__focusBlock = (el) => {
-  console.log(el.closest("div.rm-block__input"));
-  window.roam42.common.simulateMouseClick(el.closest("div.rm-block__input"));
-};
+  // @ts-ignore
+  window.roamEnhance.__resetVideoBlock = async function (el: HTMLButtonElement) {
+    const { string, uid } = await getClosestBlockInfo(el);
+    await window.roam42.common.updateBlock(
+      uid,
+      string.replace(/\{\{videoo\:\s*(.*)\}\}/, (m, url) => url)
+    );
+  };
+  //@ts-ignore
+  window.roamEnhance.__focusBlock = (el) => {
+    console.log(el.closest("div.rm-block__input"));
+    window.roam42.common.simulateMouseClick(el.closest("div.rm-block__input"));
+  };
 
-function getVideoHTML(src: string) {
-  return `<div class="rm-iframe__spacing-wrapper rm-video-player__spacing-wrapper"><div class="rm-iframe__container rm-video-player__container hoverparent"><div class="hoveronly"><button onclick="window.roamEnhance.__focusBlock(this)" class="bp3-button bp3-small bp3-icon-standard bp3-icon-edit bp3-minimal rm-iframe__edit-btn rm-video-player__edit-btn" content=""></button><button onclick="window.roamEnhance.__resetVideoBlock(this);" style="position: absolute; right: 25px; top: 0; z-index: 10;" class="bp3-button bp3-small bp3-icon-standard bp3-icon-reset bp3-minimal rm-iframe__edit-btn rm-video-player__edit-btn" content=""></button></div><iframe class="rm-video-player" style="width: 100%; height: 100%; pointer-events: auto;" src="${src}" frameborder="no" allowfullscreen="" sandbox="allow-top-navigation-by-user-activation allow-same-origin allow-forms allow-scripts allow-popups"></iframe></div></div>`;
-}
+  function getVideoHTML(src: string) {
+    return `<div class="rm-iframe__spacing-wrapper rm-video-player__spacing-wrapper"><div class="rm-iframe__container rm-video-player__container hoverparent"><div class="hoveronly"><button onclick="window.roamEnhance.__focusBlock(this)" class="bp3-button bp3-small bp3-icon-standard bp3-icon-edit bp3-minimal rm-iframe__edit-btn rm-video-player__edit-btn" content=""></button><button onclick="window.roamEnhance.__resetVideoBlock(this);" style="position: absolute; right: 25px; top: 0; z-index: 10;" class="bp3-button bp3-small bp3-icon-standard bp3-icon-reset bp3-minimal rm-iframe__edit-btn rm-video-player__edit-btn" content=""></button></div><iframe class="rm-video-player" style="width: 100%; height: 100%; pointer-events: auto;" src="${src}" frameborder="no" allowfullscreen="" sandbox="allow-top-navigation-by-user-activation allow-same-origin allow-forms allow-scripts allow-popups"></iframe></div></div>`;
+  }
 
-retry(() => {
   document.arrive(
     ".roam-app div.rm-block__input button",
     { existing: true },
@@ -92,4 +92,4 @@ retry(() => {
       }
     }
   );
-}, "video");
+});

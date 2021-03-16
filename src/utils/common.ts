@@ -1,14 +1,3 @@
-export function addScript(src: string, id: string, async = true) {
-  const old = document.getElementById(id);
-  old && old.remove();
-  const s = document.createElement("script");
-  s.src = src;
-  id && (s.id = id);
-  s.async = async;
-  s.type = "text/javascript";
-  document.getElementsByTagName("head")[0].appendChild(s);
-}
-
 export const addStyle = (content: string, id: string) => {
   const old = document.getElementById(id);
   old && old.remove();
@@ -32,4 +21,9 @@ export function retry(fn: any, name = "") {
   }
 
   setTimeout(() => _retry(fn), 3000);
+}
+
+export function runPlugin(name: string, fn: () => void) {
+  window.roamEnhance.loaded.add(name);
+  retry(fn, name);
 }

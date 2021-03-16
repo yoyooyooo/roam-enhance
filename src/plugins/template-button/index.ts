@@ -1,4 +1,4 @@
-import { retry } from "../../utils/common";
+import { runPlugin } from "../../utils/common";
 
 const observer = new MutationObserver((mutationsList, observer) => {
   for (let mutation of mutationsList) {
@@ -17,7 +17,7 @@ observer.observe(document.body, {
   subtree: true
 });
 
-retry(async () => {
+runPlugin("template-button", async () => {
   const pageUid = await window.roam42.common.getPageUidByTitle("roam/enhance/template-button");
 
   const info = await window.roam42.common.getBlockInfoByUID(pageUid, true);
@@ -69,4 +69,4 @@ retry(async () => {
       }
     });
   });
-}, "template-button");
+});

@@ -1,6 +1,6 @@
-import { retry } from "../../utils/common";
+import { runPlugin } from "../../utils/common";
 
-retry(() => {
+runPlugin("reading-mode", () => {
   ((id) => {
     let button = document.getElementById(id) as HTMLElement;
     button && button.remove();
@@ -35,4 +35,4 @@ retry(() => {
     const dot = document.querySelector(".rm-topbar .bp3-popover-wrapper");
     topbar.insertBefore(button, dot);
   })("reading-mode");
-}, "reading-mode");
+});

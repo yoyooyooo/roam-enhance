@@ -1,7 +1,7 @@
-import { retry } from "../../utils/common";
+import { runPlugin } from "../../utils/common";
 import "./index.css";
 
-retry(() => {
+runPlugin("change-fontsize", () => {
   ((id) => {
     let fontSize = +getComputedStyle(document.documentElement)
       .getPropertyValue("font-size")
@@ -31,4 +31,4 @@ retry(() => {
     const dot = document.querySelector(".rm-topbar .bp3-popover-wrapper");
     topbar.insertBefore(template, dot);
   })("change-font");
-}, "change-font");
+});
