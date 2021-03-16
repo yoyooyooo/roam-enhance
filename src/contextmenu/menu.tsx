@@ -8,6 +8,24 @@ import { ClickArea, ClickArgs, Menu } from "./types";
 
 export let commonMenu: Menu[] = [
   {
+    text: "Clear current block/page",
+    key: "Clear current block/page",
+    onClick: async ({ currentUid }) => {
+      if (
+        await yoyo.help.confirm(
+          navigator.language === "zh-CN"
+            ? "确定清空当前页/Block吗？"
+            : "Are you sure to clear the current block/page?"
+        )
+      ) {
+        const info = await window.roam42.common.getBlockInfoByUID(currentUid, true);
+        info[0][0].children.forEach((a) => {
+          window.roam42.common.deleteBlock(a.uid);
+        });
+      }
+    }
+  },
+  {
     text: "All children's highlight",
     key: "Extract All children's highlight",
     onClick: async ({ currentUid }) => {
@@ -233,24 +251,6 @@ export let blockMenu: Menu[] = [
 
 export let pageTitleMenu: Menu[] = [
   ...commonMenu,
-  {
-    text: "Clear current block/page",
-    key: "Clear current block/page",
-    onClick: async ({ currentUid }) => {
-      if (
-        await yoyo.help.confirm(
-          navigator.language === "zh-CN"
-            ? "确定清空当前页/Block吗？"
-            : "Are you sure to clear the current block/page?"
-        )
-      ) {
-        const info = await window.roam42.common.getBlockInfoByUID(currentUid, true);
-        info[0][0].children.forEach((a) => {
-          window.roam42.common.deleteBlock(a.uid);
-        });
-      }
-    }
-  },
   {
     text: "Delete all refering blocks",
     key: "Delete all refering blocks",
