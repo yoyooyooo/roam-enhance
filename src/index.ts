@@ -26,7 +26,5 @@ if (!window.yoyo) {
 } else {
   window.roamEnhance = { ...window.yoyo, ...roamEnhance, ...(window.roamEnhance || {}) };
   // load diff plugin
-  const set = new Set<string>(window.roamEnhance?.plugins || []);
-  window.roamEnhance.loaded.forEach((pluginName) => set.delete(pluginName));
-  set.size && loadPlugins([...set]);
+  loadPlugins(window.roamEnhance?.plugins);
 }

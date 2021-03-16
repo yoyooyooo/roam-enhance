@@ -1,4 +1,8 @@
-export function addScript(src: string, id: string, async = true) {
+export function addScript(
+  src: string,
+  options: { id?: string; name?: string; async?: boolean } = {}
+) {
+  const { id = "", name = "", async = true } = options;
   const old = document.getElementById(id);
   old && old.remove();
   const s = document.createElement("script");
@@ -6,6 +10,11 @@ export function addScript(src: string, id: string, async = true) {
   id && (s.id = id);
   s.async = async;
   s.type = "text/javascript";
+  if (name) {
+    s.onload = () => {
+      window.roamEnhance.loaded.add(name);
+    };
+  }
   document.getElementsByTagName("head")[0].appendChild(s);
 }
 
@@ -23,11 +32,17 @@ export function loadPlugins(plugins: string[], host: string = window?.roamEnhanc
     }, new Set<string>());
 
     dependencies.forEach((name) => {
-      addScript(`${host}libs/${name}.js`, `roamEnhance-lib-${name}`, false);
+      !window.roamEnhance.loaded.has(name) &&
+        addScript(`${host}libs/${name}.js`, { id: `roamEnhance-lib-${name}`, name, async: false });
     });
 
-    plugins.forEach((pluginName) => {
-      addScript(`${host}plugins/${pluginName}.js`, `roamEnhance-plugin-${pluginName}`, false);
+    plugins.forEach((name) => {
+      !window.roamEnhance.loaded.has(name) &&
+        addScript(`${host}plugins/${name}.js`, {
+          id: `roamEnhance-plugin-${name}`,
+          name,
+          async: false
+        });
     });
   }
 }
