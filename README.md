@@ -97,7 +97,7 @@ So your custom menu could look like this:
 If you do not use `<%JA:%>` but use \`\`\`javascript\`\`\` directly, you will get some convenience, you can use some variables starting with $ in javascript code directly:
 
 ```javascript
-console.log("$ctx", "$currentUid", "$selectUids", "$target", "$pageTitle");
+console.log($ctx, $currentUid, $selectUids, $target, $pageTitle);
 ```
 
 - $ctx: task's context, you can save your variables to it,it will be cleared after the task is completed.
