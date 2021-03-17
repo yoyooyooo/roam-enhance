@@ -17,7 +17,7 @@ runPlugin("reading-mode", () => {
         const style = document.createElement("style");
         style.id = id + "-css";
         style.innerText =
-          '.rm-block__input{pointer-events: none;}.rm-block-main {cursor: not-allowed;}.bp3-tag,.bp3-small,.bp3-popover-wrapper,.rm-paren {pointer-events: auto;cursor: pointer;}.rm-page-ref[data-tag^="."]{display:none !important;}';
+          '.rm-block__input{pointer-events: none;}.rm-block-main {cursor: not-allowed;}.bp3-tag,.bp3-small,.bp3-popover-wrapper,.rm-paren,.block__input img {pointer-events: auto;cursor: pointer;}.rm-page-ref[data-tag^="."]{display:none !important;}';
         document.getElementsByTagName("head")[0].appendChild(style);
 
         window.roam42.help.displayMessage("切换至阅读模式", 2000);
