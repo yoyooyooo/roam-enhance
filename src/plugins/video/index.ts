@@ -1,22 +1,23 @@
 import { runPlugin } from "../../utils/common";
+import "./index.css";
 
 runPlugin("video", () => {
   const videoMap = new Map<RegExp, (...args: any[]) => string>()
     .set(
-      /https\:\/\/www\.bilibili\.com\/video\/([^\s]*)/,
+      /https\:\/\/www\.bilibili\.com\/video\/([^(\s\)\})]*)/,
       (m, id) =>
         `https://player.bilibili.com/player.html?bvid=${id}&page=1&high_quality=1&as_wide=1&allowfullscreen=true`
     )
     .set(
-      /https\:\/\/www\.ixigua\.com\/([^\s]*)/,
+      /https\:\/\/www\.ixigua\.com\/([^(\s\)\})]*)/,
       (m, id) => `https://www.ixigua.com/iframe/${id}?autoplay=0&amp;startTime=0`
     )
     .set(
-      /https\:\/\/v\.youku\.com\/v_show\/id_([^\s]*)\.html/,
+      /https\:\/\/v\.youku\.com\/v_show\/id_([^(\s\)\})]*)\.html/,
       (m, id) => `https://player.youku.com/embed/${id}`
     )
     .set(
-      /https\:\/\/v\.qq\.com\/x\/page\/([^\s]*).html/,
+      /https\:\/\/v\.qq\.com\/x\/page\/([^(\s\)\})]*).html/,
       (m, id) => `https://v.qq.com/txp/iframe/player.html?vid=${id}`
     );
 
@@ -38,15 +39,24 @@ runPlugin("video", () => {
 
   // @ts-ignore
   window.roamEnhance.__resetVideoBlock = async function (el: HTMLButtonElement) {
+    // 当前 block 的第几个按钮(视频对应的)
+    const currentIndex = [
+      ...el.closest("div.rm-block__input").querySelectorAll(".bp3-icon-reset")
+    ]?.indexOf(el);
     const { string, uid } = await getClosestBlockInfo(el);
-    await window.roam42.common.updateBlock(
-      uid,
-      string.replace(/\{\{videoo\:\s*(.*)\}\}/, (m, url) => url)
-    );
+    let i = 0;
+    const _string = string.replace(/\{\{videoo\:\s*(.*?)\}\}/g, (m, url) => {
+      const res = currentIndex === i ? url : m;
+      i++;
+      return res;
+    });
+    el.closest("div.rm-block__input")
+      .querySelectorAll(".bp3-icon-video")
+      .forEach((a) => a.remove());
+    await window.roam42.common.updateBlock(uid, _string);
   };
   //@ts-ignore
   window.roamEnhance.__focusBlock = (el) => {
-    console.log(el.closest("div.rm-block__input"));
     window.roam42.common.simulateMouseClick(el.closest("div.rm-block__input"));
   };
 
@@ -59,10 +69,15 @@ runPlugin("video", () => {
     { existing: true },
     async function (el: HTMLButtonElement) {
       if (el.innerText === "videoo") {
+        const currentIndex = [...el.closest("div.rm-block__input").querySelectorAll("button")]
+          ?.filter((a) => a.innerText === "videoo")
+          .indexOf(el);
         const { string } = await getClosestBlockInfo(el);
-        const url = string.match(/\{\{videoo\:\s*(.*)\}\}/)[1];
-        const [videoPlayUrl] = getVideoUrl(url);
-        el.outerHTML = getVideoHTML(videoPlayUrl);
+        const url = string.match(/\{\{videoo\:\s*(.*?)\}\}/g)?.[currentIndex];
+        if (url) {
+          const [videoPlayUrl] = getVideoUrl(url);
+          el.outerHTML = getVideoHTML(videoPlayUrl);
+        }
       }
     }
   );
@@ -79,12 +94,42 @@ runPlugin("video", () => {
 
           (template.content.firstChild as HTMLElement).onclick = async function (e: MouseEvent) {
             const target = e.target as HTMLElement;
+            // 当前 block 的第几个按钮(链接对应的)
+            const currentIndex = [
+              ...target.closest("div.rm-block__input").querySelectorAll(".bp3-icon-video")
+            ]?.indexOf(target);
             const { string, uid } = await getClosestBlockInfo(target);
-            target.parentNode.removeChild(target);
-            window.roam42.common.updateBlock(
-              uid,
-              string.replace(regex, (m) => `{{videoo: ${m}}}`)
+            const linkRegex = new RegExp(
+              `(?<!(\\{\\{videoo\\:\\s*))\\[([^(\\[\\])]*?)\\]\\((${regex
+                .toString()
+                .slice(1, -1)})\\)`,
+              "g"
             );
+            let i = 0;
+            let _string = string.replace(linkRegex, (m) => {
+              return currentIndex === i++ ? `{{videoo: ${m}}}` : m;
+            });
+            if (_string !== string) {
+              // target.parentNode.removeChild(target);
+              target
+                .closest("div.rm-block__input")
+                .querySelectorAll(".bp3-icon-video")
+                .forEach((a) => a.remove());
+              window.roam42.common.updateBlock(uid, _string);
+            } else {
+              i = 0;
+              _string = string.replace(new RegExp(regex.toString().slice(1, -1), "g"), (m) => {
+                return currentIndex === i++ ? `{{videoo: ${m}}}` : m;
+              });
+              if (_string !== string) {
+                // target.parentNode.removeChild(target);
+                target
+                  .closest("div.rm-block__input")
+                  .querySelectorAll(".bp3-icon-video")
+                  .forEach((a) => a.remove());
+                window.roam42.common.updateBlock(uid, _string);
+              }
+            }
           };
 
           el.before(template.content.firstChild);
