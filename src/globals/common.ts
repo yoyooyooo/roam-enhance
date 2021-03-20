@@ -1,6 +1,11 @@
 // @ts-nocheck
 import * as utils from "./utils";
 
+export const collapseBlock = async (uid: string) => {
+  const info = await window.roam42.common.getBlockInfoByUID(uid);
+  await window.roam42.common.updateBlock(uid, info[0][0].string, false);
+};
+
 export const batchCreateBlocks = async (
   parent_uid: string,
   starting_block_order: number = 0,
@@ -14,6 +19,131 @@ export const batchCreateBlocks = async (
       `${renderItem(item)}`
     );
   });
+};
+
+interface Option {
+  renderItem: (x: string) => string;
+  async: boolean;
+  beforeCreateBlock: (item: string, uid: string) => void | Promise<void>;
+  afterCreateBlock: (item: string, uid?: string) => void | Promise<void>;
+  delay?: string;
+  maxCount?: number;
+  isCancel?: () => boolean;
+  sync?: boolean;
+}
+// 每分钟内最多插入 299，不然会报错
+export const batchCreateBlocksSync = async (
+  parent_uid: string,
+  starting_block_order: number = 0,
+  string_array_to_insert: string[],
+  options: Option = {}
+) => {
+  const {
+    renderItem = (x) => x,
+    sync = true,
+    afterCreateBlock,
+    delay,
+    maxCount = 290,
+    isCancel
+  } = options;
+  const loop = async (
+    starting_block_order: number,
+    string_array_to_insert: string[],
+    batchIndex = 1
+  ) => {
+    for (let i = 0; i < string_array_to_insert.length; i++) {
+      if (isCancel?.()) break;
+      const item = string_array_to_insert[i];
+      if (sync) {
+        const uid = await window.roam42.common.createBlock(
+          parent_uid,
+          i + starting_block_order,
+          `${renderItem(item)}`
+        );
+        delay && (await window.roam42.common.sleep(delay));
+        await afterCreateBlock?.(item, uid);
+      } else {
+        window.roam42.common.createBlock(
+          parent_uid,
+          i + starting_block_order,
+          `${renderItem(item)}`
+        );
+        afterCreateBlock?.(item);
+      }
+      if (maxCount && i > maxCount) {
+        window.iziToast.info({
+          title: `插入太多，休息 1 分钟`,
+          timeout: 70000
+        });
+        await window.roam42.common.sleep(61 * 1000);
+        await loop(
+          starting_block_order + i + 1,
+          string_array_to_insert.slice(i + 1),
+          batchIndex + 1
+        );
+        break;
+      }
+    }
+  };
+  await loop(starting_block_order, string_array_to_insert);
+};
+
+export const createBlocksByMarkdown = async (
+  parent_uid: string,
+  string_array_to_insert: string[],
+  options?: {
+    delay?: string | number;
+    maxCount?: number;
+    isCancel?: () => boolean;
+    afterCreateBlock?: () => Promise<void> | void;
+    sync?: boolean;
+  } = {}
+) => {
+  const { delay, maxCount, isCancel, afterCreateBlock, sync } = options;
+
+  function getChunks(string_array_to_insert: string[]) {
+    const chunks: string[][] = [];
+    let tmp: string[] = [];
+    let currentHeading = "";
+    for (let i = 0; i < string_array_to_insert.length; i++) {
+      const item = string_array_to_insert[i];
+      if (!currentHeading) {
+        const m = item.match(/(#+)\s/);
+        m && (currentHeading = m[1]);
+      }
+      if (currentHeading && item.startsWith(currentHeading + " ")) {
+        tmp.length && (tmp[0].startsWith("#") ? chunks.push(tmp) : chunks.push(...tmp));
+        tmp = [item];
+      } else {
+        tmp.push(item);
+      }
+
+      if (i === string_array_to_insert.length - 1) {
+        tmp.length && chunks.push(tmp);
+      }
+    }
+
+    return chunks.length === 1 ? chunks[0] : chunks;
+  }
+
+  const loop = async (uid: string, array: string[]) => {
+    await batchCreateBlocksSync(uid, 0, getChunks(array), {
+      sync,
+      isCancel,
+      delay,
+      maxCount,
+      renderItem: (a) => (Array.isArray(a) ? a[0] : a),
+      afterCreateBlock: async (a, uid) => {
+        await afterCreateBlock?.();
+        if (Array.isArray(a)) {
+          await collapseBlock(uid);
+          await loop(uid, getChunks(a.slice(1)));
+        }
+      }
+    });
+  };
+
+  await loop(parent_uid, string_array_to_insert);
 };
 
 interface Menu {

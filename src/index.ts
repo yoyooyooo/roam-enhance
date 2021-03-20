@@ -4,11 +4,12 @@ import { loadPlugins } from "./globals/loader";
 import "./index.css";
 
 if (!window.yoyo) {
-  window.roamEnhance = { ...roamEnhance, ...(window.roamEnhance || {}) };
+  window.roamEnhance = { ...roamEnhance, ...window.roamEnhance };
   window.roamEnhance.dependencyMap = {
     metadata: ["react", "react-dom"],
     video: ["arrive"],
-    "link-favicon": ["arrive"]
+    "link-favicon": ["arrive"],
+    "filter-button": ["arrive"]
   };
   window.roamEnhance.loaded = new Set<string>();
   window.roamEnhance._plugins = {};

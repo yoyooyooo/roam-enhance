@@ -29,7 +29,7 @@ export const processBlock = async (
       console.log(e);
       window.iziToast.info({
         position: "topCenter",
-        title: navigator.language === "zh-CN" ? "执行错误" : "task error"
+        title: navigator.language === "zh-CN" ? "菜单执行错误" : " menu task error"
       });
       return;
     }
@@ -39,7 +39,16 @@ export const processBlock = async (
   if (internalMenu) {
     const menu = menuMap[internalMenu[1]];
     if (menu) {
-      menu.onClick?.(onClickArgs);
+      try {
+        menu.onClick?.(onClickArgs);
+      } catch (e) {
+        console.log(e);
+        window.iziToast.info({
+          position: "topCenter",
+          title: navigator.language === "zh-CN" ? "菜单执行错误" : "menu task error"
+        });
+        return;
+      }
     } else {
       window.iziToast.error({
         title:

@@ -33,9 +33,13 @@ export function confirm(message: string, options = {}) {
   });
 }
 
-export function prompt(message: string, options = {}) {
+export function prompt(
+  message: string,
+  options: { defaultValue?: string | number } = {}
+): Promise<string> {
   return new Promise((resolve) => {
-    let res: string;
+    const { defaultValue } = options;
+    let res: string = `${defaultValue}`;
     window.iziToast.info({
       timeout: 20000,
       overlay: true,
@@ -47,7 +51,7 @@ export function prompt(message: string, options = {}) {
       drag: false,
       inputs: [
         [
-          '<input type="text">',
+          `<input type="text" value="${defaultValue}">`,
           "keyup",
           function (instance, toast, input, e) {
             res = input.value;

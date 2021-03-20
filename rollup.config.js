@@ -41,9 +41,9 @@ const plugins = [
   styles({ mode: "inject" }),
   replace({
     preventAssignment: true,
-    "process.env.NODE_ENV": '"production"'
+    "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "production")
   }),
-  terser()
+  ...(process.env.NODE_ENV === "debug" ? [] : [terser()])
 ];
 
 const pluginPaths = fs.readdirSync("./src/plugins");

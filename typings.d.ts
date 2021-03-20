@@ -72,7 +72,7 @@ declare interface Window {
       getBlockInfoByUID: (uid: string, withChild?: boolean) => Promise<[[Roam.Block]] | null>;
       createBlock: (uid: string, order: number, string: string) => Promise<string>;
       batchCreateBlocks: (uid: string, order: number, array: string[]) => Promise<void>;
-      updateBlock: (uid: string, string: string) => Promise<void>;
+      updateBlock: (uid: string, string: string, open?: boolean) => Promise<void>;
       deleteBlock: (uid: string) => Promise<void>;
       getDirectBlockParentUid: (
         uid: string
@@ -83,6 +83,9 @@ declare interface Window {
         uids: string[]
       ) => Promise<[Roam.Block, { uid: string; title: string }][]>;
     };
+  };
+  roam42KeyboardLib: {
+    changeHeading: (heading: number) => Promise<void>;
   };
   iziToast?: import("izitoast").IziToast;
   roamEnhance?: RoamEnhance;

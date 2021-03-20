@@ -34,6 +34,33 @@ export const patchBlockChildren: (
   loop(blocks, depth);
 };
 
+// 递归遍历子block
+export const patchBlockChildrenSync: (
+  uid: string,
+  fn: Function,
+  options?: { skipTop?: boolean; depth?: number }
+) => Promise<void> = async (uid, fn, options = {}) => {
+  let { skipTop = true, depth = Infinity } = options;
+  const blocks = await window.roam42.common.getBlockInfoByUID(uid, true);
+  let complete = false;
+  const loop = async (blocks: [[Roam.Block]] | Roam.Block[], depth: number, top = true) => {
+    if (complete || !blocks) return false;
+    for (let i = 0; i < blocks.length; i++) {
+      const a = blocks[i];
+      const block = Array.isArray(a) ? a[0] : a;
+      if (block.children && depth > 0) {
+        await loop(block.children, depth - 1, false);
+      }
+      if (skipTop ? !top : true) {
+        if ((await fn(block)) === false) {
+          complete = true;
+        }
+      }
+    }
+  };
+  await loop(blocks, depth);
+};
+
 export const getValueInOrderIfError = (fns: Function[], defaultValue?: string) => {
   while (fns.length > 0) {
     const fn = fns.shift();
