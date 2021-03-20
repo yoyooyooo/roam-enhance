@@ -118,9 +118,12 @@ runPlugin("video", () => {
               window.roam42.common.updateBlock(uid, _string);
             } else {
               i = 0;
-              _string = string.replace(new RegExp(regex.toString().slice(1, -1), "g"), (m) => {
-                return currentIndex === i++ ? `{{videoo: ${m}}}` : m;
-              });
+              _string = string.replace(
+                new RegExp(`(?<!(\\{\\{videoo\\:\\s*))(${regex.toString().slice(1, -1)})`, "g"),
+                (m) => {
+                  return currentIndex === i++ ? `{{videoo: ${m}}}` : m;
+                }
+              );
               if (_string !== string) {
                 // target.parentNode.removeChild(target);
                 target
@@ -138,3 +141,8 @@ runPlugin("video", () => {
     }
   );
 });
+
+`1=[xxx](https://www.bilibili.com/video/BV1oX4y137Eq) =
+2= https://www.bilibili.com/video/BV1Cz4y117rB =`.match(
+  /(\[(?:[^(\[\])]*)\]\(https\:\/\/www\.bilibili\.com\/video\/([^(\s\)\})]*)\))|(https\:\/\/www\.bilibili\.com\/video\/([^(\s\)\})]*))/g
+);
