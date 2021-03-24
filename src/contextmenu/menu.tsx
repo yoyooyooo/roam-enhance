@@ -61,7 +61,12 @@ export let commonMenu: Menu[] = [
         if (!m) return;
         const div = document.querySelector(`.rm-block__input[id*="${a.uid}"]`);
         if (div) {
-          await window.roam42.common.updateBlock(a.uid, a.string.replace(/^(#+\s)/, ""), false);
+          const info = window.roam42.common.getBlockInfoByUID(a.uid);
+          await window.roam42.common.updateBlock(
+            a.uid,
+            a.string.replace(/^(#+\s)/, ""),
+            info[0][0].open
+          );
           await window.roam42.common.sleep(50);
           window.roam42.common.simulateMouseClick(div as HTMLElement);
           await window.roam42.common.sleep(50);
@@ -307,7 +312,7 @@ export let blockMenu: Menu[] = [
               return;
             }
 
-              message.loading({ content: "校验链接中...", key });
+            message.loading({ content: "校验链接中...", key });
             const supports = await window
               .fetch(`API_URL/supports`)
               .then((a) => a.json())

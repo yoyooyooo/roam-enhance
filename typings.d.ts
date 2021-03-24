@@ -5,6 +5,7 @@ declare namespace Roam {
     string: string;
     uid: string;
     order: number;
+    open: boolean;
     children: Block[];
   }
 }
