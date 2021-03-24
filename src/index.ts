@@ -1,6 +1,6 @@
 import "./contextmenu";
 import roamEnhance from "./globals";
-import { loadPlugins } from "./globals/loader";
+import { loadPlugins, addScript } from "./globals/loader";
 import "./index.css";
 
 if (!window.yoyo) {
@@ -16,12 +16,15 @@ if (!window.yoyo) {
   window.roamEnhance.contextMenu = {};
   window.roamEnhance.contextMenu.registerMenu = new Set();
 
-  const host = (window.roamEnhance.host = (document.currentScript as HTMLScriptElement).src.replace(
+  const host = window.roamEnhance.host = (document.currentScript as HTMLScriptElement).src.replace(
     "main.js",
     ""
-  ));
+  );
 
-  loadPlugins(window.roamEnhance?.plugins, host);
+  addScript(`${host}libs/react.js`, { id: `roamEnhance-lib-react`, name: 'react', async: false });
+  addScript(`${host}libs/react-dom.js`, { id: `roamEnhance-lib-react-dom`, name: 'react-dom', async: false });
+
+  loadPlugins(window.roamEnhance?.plugins);
   // previous window.roamEnhance
   window.yoyo = window.roamEnhance;
 } else {

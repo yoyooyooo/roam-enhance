@@ -25,7 +25,7 @@ interface Option {
   renderItem: (x: string) => string;
   async: boolean;
   beforeCreateBlock: (item: string, uid: string) => void | Promise<void>;
-  afterCreateBlock: (item: string, uid?: string) => void | Promise<void>;
+  afterCreateBlock: (item: string, uid?: string, nextOrder?: number) => void | Promise<void>;
   delay?: string;
   maxCount?: number;
   isCancel?: () => boolean;
@@ -61,7 +61,7 @@ export const batchCreateBlocksSync = async (
           `${renderItem(item)}`
         );
         delay && (await window.roam42.common.sleep(delay));
-        await afterCreateBlock?.(item, uid);
+        await afterCreateBlock?.(item, uid, i + starting_block_order + 1);
       } else {
         window.roam42.common.createBlock(
           parent_uid,
@@ -126,8 +126,8 @@ export const createBlocksByMarkdown = async (
     return chunks.length === 1 ? chunks[0] : chunks;
   }
 
-  const loop = async (uid: string, array: string[]) => {
-    await batchCreateBlocksSync(uid, 0, getChunks(array), {
+  const loop = async (parentUid: string, array: string[]) => {
+    await batchCreateBlocksSync(parentUid, 0, getChunks(array), {
       sync,
       isCancel,
       delay,

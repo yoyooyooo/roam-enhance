@@ -40,8 +40,13 @@ const plugins = [
   // css({ output: "main.css" }),
   styles({ mode: "inject" }),
   replace({
+    delimiters: ["", ""],
     preventAssignment: true,
-    "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "production")
+    "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "production"),
+    API_URL:
+      process.env.NODE_ENV === "debug"
+        ? `https://pure-post-yooo.vercel.app/api`
+        : `https://pure-post.vercel.app/api`
   }),
   ...(process.env.NODE_ENV === "debug" ? [] : [terser()])
 ];

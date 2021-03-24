@@ -91,3 +91,5 @@ declare interface Window {
   roamEnhance?: RoamEnhance;
   yoyo?: RoamEnhance;
 }
+
+declare const API_URL: string;
