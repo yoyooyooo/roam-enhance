@@ -107,6 +107,7 @@ export const createBlocksByMarkdown = async (
     let currentHeading = "";
     for (let i = 0; i < string_array_to_insert.length; i++) {
       const item = string_array_to_insert[i];
+      console.log("qqq", { item, string_array_to_insert, i });
       if (!currentHeading) {
         const m = item.match(/(#+)\s/);
         m && (currentHeading = m[1]);
@@ -137,7 +138,7 @@ export const createBlocksByMarkdown = async (
         await afterCreateBlock?.();
         if (Array.isArray(a)) {
           await collapseBlock(uid);
-          await loop(uid, getChunks(a.slice(1)));
+          await loop(uid, a.slice(1));
         }
       }
     });
