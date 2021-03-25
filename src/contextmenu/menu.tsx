@@ -280,8 +280,8 @@ export let blockMenu: Menu[] = [
         text: "拉取知乎文章",
         key: "Pull zhihu article",
         onClick: async ({ currentUid }) => {
+          const key = "process";
           const pullZhihuArticle = async () => {
-            const key = "process";
             let isCancel = false;
             let finishedCount = 0;
             const showNotification = (n?: number) => {
@@ -379,8 +379,12 @@ export let blockMenu: Menu[] = [
               }
             } catch (e) {}
           };
-
-          await Promise.all([pullZhihuArticle(), setMarkdownLink()]);
+          try {
+            await Promise.all([pullZhihuArticle(), setMarkdownLink()]);
+          } catch (e) {
+            message.error({ content: `导入失败`, key, duration: 2 });
+            notification.close(key);
+          }
         }
       }
     ]
