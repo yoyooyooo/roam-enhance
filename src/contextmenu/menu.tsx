@@ -61,17 +61,11 @@ export let commonMenu: Menu[] = [
         if (!m) return;
         const div = document.querySelector(`.rm-block__input[id*="${a.uid}"]`);
         if (div) {
-          const info = window.roam42.common.getBlockInfoByUID(a.uid);
-          await window.roam42.common.updateBlock(
-            a.uid,
-            a.string.replace(/^(#+\s)/, ""),
-            info[0][0].open
-          );
+          await window.roam42.common.updateBlock(a.uid, a.string.replace(/^(#+\s)/, ""), a.open);
           await window.roam42.common.sleep(50);
           window.roam42.common.simulateMouseClick(div as HTMLElement);
           await window.roam42.common.sleep(50);
           await window.roam42KeyboardLib.changeHeading(m[1].length);
-          // await window.roam42.common.sleep(50);
         }
       });
     }
