@@ -5,6 +5,8 @@ declare namespace Roam {
     string: string;
     uid: string;
     order: number;
+    heading: number;
+    "view-type": "document" | "bullet" | "numbered";
     open: boolean;
     children: Block[];
   }

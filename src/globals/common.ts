@@ -92,14 +92,15 @@ export const createBlocksByMarkdown = async (
   parent_uid: string,
   string_array_to_insert: string[],
   options?: {
-    delay?: string | number;
+    delay?: number;
     maxCount?: number;
     isCancel?: () => boolean;
-    afterCreateBlock?: () => Promise<void> | void;
+    renderItem?: (x: string) => string;
+    afterCreateBlock?: (item: string, uid?: string, nextOrder?: number) => void | Promise<void>;
     sync?: boolean;
   } = {}
 ) => {
-  const { delay, maxCount, isCancel, afterCreateBlock, sync } = options;
+  const { delay, maxCount, isCancel, afterCreateBlock, sync, renderItem = (x) => x } = options;
 
   function getChunks(string_array_to_insert: string[]) {
     const chunks: string[][] = [];
@@ -107,7 +108,6 @@ export const createBlocksByMarkdown = async (
     let currentHeading = "";
     for (let i = 0; i < string_array_to_insert.length; i++) {
       const item = string_array_to_insert[i];
-      console.log("qqq", { item, string_array_to_insert, i });
       if (!currentHeading) {
         const m = item.match(/(#+)\s/);
         m && (currentHeading = m[1]);
@@ -133,9 +133,9 @@ export const createBlocksByMarkdown = async (
       isCancel,
       delay,
       maxCount,
-      renderItem: (a) => (Array.isArray(a) ? a[0] : a),
-      afterCreateBlock: async (a, uid) => {
-        await afterCreateBlock?.();
+      renderItem: (a) => renderItem(Array.isArray(a) ? a[0] : a),
+      afterCreateBlock: async (a, uid, nextOrder) => {
+        await afterCreateBlock?.(a, uid, nextOrder);
         if (Array.isArray(a)) {
           await collapseBlock(uid);
           await loop(uid, a.slice(1));

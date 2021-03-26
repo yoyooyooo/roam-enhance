@@ -328,6 +328,45 @@ export let blockMenu: Menu[] = [
               });
             if (!list) return;
 
+            const run = async (delay?: number) => {
+              const refMap = new Map<string, { string: string; uid: string }>();
+              const originRefMap = new Map<string, string>();
+              await yoyo.common.collapseBlock(currentUid);
+              await yoyo.common.createBlocksByMarkdown(currentUid, list, {
+                isCancel: () => isCancel,
+                maxCount: 0,
+                delay: delay || 0,
+                sync: true,
+                renderItem: (a) => a.replace(/^\[\^\]\((#ref_\d+)\)/, ""),
+                afterCreateBlock: (a, uid) => {
+                  showNotification();
+                  const item = Array.isArray(a) ? a[0] : a;
+                  // 包含引用的 block
+                  const refs: string[] | null = item.match(/(?<=\[\d+\]\()#ref_\d+(?=\))/g);
+                  if (refs) {
+                    refs.forEach((ref) => {
+                      refMap.set(ref, { uid: uid, string: a });
+                    });
+                    return;
+                  }
+                  // 源引用
+                  item.replace(/^\[\^\]\((#ref_\d+)\)/, (m, ref) => {
+                    originRefMap.set(ref, uid);
+                  });
+                }
+              });
+              [...refMap.keys()].forEach((key) => {
+                const { string, uid } = refMap.get(key);
+                window.roam42.common.updateBlock(
+                  uid,
+                  string.replace(/\[(\d+)\]\((#ref_\d+)\)/g, (m, n, ref) => {
+                    const uid = originRefMap.get(ref);
+                    return uid ? `[(${n})](((${uid})))` : m;
+                  })
+                );
+              });
+            };
+
             if (list.length > 290) {
               message.destroy(key);
               const delay = await yoyo.help.prompt(
@@ -335,26 +374,10 @@ export let blockMenu: Menu[] = [
                 { defaultValue: 300 }
               );
               showNotification(0);
-              if (delay) {
-                await yoyo.common.collapseBlock(currentUid);
-                await yoyo.common.createBlocksByMarkdown(currentUid, list, {
-                  isCancel: () => isCancel,
-                  maxCount: 0,
-                  delay,
-                  sync: true,
-                  afterCreateBlock: () => showNotification()
-                });
-              }
+              run(+delay);
             } else {
               showNotification(0);
-              await yoyo.common.collapseBlock(currentUid);
-              await yoyo.common.createBlocksByMarkdown(currentUid, list, {
-                isCancel: () => isCancel,
-                maxCount: 0,
-                delay: 0,
-                sync: true,
-                afterCreateBlock: () => showNotification()
-              });
+              run();
             }
             message.success({ content: `导入成功`, key, duration: 2 });
             notification.close(key);
