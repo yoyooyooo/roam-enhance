@@ -392,7 +392,11 @@ export let blockMenu: Menu[] = [
                   .fetch(`API_URL/pagetitle?url=${url}`)
                   .then((a) => a.json());
                 const title = res.meta.title;
-                window.roam42.common.updateBlock(currentUid, `[${title}](${url})`, false);
+                window.roam42.common.updateBlock(
+                  currentUid,
+                  `[${title.replace(/\[/g, "『").replace(/\]/g, "』")}](${url})`,
+                  false
+                );
               }
             } catch (e) {}
           };
