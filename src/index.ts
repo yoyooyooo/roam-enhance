@@ -9,20 +9,25 @@ if (!window.yoyo) {
     metadata: ["react", "react-dom"],
     video: ["arrive"],
     "link-favicon": ["arrive"],
-    "filter-button": ["arrive"]
+    "filter-button": ["arrive"],
+    "table-of-content": ["arrive"]
   };
   window.roamEnhance.loaded = new Set<string>();
   window.roamEnhance._plugins = {};
   window.roamEnhance.contextMenu = {};
   window.roamEnhance.contextMenu.registerMenu = new Set();
 
-  const host = window.roamEnhance.host = (document.currentScript as HTMLScriptElement).src.replace(
+  const host = (window.roamEnhance.host = (document.currentScript as HTMLScriptElement).src.replace(
     "main.js",
     ""
-  );
+  ));
 
-  addScript(`${host}libs/react.js`, { id: `roamEnhance-lib-react`, name: 'react', async: false });
-  addScript(`${host}libs/react-dom.js`, { id: `roamEnhance-lib-react-dom`, name: 'react-dom', async: false });
+  addScript(`${host}libs/react.js`, { id: `roamEnhance-lib-react`, name: "react", async: false });
+  addScript(`${host}libs/react-dom.js`, {
+    id: `roamEnhance-lib-react-dom`,
+    name: "react-dom",
+    async: false
+  });
 
   loadPlugins(window.roamEnhance?.plugins);
   // previous window.roamEnhance
