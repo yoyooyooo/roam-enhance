@@ -45,19 +45,23 @@ runPlugin("table-of-content", ({ ctx, name }) => {
       }
     }
   };
-  function getMenu(blocks?: Roam.Block[]) {
+  function getMenu(blocks?: Roam.Block[], depth = 0) {
     return (
       blocks
         ?.flatMap((a) => {
           return [
-            `<div class="rm-level${a.heading}" data-uid="${a.uid}" onmousedown="window.roamEnhance._plugins['${name}'].onMenuMouseDown(event)">
+            `<div class="rm-level${a.heading}" data-uid="${
+              a.uid
+            }" onmousedown="window.roamEnhance._plugins['${name}'].onMenuMouseDown(event)">
                 <a class="bp3-menu-item bp3-popover-dismiss">
-                    <div class="bp3-text-overflow-ellipsis bp3-fill">
+                    <div style="padding-left: ${
+                      16 * depth
+                    }px" class="bp3-text-overflow-ellipsis bp3-fill">
                         ${a.string}
                     </div>
                 </a>
             </div>`,
-            ...(a.children ? [`<div style="padding-left: 20px;">${getMenu(a.children)}</div>`] : [])
+            ...(a.children ? [`${getMenu(a.children, depth + 1)}`] : [])
           ];
         })
         .join("") || ""
@@ -65,14 +69,11 @@ runPlugin("table-of-content", ({ ctx, name }) => {
   }
 
   ctx.showByUid = async (uid: string) => {
+    console.log("showByUid", ctx.tippyInstances, ctx.tippyInstances[0].state.isVisible);
     if (ctx.tippyInstances.length) {
-      if (ctx.tippyInstances[0].state.isVisible) {
-        ctx.tippyInstances[0].hide();
-      } else {
-        const info = await window.roam42.common.getBlockInfoByUID(uid, true);
-        ctx.tippyInstances[0].setContent(getMenu(getTOC(info[0][0].children)) || "没有标题层级");
-        ctx.tippyInstances[0].show();
-      }
+      const info = await window.roam42.common.getBlockInfoByUID(uid, true);
+      ctx.tippyInstances[0].setContent(getMenu(getTOC(info[0][0].children)) || "没有标题层级");
+      ctx.tippyInstances[0].show();
     }
   };
 
@@ -86,12 +87,16 @@ runPlugin("table-of-content", ({ ctx, name }) => {
           div.id = id;
           div.onclick = async (e: MouseEvent) => {
             if (isPageTitle) {
-              const pageTitleDOM = (document.querySelector(".roam-article .rm-title-display") ||
-                document.querySelector(
-                  ".roam-article .rm-title-editing-display"
-                )) as HTMLDivElement;
-              const uid = await window.roam42.common.getPageUidByTitle(pageTitleDOM.innerText);
-              await ctx.showByUid(uid);
+              window.requestAnimationFrame(async () => {
+                const pageTitle =
+                  (document.querySelector(".roam-article .rm-title-display") as HTMLDivElement)
+                    ?.innerText ||
+                  (document.querySelector(
+                    ".roam-article .rm-title-editing-display"
+                  ) as HTMLDivElement)?.innerText;
+                const uid = await window.roam42.common.getPageUidByTitle(pageTitle);
+                await ctx.showByUid(uid);
+              });
             } else {
               const id = document.querySelector(".rm-block__input")?.id;
               if (id) {
@@ -109,6 +114,7 @@ runPlugin("table-of-content", ({ ctx, name }) => {
           ctx.tippyInstances.forEach((ins: Instance) => ins?.destroy());
           ctx.tippyInstances = tippy("#" + id, {
             theme: "toc",
+            placement: "bottom-end",
             allowHTML: true,
             interactive: true,
             arrow: false,
