@@ -104,7 +104,7 @@ runPlugin("table-of-content", ({ ctx, name }) => {
               }
             }
           };
-          if (isPageTitle) {
+          if (isPageTitle && !document.querySelector(".roam-article .roam-log-container")) {
             (titleDOM.parentNode as HTMLElement).style.position = "relative";
             titleDOM.before(div);
           } else {
