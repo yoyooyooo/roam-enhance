@@ -57,7 +57,25 @@ runPlugin("table-of-content", ({ ctx, name }) => {
                     <div style="padding-left: ${
                       16 * depth
                     }px" class="bp3-text-overflow-ellipsis bp3-fill">
-                        ${a.string}
+                        ${a.string
+                          .replace(
+                            /\*\*.+?\*\*/g,
+                            (m) => `<span class="rm-bold"><span>${m.slice(2, -2)}</span></span>`
+                          )
+                          .replace(
+                            /\^\^.+?\^\^/g,
+                            (m) =>
+                              `<span class="rm-highlight"><span>${m.slice(2, -2)}</span></span>`
+                          )
+                          .replace(
+                            /\~\~.+?\~\~/g,
+                            (m) =>
+                              `<del class="rm-strikethrough"><span>${m.slice(2, -2)}</span></del>`
+                          )
+                          .replace(
+                            /\_\_.+?\_\_/g,
+                            (m) => `<em class="rm-italics"><span>${m.slice(2, -2)}</span></em>`
+                          )}
                     </div>
                 </a>
             </div>`,
@@ -69,7 +87,6 @@ runPlugin("table-of-content", ({ ctx, name }) => {
   }
 
   ctx.showByUid = async (uid: string) => {
-    console.log("showByUid", ctx.tippyInstances, ctx.tippyInstances[0].state.isVisible);
     if (ctx.tippyInstances.length) {
       const info = await window.roam42.common.getBlockInfoByUID(uid, true);
       ctx.tippyInstances[0].setContent(getMenu(getTOC(info[0][0].children)) || "没有标题层级");
