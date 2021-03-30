@@ -7,8 +7,10 @@ let mouseX: number;
 let mouseY: number;
 
 document.addEventListener("mousedown", (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
+  if (e.button === 2) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  }
 });
 
 const observer = new MutationObserver(async (mutationsList, observer) => {

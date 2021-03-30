@@ -1,0 +1,33 @@
+.rm-title-display,
+.rm-title-editing-display,
+.roam-article .rm-zoom {
+  position: relative;
+}
+
+#show-toc {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: hsl(350, 100%, 88%);
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  transform-origin: top;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+
+  &:hover,
+  &.open {
+    transform: scale(1.2) translateY(-50%);
+    background-color: hsl(350, 100%, 60%);
+  }
+}
+
+.tippy-box[data-theme="toc"] {
+  --page-color: white;
+  font-size: clamp(10px, 70%, 100%);
+  color: unset;
+  max-height: 600px;
+  overflow: scroll;
+}

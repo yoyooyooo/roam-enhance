@@ -14,7 +14,18 @@ const plugins = [
   babel({
     babelrc: false,
     babelHelpers: "bundled",
-    plugins: [["import", { libraryName: "antd", libraryDirectory: "es", style: true }]],
+    plugins: [
+      ["import", { libraryName: "antd", libraryDirectory: "es", style: true }, "antd"],
+      [
+        "import",
+        {
+          libraryName: "lodash",
+          libraryDirectory: "",
+          camel2DashComponentName: false
+        },
+        "lodash"
+      ]
+    ],
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     exclude: "node_modules/**"
   }),
@@ -46,7 +57,7 @@ const plugins = [
     API_URL:
       process.env.NODE_ENV === "debug"
         ? `https://pure-post-yooo.vercel.app/api`
-        : `https://pure-post.vercel.app/api`
+        : `https://pure-post-yooo.vercel.app/api`
   }),
   ...(process.env.NODE_ENV === "debug" ? [] : [terser()])
 ];

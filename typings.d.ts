@@ -38,6 +38,7 @@ declare interface document {
 }
 
 declare interface Window {
+  tippy?: any;
   roamjs?: {
     alerted: boolean;
     loaded: Set<string>;
@@ -48,6 +49,7 @@ declare interface Window {
     };
     dynamicElements: Set<HTMLElement>;
   };
+  roamAlphaAPI?: any;
   roam42?: {
     help: {
       displayMessage: (s: string, delay: number) => void;
@@ -85,6 +87,7 @@ declare interface Window {
       getPageNamesFromBlockUidList: (
         uids: string[]
       ) => Promise<[Roam.Block, { uid: string; title: string }][]>;
+      baseUrl: () => URL;
     };
   };
   roam42KeyboardLib: {

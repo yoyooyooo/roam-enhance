@@ -1,7 +1,7 @@
 import { runPlugin } from "../../utils/common";
 import "./index.css";
 
-runPlugin("video", () => {
+runPlugin("video", ({ ctx, name }) => {
   const videoMap = new Map<RegExp, (...args: any[]) => string>()
     .set(
       /https\:\/\/www\.bilibili\.com\/video\/([^(\s\)\})]*)/,
@@ -37,8 +37,7 @@ runPlugin("video", () => {
     return info[0][0];
   }
 
-  // @ts-ignore
-  window.roamEnhance.__resetVideoBlock = async function (el: HTMLButtonElement) {
+  ctx.resetVideoBlock = async function (el: HTMLButtonElement) {
     // 当前 block 的第几个按钮(视频对应的)
     const currentIndex = [
       ...el.closest("div.rm-block__input").querySelectorAll(".bp3-icon-reset")
@@ -55,13 +54,13 @@ runPlugin("video", () => {
       .forEach((a) => a.remove());
     await window.roam42.common.updateBlock(uid, _string);
   };
-  //@ts-ignore
-  window.roamEnhance.__focusBlock = (el) => {
+
+  ctx.focusBlock = (el) => {
     window.roam42.common.simulateMouseClick(el.closest("div.rm-block__input"));
   };
 
   function getVideoHTML(src: string) {
-    return `<div class="rm-iframe__spacing-wrapper rm-video-player__spacing-wrapper"><div class="rm-iframe__container rm-video-player__container hoverparent"><div class="hoveronly"><button onclick="window.roamEnhance.__focusBlock(this)" class="bp3-button bp3-small bp3-icon-standard bp3-icon-edit bp3-minimal rm-iframe__edit-btn rm-video-player__edit-btn" content=""></button><button onclick="window.roamEnhance.__resetVideoBlock(this);" style="position: absolute; right: 25px; top: 0; z-index: 10;" class="bp3-button bp3-small bp3-icon-standard bp3-icon-reset bp3-minimal rm-iframe__edit-btn rm-video-player__edit-btn" content=""></button></div><iframe class="rm-video-player" style="width: 100%; height: 100%; pointer-events: auto;" src="${src}" frameborder="no" allowfullscreen="" sandbox="allow-top-navigation-by-user-activation allow-same-origin allow-forms allow-scripts allow-popups"></iframe></div></div>`;
+    return `<div class="rm-iframe__spacing-wrapper rm-video-player__spacing-wrapper"><div class="rm-iframe__container rm-video-player__container hoverparent"><div class="hoveronly"><button onclick="window.roamEnhance._plugins['${name}'].focusBlock(this)" class="bp3-button bp3-small bp3-icon-standard bp3-icon-edit bp3-minimal rm-iframe__edit-btn rm-video-player__edit-btn" content=""></button><button onclick="window.roamEnhance._plugins['${name}'].resetVideoBlock(this);" style="position: absolute; right: 25px; top: 0; z-index: 10;" class="bp3-button bp3-small bp3-icon-standard bp3-icon-reset bp3-minimal rm-iframe__edit-btn rm-video-player__edit-btn" content=""></button></div><iframe class="rm-video-player" style="width: 100%; height: 100%; pointer-events: auto;" src="${src}" frameborder="no" allowfullscreen="" sandbox="allow-top-navigation-by-user-activation allow-same-origin allow-forms allow-scripts allow-popups"></iframe></div></div>`;
   }
 
   document.arrive(

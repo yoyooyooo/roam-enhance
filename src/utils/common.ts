@@ -14,16 +14,23 @@ export function retry(fn: any, name = "") {
     try {
       fn();
     } catch (e) {
-      console.log("error", e);
-      n < 5 && setTimeout(() => _retry(++n), 3000);
+      console.log("[name] error", e);
+      n < 5 && setTimeout(() => _retry(++n), 2000);
       n > 5 && window.roam42?.help.displayMessage(`${name}加载失败`, 2000);
     }
   }
 
-  setTimeout(() => _retry(fn), 3000);
+  try {
+    _retry(fn);
+  } catch (e) {
+    console.log(1111111111, e);
+  }
 }
 
-export function runPlugin(name: string, fn: () => void) {
+export function runPlugin<T = any>(name: string, fn: (options: { ctx: T; name: string }) => void) {
+  window.roamEnhance._plugins[name] = {};
   window.roamEnhance.loaded.add(name);
-  retry(fn, name);
+  retry(() => {
+    fn({ ctx: window.roamEnhance._plugins[name], name });
+  }, name);
 }
