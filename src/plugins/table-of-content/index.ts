@@ -6,23 +6,25 @@ import "./index.less";
 runPlugin("table-of-content", ({ ctx, name }) => {
   function getTOC(list?: Roam.Block[]): Roam.Block[] {
     return (
-      list?.flatMap((a) => {
-        if (a.children) {
-          if (a.heading) {
-            const children = getTOC(a.children);
-            if (children.length > 0) {
-              return [{ ...a, children }];
+      list
+        ?.sort((a, b) => a.order - b.order)
+        .flatMap((a) => {
+          if (a.children) {
+            if (a.heading) {
+              const children = getTOC(a.children);
+              if (children.length > 0) {
+                return [{ ...a, children }];
+              } else {
+                delete a.children;
+                return a;
+              }
             } else {
-              delete a.children;
-              return a;
+              return [];
             }
           } else {
-            return [];
+            return a.heading ? [a] : [];
           }
-        } else {
-          return a.heading ? [a] : [];
-        }
-      }) || []
+        }) || []
     );
   }
   ctx.tippyInstances = [] as Instance[];
