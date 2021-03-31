@@ -4,7 +4,6 @@ import { runPlugin } from "../../utils/common";
 import "./index.less";
 
 runPlugin("table-of-content", ({ ctx, name, options }) => {
-  console.log({ options });
   function getTOC(list?: Roam.Block[]): Roam.Block[] {
     return (
       list
@@ -89,7 +88,8 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
     );
   }
 
-  ctx.showByUid = async (uid: string) => {
+  ctx.showByUid = async (uid?: string) => {
+    if (!uid) return;
     if (ctx.tippyInstances.length) {
       const info = await window.roam42.common.getBlockInfoByUID(uid, true);
       ctx.tippyInstances[0].setContent(getMenu(getTOC(info[0][0].children)) || "没有标题层级");
@@ -127,9 +127,20 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
               }
             }
           };
-          if (isPageTitle && !document.querySelector(".roam-article .roam-log-container")) {
-            (titleDOM.parentNode as HTMLElement).style.position = "relative";
-            titleDOM.before(div);
+          if (isPageTitle) {
+            const logDOM = document.querySelector(
+              ".roam-article .roam-log-container .roam-log-page"
+            );
+            if (logDOM) {
+              const wrap = document.createElement("div");
+              wrap.style.position = "relative";
+              logDOM.prepend(wrap);
+              wrap.insertBefore(titleDOM, null);
+              wrap.appendChild(div);
+            } else {
+              (titleDOM.parentNode as HTMLElement).style.position = "relative";
+              titleDOM.before(div);
+            }
           } else {
             titleDOM.appendChild(div);
           }
@@ -171,6 +182,8 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
     }
   );
   document.arrive(".roam-article .rm-zoom", { existing: true }, (el: HTMLElement) => {
-    createButton(el, false);
+    if (!el.closest(".rm-reference-main")) {
+      createButton(el, false);
+    }
   });
 });
