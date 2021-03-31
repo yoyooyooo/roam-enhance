@@ -3,7 +3,8 @@ import tippy, { Instance } from "tippy.js";
 import { runPlugin } from "../../utils/common";
 import "./index.less";
 
-runPlugin("table-of-content", ({ ctx, name }) => {
+runPlugin("table-of-content", ({ ctx, name, options }) => {
+  console.log({ options });
   function getTOC(list?: Roam.Block[]): Roam.Block[] {
     return (
       list
@@ -104,6 +105,9 @@ runPlugin("table-of-content", ({ ctx, name }) => {
         if (!old) {
           const div = document.createElement("div");
           div.id = id;
+          div.className = `bp3-button bp3-minimal bp3-small${
+            options.fontIcon ? ` fontIcon bp3-icon-${options.fontIcon}` : ""
+          }`;
           div.onclick = async (e: MouseEvent) => {
             if (isPageTitle) {
               window.requestAnimationFrame(async () => {
