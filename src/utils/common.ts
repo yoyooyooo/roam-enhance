@@ -23,10 +23,16 @@ export function retry(fn: any, name = "") {
   _retry(fn);
 }
 
-export function runPlugin<T = any>(name: string, fn: (options: { ctx: T; name: string }) => void) {
-  window.roamEnhance._plugins[name] = {};
+export function runPlugin<T = any>(
+  name: string,
+  fn: (options: { ctx: T; name: string; options: any }) => void
+) {
   window.roamEnhance.loaded.add(name);
   retry(async () => {
-    await fn({ ctx: window.roamEnhance._plugins[name], name });
+    await fn({
+      ctx: window.roamEnhance._plugins[name],
+      name,
+      options: window.roamEnhance._plugins[name].options || {}
+    });
   }, name);
 }

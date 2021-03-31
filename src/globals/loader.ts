@@ -24,9 +24,13 @@ export function registerPlugin(name: string, { ctx }: { ctx: any }) {
   };
 }
 
-export function loadPlugins(plugins: string[], host: string = window?.roamEnhance?.host || "/") {
+export function loadPlugins(
+  plugins: Array<string | string[]>,
+  host: string = window?.roamEnhance?.host || "/"
+) {
   if (plugins?.length) {
-    const dependencies = plugins.reduce((memo, pluginName) => {
+    const dependencies = plugins.reduce((memo, p) => {
+      const pluginName = Array.isArray(p) ? p[0] : p;
       window.roamEnhance.dependencyMap[pluginName]?.forEach((a) => memo.add(a));
       return memo;
     }, new Set<string>());
@@ -36,11 +40,24 @@ export function loadPlugins(plugins: string[], host: string = window?.roamEnhanc
         addScript(`${host}libs/${name}.js`, { id: `roamEnhance-lib-${name}`, name, async: false });
     });
 
-    plugins.forEach((name) => {
-      !window.roamEnhance.loaded.has(name) &&
-        addScript(`${host}plugins/${name}.js`, {
-          id: `roamEnhance-plugin-${name}`,
-          name,
+    plugins.forEach((p) => {
+      let pluginName: string;
+      let options: any;
+      if (Array.isArray(p)) {
+        pluginName = p[0];
+        p[1] && (options = p[1]);
+      } else {
+        pluginName = p;
+      }
+      if (!window.roamEnhance._plugins[pluginName]) {
+        window.roamEnhance._plugins[pluginName] = {};
+      }
+      options && (window.roamEnhance._plugins[pluginName].options = options);
+
+      !window.roamEnhance.loaded.has(pluginName) &&
+        addScript(`${host}plugins/${pluginName}.js`, {
+          id: `roamEnhance-plugin-${pluginName}`,
+          name: pluginName,
           async: false
         });
     });
