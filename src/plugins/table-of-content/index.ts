@@ -49,19 +49,14 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
   };
   function parseText(text: string) {
     return text
-      .replace(/\*\*.+?\*\*/g, (m) => `<span class="rm-bold"><span>${m.slice(2, -2)}</span></span>`)
+      .replace(/\*\*(.+?)\*\*/g, `<span class="rm-bold"><span>$1</span></span>`)
+      .replace(/\^\^(.+?)\^\^/g, `<span class="rm-highlight"><span>$1</span></span>`)
+      .replace(/\~\~(.+?)\~\~/g, `<del class="rm-strikethrough"><span>$1</span></del>`)
+      .replace(/\_\_(.+?)\_\_/g, `<em class="rm-italics"><span>$1</span></em>`)
+      .replace(/(?<=^|[^#])\[\[(.+?)\]\]/g, `<span class="rm-page-ref rm-page-ref--link">$1</span>`)
       .replace(
-        /\^\^.+?\^\^/g,
-        (m) => `<span class="rm-highlight"><span>${m.slice(2, -2)}</span></span>`
-      )
-      .replace(
-        /\~\~.+?\~\~/g,
-        (m) => `<del class="rm-strikethrough"><span>${m.slice(2, -2)}</span></del>`
-      )
-      .replace(/\_\_.+?\_\_/g, (m) => `<em class="rm-italics"><span>${m.slice(2, -2)}</span></em>`)
-      .replace(
-        /\[\[.+?\]\]/g,
-        (m) => `<span class="rm-page-ref rm-page-ref--link">${m.slice(2, -2)}</span>`
+        /#\[\[(.*?)\]\]|#([-\.\w\d]+)/g,
+        (m, p1, p2) => `<span class="rm-page-ref rm-page-ref--tag">#${p1 || p2}</span>`
       );
   }
   function getMenu(blocks?: Roam.Block[], depth = 0) {
