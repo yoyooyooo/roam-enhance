@@ -47,6 +47,23 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
       }
     }
   };
+  function parseText(text: string) {
+    return text
+      .replace(/\*\*.+?\*\*/g, (m) => `<span class="rm-bold"><span>${m.slice(2, -2)}</span></span>`)
+      .replace(
+        /\^\^.+?\^\^/g,
+        (m) => `<span class="rm-highlight"><span>${m.slice(2, -2)}</span></span>`
+      )
+      .replace(
+        /\~\~.+?\~\~/g,
+        (m) => `<del class="rm-strikethrough"><span>${m.slice(2, -2)}</span></del>`
+      )
+      .replace(/\_\_.+?\_\_/g, (m) => `<em class="rm-italics"><span>${m.slice(2, -2)}</span></em>`)
+      .replace(
+        /\[\[.+?\]\]/g,
+        (m) => `<span class="rm-page-ref rm-page-ref--link">${m.slice(2, -2)}</span>`
+      );
+  }
   function getMenu(blocks?: Roam.Block[], depth = 0) {
     return (
       blocks
@@ -59,25 +76,7 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
                     <div style="padding-left: ${
                       16 * depth
                     }px" class="bp3-text-overflow-ellipsis bp3-fill">
-                        ${a.string
-                          .replace(
-                            /\*\*.+?\*\*/g,
-                            (m) => `<span class="rm-bold"><span>${m.slice(2, -2)}</span></span>`
-                          )
-                          .replace(
-                            /\^\^.+?\^\^/g,
-                            (m) =>
-                              `<span class="rm-highlight"><span>${m.slice(2, -2)}</span></span>`
-                          )
-                          .replace(
-                            /\~\~.+?\~\~/g,
-                            (m) =>
-                              `<del class="rm-strikethrough"><span>${m.slice(2, -2)}</span></del>`
-                          )
-                          .replace(
-                            /\_\_.+?\_\_/g,
-                            (m) => `<em class="rm-italics"><span>${m.slice(2, -2)}</span></em>`
-                          )}
+                        ${parseText(a.string)}
                     </div>
                 </a>
             </div>`,
