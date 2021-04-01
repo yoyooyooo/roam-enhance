@@ -5,7 +5,7 @@ runPlugin("reading-mode", ({ name: id }) => {
   button && button.remove();
 
   const template = document.createElement("template");
-  template.innerHTML = `<span id="${id}" title="当前:编辑模式" class="bp3-button bp3-minimal bp3-icon-edit pointer bp3-small"></span>`;
+  template.innerHTML = `<span id="toggle-${id}" title="当前:编辑模式" class="bp3-button bp3-minimal bp3-icon-edit pointer bp3-small"></span>`;
   (template.content.firstChild as HTMLElement).onclick = () => {
     const classList = button.classList;
     if (classList.contains("bp3-icon-edit")) {
