@@ -1,9 +1,11 @@
-import "./contextmenu";
+import { enhanceContextMenu } from "./contextmenu";
 import roamEnhance from "./globals";
-import { loadPlugins, addScript } from "./globals/loader";
+import { addScript, loadPlugins } from "./globals/loader";
 import "./index.css";
 
 if (!window.yoyo) {
+  enhanceContextMenu();
+
   window.roamEnhance = { ...roamEnhance, ...window.roamEnhance };
   window.roamEnhance.dependencyMap = {
     metadata: ["react", "react-dom"],
