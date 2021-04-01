@@ -103,3 +103,16 @@ export function flattenBlocks(block: Roam.Block[], filter?: (block: Roam.Block) 
     ...(filter?.(a) === false ? [] : [a])
   ]);
 }
+
+export function parseText(text: string) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, `<span class="rm-bold"><span>$1</span></span>`)
+    .replace(/\^\^(.+?)\^\^/g, `<span class="rm-highlight"><span>$1</span></span>`)
+    .replace(/\~\~(.+?)\~\~/g, `<del class="rm-strikethrough"><span>$1</span></del>`)
+    .replace(/\_\_(.+?)\_\_/g, `<em class="rm-italics"><span>$1</span></em>`)
+    .replace(/(?<=^|[^#])\[\[(.+?)\]\]/g, `<span class="rm-page-ref rm-page-ref--link">$1</span>`)
+    .replace(
+      /#\[\[(.*?)\]\]|#([-\.\w\d]+?)/g,
+      (m, p1, p2) => `<span class="rm-page-ref rm-page-ref--tag">#${p1 || p2}</span>`
+    );
+}
