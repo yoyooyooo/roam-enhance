@@ -4,14 +4,17 @@ import { runPlugin } from "../../utils/common";
 import "./index.less";
 
 runPlugin("table-of-content", ({ ctx, name, options }) => {
-  function getTOC(list?: Roam.Block[]): Roam.Block[] {
+  function getTOC(list?: Roam.Block[], depth: number = 0): Roam.Block[] {
     return (
       list
         ?.sort((a, b) => a.order - b.order)
         .flatMap((a) => {
+          const d = depth > 0 ? depth : +a.string.match(/#\.toc-depth-(\d)/)?.[1];
+          const isHeading = d > 0 || a.heading || /#\.toc-h\d/.test(a.string);
+
           if (a.children) {
-            if (a.heading) {
-              const children = getTOC(a.children);
+            if (isHeading) {
+              const children = getTOC(a.children, d - 1);
               if (children.length > 0) {
                 return [{ ...a, children }];
               } else {
@@ -22,7 +25,7 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
               return [];
             }
           } else {
-            return a.heading ? [a] : [];
+            return isHeading ? [a] : [];
           }
         }) || []
     );
@@ -60,7 +63,9 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
                     <div style="padding-left: ${
                       16 * depth
                     }px" class="bp3-text-overflow-ellipsis bp3-fill">
-                        ${window.roamEnhance.utils.parseText(a.string)}
+                        ${window.roamEnhance.utils.parseText(
+                          a.string.replace(/#\.toc-depth-(\d)/g, "").replace(/#\.toc-h\d/g, "")
+                        )}
                     </div>
                 </a>
             </div>`,
