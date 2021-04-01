@@ -8,14 +8,14 @@ export const addStyle = (content: string, id: string) => {
   return css;
 };
 
-export function retry(fn: any, name = "") {
+export function retry(fn: Function, name = "") {
   let n = 0;
-  async function _retry(fn: any) {
+  async function _retry(fn: Function) {
     try {
       await fn();
     } catch (e) {
       console.log("[name] error", e);
-      n < 5 && setTimeout(() => _retry(++n), 2000);
+      n < 5 && setTimeout(() => (n++, _retry(fn)), 2000);
       n > 5 && window.roam42?.help.displayMessage(`${name}加载失败`, 2000);
     }
   }
