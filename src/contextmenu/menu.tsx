@@ -204,7 +204,7 @@ export let blockMenu: Menu[] = [
             const originUid = m && m[1];
             if (originUid) {
               const originInfo = await window.roam42.common.getBlockInfoByUID(originUid);
-              window.roam42.common.updateBlock(a.uid, originInfo[0][0].string);
+              window.roam42.common.updateBlock(a.uid, originInfo[0][0].string, !!a.open);
             }
           });
         }

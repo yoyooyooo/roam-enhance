@@ -288,7 +288,7 @@ export const getParentBlockNode = (dom = document.activeElement) => {
     return null;
   }
 };
-export const getParentBlockUid = async (dom = document.activeElement) => {
+export const getParentBlockUid = async () => {
   try {
     return (await window.roam42.common.getDirectBlockParentUid(getCurrentBlockUid())).parentUID;
   } catch (e) {

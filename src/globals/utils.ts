@@ -1,17 +1,17 @@
 // 提取字符串中的标签
 export const extractTags = (str: string) => {
-  return str.match(/((?<=#?\[\[)(.*?)(?=\]\]))|((?<=#)\w+)/g) || [];
+  return str.match(/((?<=#?\[\[)(.*?)(?=\]\]))|((?<=#)[-\.\w\d]+)/g) || [];
 };
 
 // 移除字符串中的标签,只移除带#的tag，避免匹配到句子中合理的页面引用以及{{[[TODO]]}}
 export const removeTags = (str: string) => {
-  return str.replace(/(#\[\[(.*?)\]\])|(#\w+)/g, "").trim();
+  return str.replace(/(#\[\[(.*?)\]\])|(#[-\.\w\d]+)/g, "").trim();
 };
 
 // 递归遍历子block
 export const patchBlockChildren: (
   uid: string,
-  fn: Function,
+  fn: (block: Roam.Block) => PromiseOrNot<void | boolean>,
   options?: { skipTop?: boolean; depth?: number }
 ) => Promise<void> = async (uid, fn, options = {}) => {
   let { skipTop = true, depth = Infinity } = options;

@@ -100,3 +100,5 @@ declare interface Window {
 }
 
 declare const API_URL: string;
+
+type PromiseOrNot<T> = Promise<T> | T;
