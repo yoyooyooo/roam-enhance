@@ -1,22 +1,23 @@
-import difference from "lodash-es/difference";
-import memorize from "lodash-es/memoize";
 import yoyo from "@/globals";
 import { deepCreateBlock } from "@/globals/common";
 import { confirm } from "@/globals/help";
+import { retry } from "@/utils/common";
+import { Button, message, notification } from "antd";
+import { difference, memoize } from "lodash";
+import React from "react";
 import { runTasksByBlocks } from "./task";
 import { ClickArea, ClickArgs, Menu } from "./types";
-import { message, notification, Button } from "antd";
-import React from "react";
 
 export let commonMenu: Menu[] = [
   {
-    text: "Clear current block/page",
-    key: "Clear current block/page",
+    text: "Clear current block/page's children",
+    key: "Clear current block/page's children",
+    help: `<b>清空当前 block/page 的所有子内容</b><br/>适用范围：通用`,
     onClick: async ({ currentUid }) => {
       if (
         await yoyo.help.confirm(
           navigator.language === "zh-CN"
-            ? "确定清空当前页/Block吗？"
+            ? "确定清空当前页/Block的所有子内容吗？"
             : "Are you sure to clear the current block/page?"
         )
       ) {
@@ -30,6 +31,7 @@ export let commonMenu: Menu[] = [
   {
     text: "All children's highlight",
     key: "Extract All children's highlight",
+    help: `<b>清空当前 block/page 的所有子内容</b><br/>适用范围：通用`,
     onClick: async ({ currentUid }) => {
       let highlights = [];
       await yoyo.utils.patchBlockChildren(currentUid, (a) => {
@@ -55,6 +57,7 @@ export let commonMenu: Menu[] = [
   {
     text: "Apply markdown heading to child blocks",
     key: "Apply markdown heading to child blocks",
+    help: `<b>把的以#开头的子 block 转化为对应的标题</b><br/>适用范围：通用`,
     onClick: async ({ currentUid }) => {
       yoyo.utils.patchBlockChildrenSync(currentUid, async (a) => {
         const m = a.string.match(/^(#+)\s/);
@@ -81,6 +84,7 @@ export let blockMenu: Menu[] = [
       {
         text: "Delete block and its references",
         key: "Delete block and its references",
+        help: `<b>删除 block 及其引用</b><br/>适用范围：Block`,
         onClick: async ({ currentUid, selectUids }) => {
           if (
             await confirm(
@@ -102,6 +106,7 @@ export let blockMenu: Menu[] = [
       {
         text: "Delete current block and embed block's refers",
         key: "Delete current block and embed block's refers",
+        help: `<b>删除 block 及其 embed 的引用</b><br/>适用范围：Block`,
         onClick: async ({ currentUid }) => {
           try {
             const info = await yoyo.common.getCurrentBlockInfo(currentUid);
@@ -145,6 +150,7 @@ export let blockMenu: Menu[] = [
       {
         text: "Remove tags",
         key: "Remove tags",
+        help: `<b>删除 block 内的标签(以#开头)</b><br/>适用范围：Block`,
         onClick: async ({ currentUid, selectUids }) => {
           [currentUid, ...selectUids].forEach(async (uid) => {
             const a = await yoyo.common.getCurrentBlockInfo(uid);
@@ -155,6 +161,7 @@ export let blockMenu: Menu[] = [
       {
         text: "Split block",
         key: "Split block",
+        help: `<b>以换行为分割拆分当前 block</b><br/>适用范围：Block`,
         onClick: async ({ currentUid }) => {
           const info = await window.roam42.common.getBlockInfoByUID(currentUid);
           const { parentUID } = await window.roam42.common.getDirectBlockParentUid(currentUid);
@@ -166,6 +173,7 @@ export let blockMenu: Menu[] = [
       {
         text: "Merge blocks",
         key: "Merge blocks",
+        help: `<b>合并多个 block 为 一个</b><br/>先多选 block 再右键执行<br/>适用范围：Block`,
         onClick: async ({ currentUid, selectUids }) => {
           if (selectUids.length < 2) return;
           const strings = await Promise.all(
@@ -189,6 +197,7 @@ export let blockMenu: Menu[] = [
       {
         text: "Embed to text",
         key: "Child embed to text",
+        help: `<b>所有子 embed 转化为纯文本</b><br/>适用范围：Block`,
         onClick: async ({ currentUid }) => {
           await yoyo.utils.patchBlockChildren(currentUid, async (a) => {
             const m = a.string.match(/\{\{\[\[embed\]\]\:\s+\(\(\(\((.*?)\)\)\)\)\}\}/);
@@ -203,6 +212,7 @@ export let blockMenu: Menu[] = [
       {
         text: "Remove tags",
         key: "Child blocks remove tags",
+        help: `<b>所有子 block 删除标签(以#开头)</b><br/>适用范围：Block`,
         onClick: async ({ currentUid }) => {
           yoyo.utils.patchBlockChildren(currentUid, (a) => {
             const newString = yoyo.utils.removeTags(a.string);
@@ -215,6 +225,7 @@ export let blockMenu: Menu[] = [
       {
         text: "Merge blocks",
         key: "Merge child blocks",
+        help: `<b>合并所有子 block 为一个</b><br/>适用范围：Block`,
         onClick: async ({ currentUid }) => {
           const count = +window.prompt(
             navigator.language === "zh-CN" ? "每多少行为一组进行合并？" : "How many lines into one?"
@@ -248,6 +259,7 @@ export let blockMenu: Menu[] = [
       {
         text: "Expand all",
         key: "Expand all cloze",
+        help: `<b>展开所有填空<br\>((xxx))</b><br/>适用范围：Block`,
         onClick: async ({ target }) => {
           target
             .closest(".roam-block-container")
@@ -258,6 +270,7 @@ export let blockMenu: Menu[] = [
       {
         text: "Collapse all",
         key: "Collapse all cloze",
+        help: `<b>收缩所有填空</b><br/>((xxx))<br/>适用范围：Block`,
         onClick: async ({ target }) => {
           target
             .closest(".roam-block-container")
@@ -273,6 +286,7 @@ export let blockMenu: Menu[] = [
       {
         text: "拉取知乎文章",
         key: "Pull zhihu article",
+        help: `<b>拉取知乎文章</b><br/>适用范围：Block`,
         onClick: async ({ currentUid }) => {
           const key = "process";
           const pullZhihuArticle = async () => {
@@ -417,6 +431,7 @@ export let pageTitleMenu: Menu[] = [
   {
     text: "Delete all refering blocks",
     key: "Delete all refering blocks",
+    help: `<b>删除当前页面的所有引用</b><br/>适用范围：页面标题`,
     onClick: async ({ pageTitle }) => {
       const refers = await window.roam42.common.getBlocksReferringToThisPage(pageTitle);
       if (refers.length) {
@@ -441,6 +456,7 @@ export let pageTitleMenu: Menu[] = [
   {
     text: "Extract currentPage's refers",
     key: "Extract currentPage's refers",
+    help: `<b>提取当前页面的所有引用，复制到剪切板</b>适合提取在 daily notes 记录的加了相同双链的内容，进入该双链执行本菜单任务，会得到以日期为一级标题的文本<br/>适用范围：页面标题`,
     onClick: async ({ pageTitle }) => {
       const refers = await window.roam42.common.getBlocksReferringToThisPage(pageTitle);
       if (!refers.length) {
@@ -511,6 +527,7 @@ export let pageTitleMenu_Sidebar: Menu[] = [
   {
     text: "Focus on page",
     key: "Focus on page",
+    help: `<b>聚焦到该页面(左侧打开)</b><br/>适用范围：侧边栏内的页面标题`,
     onClick: async ({ pageTitle }) => {
       await window.roam42.common.navigateUiTo(pageTitle);
     }
@@ -519,7 +536,7 @@ export let pageTitleMenu_Sidebar: Menu[] = [
   ...pageTitleMenu
 ];
 
-export const getMenuMap = memorize((menu: Menu[]) => {
+export const getMenuMap = memoize((menu: Menu[]) => {
   const map = {};
   const loop = (menu: Menu[]) => {
     menu.forEach((a) => {
@@ -531,8 +548,28 @@ export const getMenuMap = memorize((menu: Menu[]) => {
     });
   };
   loop(menu);
-  return map;
+  return map as Record<string, Menu>;
 });
+
+// register menu into roam42's smartBlock
+retry(() => {
+  const allMenuMap = {
+    ...getMenuMap(blockMenu),
+    ...getMenuMap(pageTitleMenu),
+    ...getMenuMap(pageTitleMenu_Sidebar)
+  };
+  window.roam42.smartBlocks.customCommands.push(
+    ...Object.keys(allMenuMap).map((key) => ({
+      key: `<roamEnhance's menu:${key}>`,
+      icon: "gear",
+      processor: "static",
+      value: `<menu:${key}>`,
+      ...(navigator.language === "zh-CN" && allMenuMap[key].help
+        ? { help: allMenuMap[key].help }
+        : {})
+    }))
+  );
+}, "register menu into smartBlock");
 
 export async function getMergeMenu(userBlocks: Roam.Block[], menuMap: Record<string, Menu>) {
   if (!userBlocks || !userBlocks.length) return [];

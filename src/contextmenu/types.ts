@@ -1,6 +1,7 @@
 export interface Menu {
   text: string;
   key?: string;
+  help?: string;
   onClick?: (args: ClickArgs) => void;
   children?: Menu[];
 }

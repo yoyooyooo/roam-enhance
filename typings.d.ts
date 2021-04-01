@@ -55,11 +55,12 @@ declare interface Window {
       displayMessage: (s: string, delay: number) => void;
     };
     smartBlocks?: {
+      addCommands: (array: any[]) => void;
       customCommands: {
         key: string; // `<% ${string} %> (SmartBlock function)`, sad - https://github.com/microsoft/TypeScript/issues/13969
-        icon: "gear";
-        value: string;
-        processor: (match: string) => Promise<string | void>;
+        icon: string;
+        value: string | Function;
+        processor: string;
       }[];
       activeWorkflow: {
         outputAdditionalBlock: (text: string) => void;
