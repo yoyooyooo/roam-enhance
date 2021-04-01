@@ -112,7 +112,7 @@ export function parseText(text: string) {
     .replace(/\_\_(.+?)\_\_/g, `<em class="rm-italics"><span>$1</span></em>`)
     .replace(/(?<=^|[^#])\[\[(.+?)\]\]/g, `<span class="rm-page-ref rm-page-ref--link">$1</span>`)
     .replace(
-      /#\[\[(.*?)\]\]|#([-\.\w\d]+?)/g,
+      /#\[\[(.*?)\]\]|#([-\.\w\d]+)/g,
       (m, p1, p2) => `<span class="rm-page-ref rm-page-ref--tag">#${p1 || p2}</span>`
     );
 }
