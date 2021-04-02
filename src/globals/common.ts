@@ -12,13 +12,18 @@ export const batchCreateBlocks = async (
   string_array_to_insert: string[],
   renderItem: (x: any) => string = (x) => x
 ) => {
-  string_array_to_insert.forEach(async (item, counter) => {
-    await window.roam42.common.createBlock(
-      parent_uid,
-      counter + starting_block_order,
-      `${renderItem(item)}`
+  const res = [];
+  for (let i = 0; i < string_array_to_insert.length; i++) {
+    const item = string_array_to_insert[i];
+    res.push(
+      await window.roam42.common.createBlock(
+        parent_uid,
+        starting_block_order + i,
+        `${renderItem(item)}`
+      )
     );
-  });
+  }
+  return res;
 };
 
 interface Option {

@@ -1,4 +1,5 @@
 import { Menu, ClickArgs } from "./types";
+import yoyo from "@/globals/";
 
 export const processBlock = async (
   parentUid: string,
@@ -62,6 +63,7 @@ export const processBlock = async (
     return;
   }
 
+  const uids = [];
   const finalString = await window.roam42.smartBlocks.proccessBlockWithSmartness(block.string);
   if (!!window.roam42.smartBlocks.activeWorkflow.arrayToWrite.length) {
     let countOfblocksToInsert = window.roam42.smartBlocks.activeWorkflow.arrayToWrite.length;
@@ -77,10 +79,12 @@ export const processBlock = async (
             : [textToInsert];
         })
       );
-      await window.roam42.common.batchCreateBlocks(
-        parentUid,
-        block.order,
-        (strings as unknown) as string[]
+      uids.push(
+        ...(await yoyo.common.batchCreateBlocks(
+          parentUid,
+          block.order,
+          (strings as unknown) as string[]
+        ))
       );
       window.roam42.smartBlocks.activeWorkflow.arrayToWrite = [];
     }
@@ -92,7 +96,10 @@ export const processBlock = async (
       finalString.includes(window.roam42.smartBlocks.replaceFirstBlock)
     )
   ) {
-    return await window.roam42.common.createBlock(parentUid, block.order, finalString);
+    uids.push(await window.roam42.common.createBlock(parentUid, block.order, finalString));
+  }
+  if (uids.length) {
+    return uids[uids.length - 1];
   }
 };
 
@@ -105,6 +112,7 @@ export async function runTasksByBlocks(blocks, menuMap, onClickArgs) {
     finalUid = await window.roam42.common.getPageUidByTitle(pageTitle);
   }
 
+  let $ctx = {};
   const runTasks = async (parentUid, blocks) => {
     for (const block of blocks.sort((a, b) => a.order - b.order)) {
       const uid = await processBlock(parentUid, block, menuMap, onClickArgs, $ctx);
@@ -113,8 +121,6 @@ export async function runTasksByBlocks(blocks, menuMap, onClickArgs) {
       }
     }
   };
-
-  let $ctx = {};
   await runTasks(finalUid, blocks);
   $ctx = {};
 }
