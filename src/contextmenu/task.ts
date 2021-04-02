@@ -62,11 +62,38 @@ export const processBlock = async (
     return;
   }
 
-  return await window.roam42.common.createBlock(
-    parentUid,
-    block.order,
-    await window.roam42.smartBlocks.proccessBlockWithSmartness(block.string)
-  );
+  const finalString = await window.roam42.smartBlocks.proccessBlockWithSmartness(block.string);
+  if (!!window.roam42.smartBlocks.activeWorkflow.arrayToWrite.length) {
+    let countOfblocksToInsert = window.roam42.smartBlocks.activeWorkflow.arrayToWrite.length;
+    if (countOfblocksToInsert > 0) {
+      const strings = await Promise.all(
+        window.roam42.smartBlocks.activeWorkflow.arrayToWrite.flatMap(async (sb) => {
+          let textToInsert = sb.text;
+          if (sb.reprocess == true)
+            textToInsert = await window.roam42.smartBlocks.proccessBlockWithSmartness(textToInsert);
+          return textToInsert.includes(window.roam42.smartBlocks.exclusionBlockSymbol) ||
+            textToInsert.includes(window.roam42.smartBlocks.replaceFirstBlock)
+            ? []
+            : [textToInsert];
+        })
+      );
+      await window.roam42.common.batchCreateBlocks(
+        parentUid,
+        block.order,
+        (strings as unknown) as string[]
+      );
+      window.roam42.smartBlocks.activeWorkflow.arrayToWrite = [];
+    }
+  }
+
+  if (
+    !(
+      finalString.includes(window.roam42.smartBlocks.exclusionBlockSymbol) ||
+      finalString.includes(window.roam42.smartBlocks.replaceFirstBlock)
+    )
+  ) {
+    return await window.roam42.common.createBlock(parentUid, block.order, finalString);
+  }
 };
 
 export async function runTasksByBlocks(blocks, menuMap, onClickArgs) {

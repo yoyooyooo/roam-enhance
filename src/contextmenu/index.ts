@@ -1,6 +1,6 @@
 import { getBlockUidFromId, getSelectBlockUids } from "../globals/utils";
 import { getMenu } from "./menu";
-import { ClickArea } from "./types";
+import { ClickArea, ClickArgs } from "./types";
 import { mergeMenuToDOM } from "./utils";
 
 export function enhanceContextMenu() {
@@ -23,14 +23,16 @@ export function enhanceContextMenu() {
     );
     if (isContextMenu) {
       // close right click menu
-      // if (
-      //   mutationsList.find(
-      //     (m) =>
-      //       m.type === "childList" && m.removedNodes.length > 0 && m.target.className === "bp3-portal"
-      //   )
-      // ) {
-      //   console.log("关闭");
-      // }
+      if (
+        mutationsList.find(
+          (m) =>
+            m.type === "childList" &&
+            m.removedNodes.length > 0 &&
+            (m.target as HTMLElement).className === "bp3-portal"
+        )
+      ) {
+        window.roamEnhance.contextMenu.onClickArgs = {};
+      }
       let portalMutation = mutationsList.find(
         (m) =>
           m.type === "childList" &&
@@ -39,10 +41,11 @@ export function enhanceContextMenu() {
       );
       // open right click menu
       if (portalMutation) {
+        window.roamEnhance.contextMenu.onClickArgs = {};
         const path = document.elementsFromPoint(mouseX, mouseY);
-        const onClickArgs = {} as any;
+        const onClickArgs = {} as ClickArgs;
         let clickArea: ClickArea = null;
-        onClickArgs.target = path[1]; // the closest element over mouse, path[0] is overlay
+        onClickArgs.target = path[1] as HTMLElement; // the closest element over mouse, path[0] is overlay
         // click on block
         const rmBlockMainDOM = path.find((a) => a.classList.contains("rm-block-main"));
         if (rmBlockMainDOM) {
@@ -66,9 +69,10 @@ export function enhanceContextMenu() {
             clickArea = "pageTitle";
           }
         }
-
         const menu = await getMenu(path, clickArea, onClickArgs);
         onClickArgs.selectUids = getSelectBlockUids();
+        window.roamEnhance.contextMenu.onClickArgs = onClickArgs;
+
         menu &&
           mergeMenuToDOM(
             (portalMutation.target as HTMLElement).querySelector("ul.bp3-menu"),

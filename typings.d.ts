@@ -26,6 +26,8 @@ type RoamEnhance = {
   host?: string;
   contextMenu?: {
     registerMenu?: Set<registerMenu>;
+    onClickArgs: Partial<import("./src/contextmenu/types").ClickArgs>;
+    active?: boolean;
   };
   libs?: {
     react: typeof import("react");
@@ -38,7 +40,6 @@ declare interface document {
 }
 
 declare interface Window {
-  tippy?: any;
   roamjs?: {
     alerted: boolean;
     loaded: Set<string>;
@@ -55,6 +56,8 @@ declare interface Window {
       displayMessage: (s: string, delay: number) => void;
     };
     smartBlocks?: {
+      exclusionBlockSymbol: string;
+      replaceFirstBlock: string;
       addCommands: (array: any[]) => void;
       customCommands: {
         key: string; // `<% ${string} %> (SmartBlock function)`, sad - https://github.com/microsoft/TypeScript/issues/13969
@@ -64,8 +67,10 @@ declare interface Window {
       }[];
       activeWorkflow: {
         outputAdditionalBlock: (text: string) => void;
+        arrayToWrite: any[];
       };
       proccessBlockWithSmartness: (s: string) => Promise<string>;
+      outputArrayWrite: () => Promise<void>;
     };
     dateProcessing: {
       testIfRoamDateAndConvert: (s: string) => string;

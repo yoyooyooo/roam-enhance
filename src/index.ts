@@ -16,7 +16,7 @@ if (!window.yoyo) {
   };
   window.roamEnhance.loaded = new Set<string>();
   window.roamEnhance._plugins = {};
-  window.roamEnhance.contextMenu = {};
+  window.roamEnhance.contextMenu = { onClickArgs: {} };
   window.roamEnhance.contextMenu.registerMenu = new Set();
 
   const host = (window.roamEnhance.host = (document.currentScript as HTMLScriptElement).src.replace(
