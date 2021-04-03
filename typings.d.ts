@@ -16,18 +16,36 @@ type registerMenu = (
   menu: import("./src/contextmenu/types").Menu[],
   clickArea: import("./src/contextmenu/types").ClickArea,
   onClickArgs: import("./src/contextmenu/types").ClickArgs
-) => void | Promise<void>;
+) => PromiseOrNot<void>;
+
+type registerMenuCommand = (
+  clickArea: import("./src/contextmenu/types").ClickArea,
+  menuMap: Record<string, Menu>
+) => void;
 
 type RoamEnhance = {
-  dependencyMap?: Record<string, string[]>;
+  dependencyMap?: {
+    plugin: Record<string, string[]>;
+    dynamicMenu: Record<string, string[]>;
+  };
   plugins?: ["metadata"?];
+  dynamicMenu?: ["pull-zhihu"?];
   _plugins?: {};
+  _dynamicMenu?: {};
   loaded?: Set<string>;
   host?: string;
   contextMenu?: {
+    menus: {
+      commonMenu: Menu[];
+      blockMenu: Menu[];
+      pageTitleMenu: Menu[];
+      pageTitleMenu_Sidebar: Menu[];
+    };
+    // 2 个 registerMenu 是直接帮用户注册 menu
     registerMenu?: Set<registerMenu>;
+    registerMenuCommand?: registerMenuCommand;
+    dynamicMenu: { loaded: Set<string> };
     onClickArgs: Partial<import("./src/contextmenu/types").ClickArgs>;
-    active?: boolean;
   };
   libs?: {
     react: typeof import("react");

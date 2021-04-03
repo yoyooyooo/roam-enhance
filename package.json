@@ -20,6 +20,7 @@
     "@types/arrive": "^2.4.0",
     "@types/react": "^17.0.2",
     "babel-plugin-import": "^1.13.3",
+    "globby": "^11.0.3",
     "less": "^4.1.1",
     "postcss": "^8.2.8",
     "prettier": "^2.2.1",

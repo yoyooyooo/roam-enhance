@@ -36,3 +36,17 @@ export function runPlugin<T = any>(
     });
   }, name);
 }
+
+export function runDynamicMenu<T = any>(
+  name: string,
+  fn: (options: { ctx: T; name: string; options: any }) => void
+) {
+  window.roamEnhance.contextMenu.dynamicMenu.loaded.add(name);
+  retry(async () => {
+    fn({
+      ctx: window.roamEnhance._dynamicMenu[name],
+      name,
+      options: window.roamEnhance._dynamicMenu[name].options || {}
+    });
+  }, name);
+}

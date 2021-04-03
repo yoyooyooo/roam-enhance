@@ -1,6 +1,8 @@
 import { Menu, ClickArgs } from "./types";
 import yoyo from "@/globals/";
 
+const menuMovedToDynamic = ["Pull zhihu article"];
+
 export const processBlock = async (
   parentUid: string,
   block: Roam.Block,
@@ -36,9 +38,9 @@ export const processBlock = async (
     }
   }
 
-  const internalMenu = block.string.match(/<%\s*menu:\s*(.*)\s*%>/);
+  const internalMenu = block.string.match(/<%\s*menu:\s*(.*)\s*%>/)?.[1];
   if (internalMenu) {
-    const menu = menuMap[internalMenu[1]];
+    const menu = menuMap[internalMenu];
     if (menu) {
       try {
         menu.onClick?.(onClickArgs);
@@ -51,13 +53,17 @@ export const processBlock = async (
         return;
       }
     } else {
+      const extraMsg = menuMovedToDynamic.includes(internalMenu)
+        ? `<br/>该 menu 已移至动态菜单，请配置后使用<br/>
+        <a target="_blank" href="https://roamresearch.com/#/app/roam-enhance/page/gOWzh6_E7">查看文档</a>`
+        : "";
       window.iziToast.error({
         title:
           navigator.language === "zh-CN"
-            ? `不存在 menu: ${internalMenu[1]}`
-            : `no menu named${internalMenu[1]} found`,
+            ? `不存在 menu: ${internalMenu}${extraMsg}`
+            : `no menu named${internalMenu} found`,
         position: "topCenter",
-        timeout: 3000
+        timeout: extraMsg ? 10000 : 3000
       });
     }
     return;

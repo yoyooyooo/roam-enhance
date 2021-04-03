@@ -2,7 +2,9 @@ import commonjs from "@rollup/plugin-commonjs";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 import typescript from "@rollup/plugin-typescript";
+import globby from "globby";
 import fs from "fs";
+import { dirname, basename } from "path";
 import { camelCase } from "lodash";
 import styles from "rollup-plugin-styles";
 import { terser } from "rollup-plugin-terser";
@@ -62,7 +64,10 @@ const plugins = [
   ...(process.env.NODE_ENV === "debug" ? [] : [terser()])
 ];
 
-const pluginPaths = fs.readdirSync("./src/plugins");
+// const pluginPaths = fs.readdirSync("./src/plugins");
+const pluginPaths = globby.sync("./src/plugins/**/index.(ts|tsx)");
+// const dynamicMenuPaths = fs.readdirSync("./src/contextmenu/dynamic-menu");
+const dynamicMenuPaths = globby.sync("./src/contextmenu/dynamic-menu/**/*.(ts|tsx)");
 
 const libGlobals = {
   // antd: "window.roamEnhance.libs.antd",
@@ -81,17 +86,34 @@ export default [
     },
     plugins
   },
-  ...pluginPaths.map((name) => ({
-    input: `src/plugins/${name}/index.ts`,
-    external: Object.keys(libGlobals),
-    output: {
-      file: `dist/plugins/${name}.js`,
-      format: "iife",
-      name: camelCase(name),
-      globals: libGlobals
-    },
-    plugins
-  })),
+  ...pluginPaths.map((path) => {
+    const name = basename(dirname(path));
+    return {
+      input: path,
+      external: Object.keys(libGlobals),
+      output: {
+        file: `dist/plugins/${name}.js`,
+        format: "iife",
+        name: camelCase(name),
+        globals: libGlobals
+      },
+      plugins
+    };
+  }),
+  ...dynamicMenuPaths.map((path) => {
+    const name = basename(dirname(path));
+    return {
+      input: path,
+      external: Object.keys(libGlobals),
+      output: {
+        file: `dist/dynamicMenu/${name}.js`,
+        format: "iife",
+        name: camelCase(name),
+        globals: libGlobals
+      },
+      plugins
+    };
+  }),
   ...Object.keys(libGlobals).map((name) => ({
     input: `node_modules/${name}`,
     external: Object.keys(libGlobals),

@@ -31,7 +31,7 @@ export function loadPlugins(
   if (plugins?.length) {
     const dependencies = plugins.reduce((memo, p) => {
       const pluginName = Array.isArray(p) ? p[0] : p;
-      window.roamEnhance.dependencyMap[pluginName]?.forEach((a) => memo.add(a));
+      window.roamEnhance.dependencyMap.plugin[pluginName]?.forEach((a) => memo.add(a));
       return memo;
     }, new Set<string>());
 
@@ -58,6 +58,50 @@ export function loadPlugins(
         addScript(`${host}plugins/${pluginName}.js`, {
           id: `roamEnhance-plugin-${pluginName}`,
           name: pluginName,
+          async: false
+        });
+    });
+  }
+}
+
+export function loadDynamicMenus(
+  menus: Array<string | string[]>,
+  host: string = window?.roamEnhance?.host || "/"
+) {
+  if (menus?.length) {
+    const dependencies = menus.reduce((memo, p) => {
+      const name = Array.isArray(p) ? p[0] : p;
+      window.roamEnhance.dependencyMap.dynamicMenu[name]?.forEach((a) => memo.add(a));
+      return memo;
+    }, new Set<string>());
+
+    dependencies.forEach((name) => {
+      !window.roamEnhance.loaded.has(name) &&
+        addScript(`${host}libs/${name}.js`, { id: `roamEnhance-lib-${name}`, name, async: false });
+    });
+
+    menus.forEach((p) => {
+      console.log("qqq", p);
+      let name: string;
+      let options: any;
+      if (Array.isArray(p)) {
+        name = p[0];
+        p[1] && (options = p[1]);
+      } else {
+        name = p;
+      }
+      if (!window.roamEnhance._dynamicMenu[name]) {
+        window.roamEnhance._dynamicMenu[name] = {};
+      }
+      console.log("qqq", { options, name });
+
+      options && (window.roamEnhance._dynamicMenu[name].options = options);
+      console.log("qqq", JSON.stringify(window.roamEnhance._dynamicMenu[name]));
+
+      !window.roamEnhance.contextMenu.dynamicMenu.loaded.has(name) &&
+        addScript(`${host}dynamicMenu/${name}.js`, {
+          id: `roamEnhance-menu-${name}`,
+          name: name,
           async: false
         });
     });
