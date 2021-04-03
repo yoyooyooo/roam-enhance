@@ -4,6 +4,7 @@ import { runDynamicMenu } from "@/utils/common";
 
 const yoyo = window.roamEnhance;
 
+// 用户配置的名字，可以是一组 menu 的集合，下面registerMenuCommand的是真正的 <%menu:%>
 runDynamicMenu("Pull zhihu article", ({ ctx }) => {
   window.roamEnhance.contextMenu.registerMenuCommand("block", {
     "Pull zhihu article": {

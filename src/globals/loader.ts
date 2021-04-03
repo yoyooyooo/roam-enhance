@@ -81,7 +81,6 @@ export function loadDynamicMenus(
     });
 
     menus.forEach((p) => {
-      console.log("qqq", p);
       let name: string;
       let options: any;
       if (Array.isArray(p)) {
@@ -96,10 +95,9 @@ export function loadDynamicMenus(
       console.log("qqq", { options, name });
 
       options && (window.roamEnhance._dynamicMenu[name].options = options);
-      console.log("qqq", JSON.stringify(window.roamEnhance._dynamicMenu[name]));
 
       !window.roamEnhance.contextMenu.dynamicMenu.loaded.has(name) &&
-        addScript(`${host}dynamicMenu/${name}.js`, {
+        addScript(`${host}dynamicMenu/${name.replace(/\s/g, "-")}.js`, {
           id: `roamEnhance-menu-${name}`,
           name: name,
           async: false
