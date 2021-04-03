@@ -19,7 +19,7 @@ export function retry(fn: Function, name = "", maxCount = 10) {
         setTimeout(() => (n++, _retry(fn)), 2000);
       } else {
         console.log(`[${name}] error 超出次数加载失败，停止重试`);
-        window.roam42?.help.displayMessage(`${name}加载失败`, 2000);
+        window.roam42?.help?.displayMessage(`${name}加载失败`, 2000);
       }
     }
   }
