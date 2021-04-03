@@ -8,15 +8,19 @@ export const addStyle = (content: string, id: string) => {
   return css;
 };
 
-export function retry(fn: Function, name = "") {
+export function retry(fn: Function, name = "", maxCount = 10) {
   let n = 0;
   async function _retry(fn: Function) {
     try {
       await fn();
     } catch (e) {
-      console.log("[name] error", e);
-      n < 5 && setTimeout(() => (n++, _retry(fn)), 2000);
-      n > 5 && window.roam42?.help.displayMessage(`${name}加载失败`, 2000);
+      console.log(`[${name}] error`, { e });
+      if (n < maxCount) {
+        setTimeout(() => (n++, _retry(fn)), 2000);
+      } else {
+        console.log(`[${name}] error 超出次数加载失败，停止重试`);
+        window.roam42?.help.displayMessage(`${name}加载失败`, 2000);
+      }
     }
   }
 
@@ -25,28 +29,42 @@ export function retry(fn: Function, name = "") {
 
 export function runPlugin<T = any>(
   name: string,
-  fn: (options: { ctx: T; name: string; options: any }) => void
+  fn: (options: { ctx: T; name: string; options: any }) => void,
+  options: { maxCount?: number } = {}
 ) {
+  const { maxCount = 5 } = options;
+
   window.roamEnhance.loaded.add(name);
-  retry(async () => {
-    await fn({
-      ctx: window.roamEnhance._plugins[name],
-      name,
-      options: window.roamEnhance._plugins[name].options || {}
-    });
-  }, name);
+  retry(
+    async () => {
+      await fn({
+        ctx: window.roamEnhance._plugins[name],
+        name,
+        options: window.roamEnhance._plugins[name].options || {}
+      });
+    },
+    name,
+    maxCount
+  );
 }
 
 export function runDynamicMenu<T = any>(
   name: string,
-  fn: (options: { ctx: T; name: string; options: any }) => void
+  fn: (options: { ctx: T; name: string; options: any }) => void,
+  options: { maxCount?: number } = {}
 ) {
+  const { maxCount = 5 } = options;
+
   window.roamEnhance.contextMenu.dynamicMenu.loaded.add(name);
-  retry(async () => {
-    fn({
-      ctx: window.roamEnhance._dynamicMenu[name],
-      name,
-      options: window.roamEnhance._dynamicMenu[name].options || {}
-    });
-  }, name);
+  retry(
+    async () => {
+      fn({
+        ctx: window.roamEnhance._dynamicMenu[name],
+        name,
+        options: window.roamEnhance._dynamicMenu[name].options || {}
+      });
+    },
+    name,
+    maxCount
+  );
 }
