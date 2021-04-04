@@ -72,8 +72,6 @@ runPlugin("save-scroll-position", ({ ctx }) => {
 
     listenPageChange() {
       window.addEventListener("hashchange", (e) => {
-        this.routes.find((a) => a.url === e.newURL) &&
-          console.log("qqq  怎么会有重复", JSON.stringify(this.routes), e);
         const currentRoute = this.routes[this.routes.length - 1 + this.offset];
         if (currentRoute) {
           this.savePosition(currentRoute);
@@ -106,11 +104,16 @@ runPlugin("save-scroll-position", ({ ctx }) => {
                 this.goToTop();
                 // last to new URL
                 this.routes.push(newRoute);
+                this.offset = 0;
               }
             }
           } else {
             this.routes.push({ url: e.newURL });
           }
+        }
+
+        if (this.routes.length > 10) {
+          this.routes = this.routes.slice(-10);
         }
       });
     }
