@@ -30,9 +30,9 @@ runPlugin("save-scroll-position", ({ ctx }) => {
     }
 
     goToTop() {
-      this.toRunAfterRendered.push(() => {
-        document.querySelector(".rm-article-wrapper").scrollTop = 0;
-      });
+      //   this.toRunAfterRendered.push(() => {
+      //     document.querySelector(".rm-article-wrapper").scrollTop = 0;
+      //   });
     }
 
     init() {
