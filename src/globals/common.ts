@@ -154,7 +154,7 @@ export const createBlocksByMarkdown = async (
 
 interface Menu {
   text: string;
-  children: Menu[];
+  children?: Menu[];
 }
 export const deepCreateBlock: (
   parentUid: string,
