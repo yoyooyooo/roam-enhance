@@ -4,13 +4,25 @@ import { runPlugin } from "../../utils/common";
 import "./index.less";
 
 runPlugin("table-of-content", ({ ctx, name, options }) => {
+  const { isHeading: _isHeading = [] } = options;
   function getTOC(list?: Roam.Block[], depth: number = 0): Roam.Block[] {
     return (
       list
         ?.sort((a, b) => a.order - b.order)
         .flatMap((a) => {
           const d = depth > 0 ? depth : +a.string.match(/#\.toc-depth-(\d)/)?.[1];
-          const isHeading = d > 0 || a.heading || /#\.toc-h\d/.test(a.string);
+          const isHeading =
+            d > 0 ||
+            a.heading ||
+            /#\.toc-h\d/.test(a.string) ||
+            _isHeading.find((r) => {
+              if (r instanceof RegExp) {
+                return r.test(a.string);
+              }
+              if (typeof r === "function") {
+                return r(a);
+              }
+            });
 
           if (a.children) {
             if (isHeading) {
