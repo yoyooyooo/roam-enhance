@@ -105,6 +105,9 @@ export function flattenBlocks(block: Roam.Block[], filter?: (block: Roam.Block) 
 }
 
 export function parseText(text: string) {
+  const codeString = text.replace(/`(.*?)`/g, `<code>$1</code>`);
+  if (codeString !== text) return codeString;
+
   return text
     .replace(/\*\*(.+?)\*\*/g, `<span class="rm-bold"><span>$1</span></span>`)
     .replace(/\^\^(.+?)\^\^/g, `<span class="rm-highlight"><span>$1</span></span>`)
@@ -112,7 +115,7 @@ export function parseText(text: string) {
     .replace(/\_\_(.+?)\_\_/g, `<em class="rm-italics"><span>$1</span></em>`)
     .replace(/\[(.*?)\]\((.*)\)/g, (m, alias, conetnt) => {
       let aliasType: "block" | "page" | "external" = "block";
-      if (/\(\(.*\)\)/.test(conetnt)) {
+      if (/\(\(.{9}\)\)/.test(conetnt)) {
         aliasType = "block";
       } else if (/\[\[.*\]\]/.test(conetnt)) {
         aliasType = "page";

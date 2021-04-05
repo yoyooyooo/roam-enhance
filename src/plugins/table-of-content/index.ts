@@ -34,15 +34,15 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
             const embedUid = embed[1];
             const info = await window.roam42.common.getBlockInfoByUID(embedUid);
             a.originString = a.string;
-            a.string = info[0][0].string;
+            a.string = info?.[0][0].string || a.string;
           }
           //@ts-ignore
           const newString = await window.roam42.common.replaceAsync(
             a.string,
-            /\(\((.*?)\)\)/g,
+            /(?<=^|[^(\]\)])\(\((.{9})\)\)(?!\))/g,
             async (m, uid) => {
               const info = await window.roam42.common.getBlockInfoByUID(uid);
-              return info[0][0].string;
+              return info?.[0][0].string || m;
             }
           );
           if (newString !== a.string) {
