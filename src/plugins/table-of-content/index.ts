@@ -11,7 +11,7 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
       asyncFlatMap<Roam.Block & { originString?: string }>(
         list?.sort((a, b) => a.order - b.order),
         async (a) => {
-          if (a.string.match(/(?<=[^`])#\.notoc(?!`)/)) {
+          if (!a.string || a.string.match(/(?<=[^`])#\.notoc(?!`)/)) {
             return [];
           }
 

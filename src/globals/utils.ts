@@ -109,6 +109,7 @@ export function parseText(text: string) {
   if (codeString !== text) return codeString;
 
   return text
+    .replace(/^---$/, `<hr class="rm-hr">`)
     .replace(/\*\*(.+?)\*\*/g, `<span class="rm-bold"><span>$1</span></span>`)
     .replace(/\^\^(.+?)\^\^/g, `<span class="rm-highlight"><span>$1</span></span>`)
     .replace(/\~\~(.+?)\~\~/g, `<del class="rm-strikethrough"><span>$1</span></del>`)
