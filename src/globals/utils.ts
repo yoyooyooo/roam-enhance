@@ -10,7 +10,7 @@ export const removeTags = (str: string) => {
 
 //
 export const removeLinks = (str: string) => {
-  return str.replace(/(#?\[\[(.*?)\]\])|(#?[-\.\w\d]+)/g, "").trim();
+  return str.replace(/(#?\[\[(.*?)\]\])|(#[-\.\w\d]+)/g, "").trim();
 };
 
 // 递归遍历子block
