@@ -110,6 +110,17 @@ export function parseText(text: string) {
     .replace(/\^\^(.+?)\^\^/g, `<span class="rm-highlight"><span>$1</span></span>`)
     .replace(/\~\~(.+?)\~\~/g, `<del class="rm-strikethrough"><span>$1</span></del>`)
     .replace(/\_\_(.+?)\_\_/g, `<em class="rm-italics"><span>$1</span></em>`)
+    .replace(/\[(.*?)\]\((.*)\)/g, (m, alias, conetnt) => {
+      let aliasType: "block" | "page" | "external" = "block";
+      if (/\(\(.*\)\)/.test(conetnt)) {
+        aliasType = "block";
+      } else if (/\[\[.*\]\]/.test(conetnt)) {
+        aliasType = "page";
+      } else if (/http.*/.test(conetnt)) {
+        aliasType = "external";
+      }
+      return `<span class="rm-alias rm-alias--${aliasType}">${alias}</span>`;
+    })
     .replace(/(?<=^|[^#])\[\[(.+?)\]\]/g, `<span class="rm-page-ref rm-page-ref--link">$1</span>`)
     .replace(
       /#\[\[(.*?)\]\]|#([-\.\w\d]+)/g,
