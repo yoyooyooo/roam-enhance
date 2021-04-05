@@ -8,6 +8,11 @@ export const removeTags = (str: string) => {
   return str.replace(/(#\[\[(.*?)\]\])|(#[-\.\w\d]+)/g, "").trim();
 };
 
+//
+export const removeLinks = (str: string) => {
+  return str.replace(/(#?\[\[(.*?)\]\])|(#?[-\.\w\d]+)/g, "").trim();
+};
+
 // 递归遍历子block
 export const patchBlockChildren: (
   uid: string,
