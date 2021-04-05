@@ -5,7 +5,7 @@ import "./index.less";
 
 runPlugin("table-of-content", ({ ctx, name, options }) => {
   const { isHeading: _isHeading = [] } = options;
-  function getTOC(list?: Roam.Block[], depth: number = 0): Roam.Block[] {
+  function getTOC(list?: Roam.Block[], level = 1, depth: number = 0): Roam.Block[] {
     return (
       list
         ?.sort((a, b) => a.order - b.order)
@@ -20,13 +20,13 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
                 return r.test(a.string);
               }
               if (typeof r === "function") {
-                return r(a);
+                return r({ ...a, level });
               }
             });
 
           if (a.children) {
             if (isHeading) {
-              const children = getTOC(a.children, d - 1);
+              const children = getTOC(a.children, level + 1, d - 1);
               if (children.length > 0) {
                 return [{ ...a, children }];
               } else {
