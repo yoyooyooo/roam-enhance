@@ -1,15 +1,20 @@
 import { debounce, throttle } from "lodash";
 import tippy, { Instance } from "tippy.js";
-import { runPlugin } from "../../utils/common";
+import { runPlugin } from "@/utils/common";
+import { asyncFlatMap } from "@/utils/function";
 import "./index.less";
 
 runPlugin("table-of-content", ({ ctx, name, options }) => {
   const { isHeading: _isHeading = [] } = options;
-  function getTOC(list?: Roam.Block[], level = 1, depth: number = 0): Roam.Block[] {
+  async function getTOC(list?: Roam.Block[], level = 1, depth: number = 0) {
     return (
-      list
-        ?.sort((a, b) => a.order - b.order)
-        .flatMap((a) => {
+      asyncFlatMap<Roam.Block & { originString?: string }>(
+        list?.sort((a, b) => a.order - b.order),
+        async (a) => {
+          if (a.string.match(/#\.notoc/)) {
+            return [];
+          }
+
           const d = depth > 0 ? depth : +a.string.match(/#\.toc-depth-(\d)/)?.[1];
           const isHeading =
             d > 0 ||
@@ -24,9 +29,30 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
               }
             });
 
+          const embed = a.string.match(/\{\{\[\[embed\]\]: \(\(\(\((.*)\)\)\)\)\}\}/);
+          if (embed) {
+            const embedUid = embed[1];
+            const info = await window.roam42.common.getBlockInfoByUID(embedUid);
+            a.originString = a.string;
+            a.string = info[0][0].string;
+          }
+          //@ts-ignore
+          const newString = await window.roam42.common.replaceAsync(
+            a.string,
+            /\(\((.*?)\)\)/g,
+            async (m, uid) => {
+              const info = await window.roam42.common.getBlockInfoByUID(uid);
+              return info[0][0].string;
+            }
+          );
+          if (newString !== a.string) {
+            a.originString = a.string;
+            a.string = newString;
+          }
+
           if (a.children) {
             if (isHeading) {
-              const children = getTOC(a.children, level + 1, d - 1);
+              const children = await getTOC(a.children, level + 1, d - 1);
               if (children.length > 0) {
                 return [{ ...a, children }];
               } else {
@@ -39,7 +65,8 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
           } else {
             return isHeading ? [a] : [];
           }
-        }) || []
+        }
+      ) || []
     );
   }
   ctx.tippyInstances = [] as Instance[];
@@ -92,7 +119,9 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
     if (!uid) return;
     if (ctx.tippyInstances.length) {
       const info = await window.roam42.common.getBlockInfoByUID(uid, true);
-      ctx.tippyInstances[0].setContent(getMenu(getTOC(info[0][0].children)) || "没有标题层级");
+      ctx.tippyInstances[0].setContent(
+        getMenu(await getTOC(info[0][0].children)) || "没有标题层级"
+      );
       ctx.tippyInstances[0].show();
     }
   };
