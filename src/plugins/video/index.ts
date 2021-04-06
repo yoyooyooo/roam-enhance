@@ -140,8 +140,3 @@ runPlugin("video", ({ ctx, name }) => {
     }
   );
 });
-
-`1=[xxx](https://www.bilibili.com/video/BV1oX4y137Eq) =
-2= https://www.bilibili.com/video/BV1Cz4y117rB =`.match(
-  /(\[(?:[^(\[\])]*)\]\(https\:\/\/www\.bilibili\.com\/video\/([^(\s\)\})]*)\))|(https\:\/\/www\.bilibili\.com\/video\/([^(\s\)\})]*))/g
-);
