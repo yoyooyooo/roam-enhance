@@ -84,20 +84,24 @@ export let blockMenu: Menu[] = [
         key: "Delete block and its references",
         help: `<b>删除 block 及其引用</b><br/>适用范围：Block`,
         onClick: async ({ currentUid, selectUids }) => {
+          const referUids = [];
+          [currentUid, ...selectUids].forEach(async (uid) => {
+            const refers = await window.roam42.common.getBlocksReferringToThisBlockRef(uid);
+            if (refers.length > 0) {
+              referUids.push(refers.map((a) => a[0].uid));
+            }
+          });
           if (
-            await confirm(
+            referUids.length === 0 ||
+            (await confirm(
               navigator.language === "zh-CN"
                 ? `确定删除当前所选 block 及其所有块引用`
                 : `Sure to delete the current block and its all references??`
-            )
+            ))
           ) {
-            [currentUid, ...selectUids].forEach(async (uid) => {
-              const refers = await window.roam42.common.getBlocksReferringToThisBlockRef(uid);
-              if (refers.length > 0) {
-                refers.forEach(async (a) => window.roam42.common.deleteBlock(a[0].uid));
-              }
-              window.roam42.common.deleteBlock(uid);
-            });
+            [...referUids, currentUid, ...selectUids].forEach((uid) =>
+              window.roam42.common.deleteBlock(uid)
+            );
           }
         }
       },
