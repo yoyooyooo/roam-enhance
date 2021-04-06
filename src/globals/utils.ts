@@ -110,11 +110,17 @@ export function flattenBlocks(block: Roam.Block[], filter?: (block: Roam.Block) 
 }
 
 export function parseText(text: string) {
-  const codeString = text.replace(/`(.*?)`/g, `<code>$1</code>`);
-  if (codeString !== text) return codeString;
-
   return text
     .replace(/^---$/, `<hr class="rm-hr">`)
+    .replace(
+      /^\{\{\[\[(TODO|DONE)\]\]\}\}/,
+      (m, p1) =>
+        `<label style="pointer-events: none;" class="check-container"><input type="checkbox"${
+          p1 === "DONE" ? " checked" : ""
+        }><span class="checkmark"></span></label>`
+    )
+    .replace(/`(.*?)`/g, `<code>$1</code>`)
+    .replace(/^>(.*)$/g, `<blockquote class="rm-bq"><span>$1</span></blockquote>`)
     .replace(/\*\*(.+?)\*\*/g, `<span class="rm-bold"><span>$1</span></span>`)
     .replace(/\^\^(.+?)\^\^/g, `<span class="rm-highlight"><span>$1</span></span>`)
     .replace(/\~\~(.+?)\~\~/g, `<del class="rm-strikethrough"><span>$1</span></del>`)
