@@ -5,7 +5,7 @@ import { asyncFlatMap } from "@/utils/function";
 import "./index.less";
 
 runPlugin("table-of-content", ({ ctx, name, options }) => {
-  const { isHeading: _isHeading = [] } = options;
+  const { isHeading: _isHeading = [], noHeading = [] } = options;
   async function getTOC(list?: Roam.Block[], parentBlock = {}, level = 1, depth: number = 0) {
     return (
       asyncFlatMap<Roam.Block & { originString?: string }>(
@@ -15,7 +15,15 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
             !a.string ||
             /!\[.*\]\(.*\)/.test(a.string) ||
             /^\{\{table\}\}$/.test(a.string) ||
-            a.string.match(/(?<=[^`])#\.notoc(?!`)/)
+            a.string.match(/(?<=[^`])#\.notoc(?!`)/) ||
+            noHeading.find((r) => {
+              if (r instanceof RegExp) {
+                return r.test(a.string);
+              }
+              if (typeof r === "function") {
+                return r({ ...a, level, parentBlock });
+              }
+            })
           ) {
             return [];
           }
