@@ -14,7 +14,7 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
           if (
             !a.string ||
             /!\[.*\]\(.*\)/.test(a.string) ||
-            /^\{\{table\}\}$/.test(a.string) ||
+            /^\{\{[[table]]\}\}$/.test(a.string) ||
             a.string.match(/(?<=[^`])#\.notoc(?!`)/) ||
             noHeading.find((r) => {
               if (r instanceof RegExp) {
