@@ -92,7 +92,6 @@ export function loadDynamicMenus(
       if (!window.roamEnhance._dynamicMenu[name]) {
         window.roamEnhance._dynamicMenu[name] = {};
       }
-      console.log("qqq", { options, name });
 
       options && (window.roamEnhance._dynamicMenu[name].options = options);
 

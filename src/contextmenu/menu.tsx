@@ -421,27 +421,26 @@ export const getMenuMap = memoize((menu: Menu[]) => {
 });
 
 export const registerMenuCommand: registerMenuCommand = (clickArea, newMenuMap) => {
-  let menuMap: Record<string, Menu>;
+  const setMap = (menu: Menu[]) => {
+    const menuMap = getMenuMap(menu);
+    Object.keys(newMenuMap).forEach((key) => {
+      if (menuMap[key]) {
+        console.warn(`[menu]: ${key} 已存在，将覆盖 menu`);
+      }
+    });
+    getMenuMap.cache.set(menu, { ...menuMap, ...newMenuMap });
+  };
   switch (clickArea) {
     case "block":
-      menuMap = getMenuMap(blockMenu);
+      setMap(blockMenu);
       break;
     case "pageTitle":
-      menuMap = getMenuMap(pageTitleMenu);
+      setMap(pageTitleMenu);
       break;
     case "pageTitle_sidebar":
-      menuMap = getMenuMap(pageTitleMenu_Sidebar);
+      setMap(pageTitleMenu_Sidebar);
       break;
   }
-
-  // check
-  Object.keys(newMenuMap).forEach((key) => {
-    if (menuMap[key]) {
-      console.warn(`[menu]: ${key} 已存在，将覆盖 menu`);
-    }
-  });
-
-  getMenuMap.cache.set(blockMenu, { ...menuMap, ...newMenuMap });
 };
 
 // register menu into roam42's smartBlock
