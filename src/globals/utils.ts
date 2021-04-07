@@ -121,6 +121,7 @@ export function parseText(text: string) {
     )
     .replace(/`(.*?)`/g, `<code>$1</code>`)
     .replace(/^>(.*)$/g, `<blockquote class="rm-bq"><span>$1</span></blockquote>`)
+    .replace(/^(.*\:)\:/, `<span class="rm-attr-ref">$1</span>`)
     .replace(/\*\*(.+?)\*\*/g, `<span class="rm-bold"><span>$1</span></span>`)
     .replace(/\^\^(.+?)\^\^/g, `<span class="rm-highlight"><span>$1</span></span>`)
     .replace(/\~\~(.+?)\~\~/g, `<del class="rm-strikethrough"><span>$1</span></del>`)
