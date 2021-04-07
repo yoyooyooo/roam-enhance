@@ -6,7 +6,7 @@ import "./index.less";
 
 runPlugin("table-of-content", ({ ctx, name, options }) => {
   const { isHeading: _isHeading = [] } = options;
-  async function getTOC(list?: Roam.Block[], level = 1, depth: number = 0) {
+  async function getTOC(list?: Roam.Block[], parentBlock = {}, level = 1, depth: number = 0) {
     return (
       asyncFlatMap<Roam.Block & { originString?: string }>(
         list?.sort((a, b) => a.order - b.order),
@@ -25,7 +25,7 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
                 return r.test(a.string);
               }
               if (typeof r === "function") {
-                return r({ ...a, level });
+                return r({ ...a, level, parentBlock });
               }
             });
 
@@ -52,7 +52,7 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
 
           if (a.children) {
             if (isHeading) {
-              const children = await getTOC(a.children, level + 1, d - 1);
+              const children = await getTOC(a.children, a, level + 1, d - 1);
               if (children.length > 0) {
                 return [{ ...a, children }];
               } else {
