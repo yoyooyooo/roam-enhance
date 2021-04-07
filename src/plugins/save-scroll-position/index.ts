@@ -53,7 +53,7 @@ runPlugin("save-scroll-position", ({ ctx }) => {
 
     // 页面先跳转再渲染，有些内容多的页面会有一定的延迟，重置滚动位置需要在渲染结束后执行
     listenPageRendered() {
-      document.arrive(".roam-article", (el) => {
+      document.arrive(".roam-article", { existing: true }, (el) => {
         this.clearToRunAfterRendered(); // change page
       });
       const observer = new MutationObserver((mutationsList, observer) => {

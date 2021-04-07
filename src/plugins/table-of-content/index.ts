@@ -11,7 +11,11 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
       asyncFlatMap<Roam.Block & { originString?: string }>(
         list?.sort((a, b) => a.order - b.order),
         async (a) => {
-          if (!a.string || a.string.match(/(?<=[^`])#\.notoc(?!`)/)) {
+          if (
+            !a.string ||
+            /!\[.*\]\(.*\)/.test(a.string) ||
+            a.string.match(/(?<=[^`])#\.notoc(?!`)/)
+          ) {
             return [];
           }
 
@@ -126,9 +130,79 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
     }
   };
 
+  /* let currentTitleDOM: HTMLElement;
+  let currentTitleRect: DOMRect;
+  const setButtonPosition = (wrapDOM = document.querySelector(".rm-article-wrapper")) => {
+    const button = document.querySelector("#show-toc") as HTMLDivElement;
+    const topbar = document.querySelector(".rm-topbar") as HTMLDivElement;
+    const fixedTop = topbar.clientHeight + button.clientHeight / 2;
+    console.log("qqq", {
+      fixedTop,
+      currentTitleRect,
+      1: currentTitleRect.height,
+      2: button.clientHeight,
+      3:
+        currentTitleRect.top -
+        topbar.clientHeight +
+        currentTitleRect.height / 2 -
+        button.clientHeight / 2
+    });
+    if (
+      button &&
+      wrapDOM.scrollTop >
+        currentTitleRect.top -
+          topbar.clientHeight +
+          currentTitleRect.height / 2 -
+          button.clientHeight / 2
+    ) {
+      button.style.position = "fixed";
+      button.style.top = fixedTop + "px";
+      button.style.left = currentTitleRect.left - 20 + "px";
+      // button.style.transform = "unset";
+    } else {
+      button.style.position = "absolute";
+      button.style.top = "50%";
+      button.style.left = "-20px";
+      // button.style.transform = "translateY(-50%)";
+    }
+  };
+  window.addEventListener("resize", (e) => {
+    setButtonPosition();
+  });
+  document.querySelector("#right-sidebar").addEventListener("transitionend", (e) => {
+    setButtonPosition();
+  });
+  const observer = new MutationObserver((mutationsList, observer) => {
+    if (
+      mutationsList.length === 1 &&
+      mutationsList.find(
+        (a) => a.type === "attributes" && (a.target as HTMLElement).id === "right-sidebar"
+      )
+    ) {
+      requestAnimationFrame(() => {
+        setButtonPosition();
+      });
+    }
+  });
+
+  observer.observe(document.querySelector("#right-sidebar"), {
+    attributes: true,
+    childList: false,
+    subtree: false
+  });
+
+  document.arrive(".roam-article", { existing: true }, (el) => {
+    document.querySelector(".rm-article-wrapper").addEventListener("scroll", (e) => {
+      requestAnimationFrame(() => {
+        setButtonPosition(e.target as HTMLElement);
+      });
+    });
+  }); */
+
   const createButton = throttle(
     debounce(
       (titleDOM: HTMLElement, isPageTitle: boolean) => {
+        // currentTitleRect = titleDOM.getBoundingClientRect();
         const id = "show-toc";
         const old = document.getElementById(id);
         if (!old) {
