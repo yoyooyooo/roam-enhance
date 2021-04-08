@@ -98,7 +98,6 @@ runDynamicMenu("Show highlight", ({ ctx, name }) => {
         );
         if (highlights.length > 0) {
           const info = await window.roam42.common.getBlockInfoByUID(currentUid);
-          console.log({ highlights, info });
           render(<Component highlights={highlights} block={info[0][0]} />);
         } else {
           window.iziToast.info({

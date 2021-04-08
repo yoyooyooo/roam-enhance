@@ -21,7 +21,8 @@ if (!window.yoyo) {
       "table-of-content": ["arrive"]
     },
     dynamicMenu: {
-      "pull-zhihu": ["react", "react-dom"]
+      "Pull zhihu article": ["react", "react-dom"],
+      "Show highlight": ["react", "react-dom"]
     }
   };
   window.roamEnhance.loaded = new Set<string>();
@@ -43,12 +44,12 @@ if (!window.yoyo) {
     ""
   ));
 
-  addScript(`${host}libs/react.js`, { id: `roamEnhance-lib-react`, name: "react", async: false });
-  addScript(`${host}libs/react-dom.js`, {
-    id: `roamEnhance-lib-react-dom`,
-    name: "react-dom",
-    async: false
-  });
+  // addScript(`${host}libs/react.js`, { id: `roamEnhance-lib-react`, name: "react", async: false });
+  // addScript(`${host}libs/react-dom.js`, {
+  //   id: `roamEnhance-lib-react-dom`,
+  //   name: "react-dom",
+  //   async: false
+  // });
 
   loadPlugins(window.roamEnhance?.plugins);
   loadDynamicMenus(window.roamEnhance?.dynamicMenu);
