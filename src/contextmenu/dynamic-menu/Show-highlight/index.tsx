@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
-import { message, notification, Button, Drawer } from "antd";
 import { runDynamicMenu } from "@/utils/common";
 import { getSingleDOM } from "@/utils/dom";
-
-const yoyo = window.roamEnhance;
+import { Drawer } from "antd";
+import { debounce } from "lodash";
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 
 runDynamicMenu("Show highlight", ({ ctx, name }) => {
   function render(Component: React.ReactElement) {
@@ -20,6 +19,10 @@ runDynamicMenu("Show highlight", ({ ctx, name }) => {
     useEffect(() => {
       setOpen(true);
     }, []);
+
+    useEffect(() => {
+      ctx.showing = open;
+    }, [open]);
 
     return (
       <Drawer
@@ -58,6 +61,7 @@ runDynamicMenu("Show highlight", ({ ctx, name }) => {
                 style={{
                   cursor: "pointer",
                   padding: "8px 0px",
+                  userSelect: "none",
                   ...(i !== highlights.length - 1 ? { borderBottom: "1px solid #ddd" } : {})
                 }}
                 onMouseDown={async (e) => {
@@ -72,7 +76,7 @@ runDynamicMenu("Show highlight", ({ ctx, name }) => {
                   }
                 }}
               >
-                <div dangerouslySetInnerHTML={{ __html: yoyo.utils.parseText(a.string) }} />
+                <div dangerouslySetInnerHTML={{ __html: window.yoyo.utils.parseText(a.string) }} />
               </div>
             );
           })}
@@ -81,33 +85,48 @@ runDynamicMenu("Show highlight", ({ ctx, name }) => {
     );
   };
 
+  let currentUid: string;
+  const showHighlight = debounce(
+    async () => {
+      currentUid = ctx.showing ? currentUid : window.roamEnhance.contextMenu.onClickArgs.currentUid;
+      if (!currentUid) return;
+      let highlights = [];
+      await window.yoyo.utils.patchBlockChildren(
+        currentUid,
+        (a) => {
+          const m = (a.title || a.string)?.match(/\^\^([\s\S]*?)\^\^/g);
+          m && highlights.push(a);
+        },
+        { skipTop: false }
+      );
+      if (highlights.length > 0) {
+        const info = await window.roam42.common.getBlockInfoByUID(currentUid);
+        console.log({ highlights });
+        render(<Component highlights={highlights} block={info[0][0]} />);
+      } else {
+        window.iziToast.info({
+          position: "topCenter",
+          title: navigator.language === "zh-CN" ? "提取不到高亮内容" : "Can't extract anything"
+        });
+      }
+    },
+    500,
+    { leading: true, trailing: true }
+  );
+
   const menuMap = {
     "Show highlight": {
       text: "查看高亮",
       key: "Show highlight",
       help: `<b>查看子级高亮</b><br/>适用范围：Block和 pagetitle`,
-      onClick: async ({ currentUid }) => {
-        let highlights = [];
-        await yoyo.utils.patchBlockChildren(
-          currentUid,
-          (a) => {
-            const m = (a.title || a.string)?.match(/\^\^([\s\S]*?)\^\^/g);
-            m && highlights.push(a);
-          },
-          { skipTop: false }
-        );
-        if (highlights.length > 0) {
-          const info = await window.roam42.common.getBlockInfoByUID(currentUid);
-          render(<Component highlights={highlights} block={info[0][0]} />);
-        } else {
-          window.iziToast.info({
-            position: "topCenter",
-            title: navigator.language === "zh-CN" ? "提取不到高亮内容" : "Can't extract anything"
-          });
-        }
+      onClick: async () => {
+        showHighlight();
       }
     }
   };
+  document.leave("textarea.rm-block-input", (e) => {
+    showHighlight();
+  });
   window.roamEnhance.contextMenu.registerMenuCommand("block", menuMap);
   window.roamEnhance.contextMenu.registerMenuCommand("pageTitle", menuMap);
   window.roamEnhance.contextMenu.registerMenuCommand("pageTitle_sidebar", menuMap);

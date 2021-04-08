@@ -22,7 +22,7 @@ if (!window.yoyo) {
     },
     dynamicMenu: {
       "Pull zhihu article": ["react", "react-dom"],
-      "Show highlight": ["react", "react-dom"]
+      "Show highlight": ["react", "react-dom", "arrive"]
     }
   };
   window.roamEnhance.loaded = new Set<string>();
