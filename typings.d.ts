@@ -21,7 +21,7 @@ type registerMenu = (
 
 type registerMenuCommand = (
   clickArea: import("./src/contextmenu/types").ClickArea,
-  menuMap: Record<string, Menu>
+  menuMap: Record<string, Menu> | (() => Record<string, Menu>)
 ) => void;
 
 type RoamEnhance = {

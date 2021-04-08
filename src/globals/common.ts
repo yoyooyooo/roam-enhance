@@ -454,3 +454,7 @@ export const getTags = async (tagName: string) => {
     window.roam42.help.displayMessage("getTags 执行出错", 2000);
   }
 };
+
+export const focusOnBlock = (uid: string) => {
+  document.location.href = window.roam42.common.baseUrl().href + "/" + uid;
+};
