@@ -4,43 +4,55 @@ import { runPlugin } from "@/utils/common";
 import { asyncFlatMap } from "@/utils/function";
 import "./index.less";
 
+type newBlock = Roam.Block & {
+  originString?: string;
+  level: number;
+  parentBlock: Roam.Block;
+};
+type format = (block: newBlock) => any;
+
+type rule = RegExp | format;
+
 runPlugin("table-of-content", ({ ctx, name, options }) => {
-  const { isHeading: _isHeading = [], noHeading = [] } = options;
+  let { isHeading: _isHeading = [], noHeading = [], format = [] } = options as {
+    isHeading: rule[];
+    noHeading: rule[];
+    format: format[];
+  };
+
+  _isHeading = [/#\.toc-h\d/, (a) => a.parentBlock["view-type"] === "numbered", ..._isHeading];
+  noHeading = [
+    /!\[.*\]\(.*\)/, // 图
+    /^\{\{\[\[table\]\]\}\}$/, // {{[[table]]}}
+    /(?<=[^`])#\.notoc(?!`)/, // #.notoc
+    ...noHeading
+  ];
+  format = [
+    (a) => (a.parentBlock["view-type"] === "numbered" ? `${a.order + 1}. ${a.string}` : a.string),
+    ...format
+  ];
+
   async function getTOC(list?: Roam.Block[], parentBlock = {}, level = 1, depth: number = 0) {
+    const matchFirst = (array: (Function | RegExp)[], a: Roam.Block) => {
+      return array.find((r) => {
+        if (r instanceof RegExp) {
+          return r.test(a.string);
+        }
+        if (typeof r === "function") {
+          return r({ ...a, level, parentBlock });
+        }
+      });
+    };
     return (
       asyncFlatMap<Roam.Block & { originString?: string }>(
         list?.sort((a, b) => a.order - b.order),
         async (a) => {
-          if (
-            !a.string ||
-            /!\[.*\]\(.*\)/.test(a.string) ||
-            /^\{\{\[\[table\]\]\}\}$/.test(a.string) ||
-            a.string.match(/(?<=[^`])#\.notoc(?!`)/) ||
-            noHeading.find((r) => {
-              if (r instanceof RegExp) {
-                return r.test(a.string);
-              }
-              if (typeof r === "function") {
-                return r({ ...a, level, parentBlock });
-              }
-            })
-          ) {
+          if (!a.string || matchFirst(noHeading, a)) {
             return [];
           }
 
           const d = depth > 0 ? depth : +a.string.match(/#\.toc-depth-(\d)/)?.[1];
-          const isHeading =
-            d > 0 ||
-            a.heading ||
-            /#\.toc-h\d/.test(a.string) ||
-            _isHeading.find((r) => {
-              if (r instanceof RegExp) {
-                return r.test(a.string);
-              }
-              if (typeof r === "function") {
-                return r({ ...a, level, parentBlock });
-              }
-            });
+          const isHeading = d > 0 || a.heading || matchFirst(_isHeading, a);
 
           const embed = a.string.match(/\{\{\[\[embed\]\]: \(\(\(\((.*)\)\)\)\)\}\}/);
           if (embed) {
@@ -61,6 +73,12 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
           if (newString !== a.string) {
             a.originString = a.string;
             a.string = newString;
+          }
+
+          if (isHeading) {
+            format.forEach((f) => {
+              a.string = f({ ...a, level, parentBlock } as newBlock);
+            });
           }
 
           if (a.children) {
