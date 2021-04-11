@@ -85,10 +85,11 @@ runDynamicMenu("Show highlight", ({ ctx, name }) => {
     );
   };
 
-  let currentUid: string;
+  // let currentUid: string;
+  // let _currentUid: string;
   const showHighlight = debounce(
-    async () => {
-      currentUid = ctx.showing ? currentUid : window.roamEnhance.contextMenu.onClickArgs.currentUid;
+    async ({ currentUid }) => {
+      // currentUid = ctx.showing ? currentUid : _currentUid;
       if (!currentUid) return;
       let highlights = [];
       await window.yoyo.utils.patchBlockChildren(
@@ -119,14 +120,16 @@ runDynamicMenu("Show highlight", ({ ctx, name }) => {
       text: "查看高亮",
       key: "Show highlight",
       help: `<b>查看子级高亮</b><br/>适用范围：Block和 pagetitle`,
-      onClick: async () => {
-        showHighlight();
+      onClick: async ({ currentUid }) => {
+        // _currentUid = window.roamEnhance.contextMenu.onClickArgs.currentUid;
+        showHighlight({ currentUid });
       }
     }
   };
-  document.leave("textarea.rm-block-input", (e) => {
-    showHighlight();
-  });
+  // document.leave("textarea.rm-block-input", (e) => {
+  //   _currentUid = window.roamEnhance.contextMenu.onClickArgs.currentUid;
+  //   showHighlight();
+  // });
   window.roamEnhance.contextMenu.registerMenuCommand("block", menuMap);
   window.roamEnhance.contextMenu.registerMenuCommand("pageTitle", menuMap);
   window.roamEnhance.contextMenu.registerMenuCommand("pageTitle_sidebar", menuMap);
