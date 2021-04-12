@@ -22,7 +22,6 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
 
   _isHeading = [/#\.toc-h\d/, (a) => a.parentBlock["view-type"] === "numbered", ..._isHeading];
   noHeading = [
-    /!\[.*\]\(.*\)/, // 图
     /^\{\{\[\[table\]\]\}\}$/, // {{[[table]]}}
     /(?<=[^`])#\.notoc(?!`)/, // #.notoc
     ...noHeading
@@ -31,6 +30,11 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
     (a) => (a.parentBlock["view-type"] === "numbered" ? `${a.order + 1}. ${a.string}` : a.string),
     ...format
   ];
+
+  const preFormat = (s: string) => {
+    // 过滤图片
+    return s.replace(/!\[.*?\]\(.*?\)/g, "");
+  };
 
   async function getTOC(list?: Roam.Block[], parentBlock = {}, level = 1, depth: number = 0) {
     const matchFirst = (array: (Function | RegExp)[], a: Roam.Block) => {
@@ -47,13 +51,26 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
       asyncFlatMap<Roam.Block & { originString?: string }>(
         list?.sort((a, b) => a.order - b.order),
         async (a) => {
-          if (!a.string || matchFirst(noHeading, a)) {
-            return [];
+          if (matchFirst(noHeading, a)) return [];
+
+          a.string = preFormat(a.string);
+
+          // block ref
+          // @ts-ignore
+          const newString = await window.roam42.common.replaceAsync(
+            a.string,
+            /(?<=^|[^(\]\)])\(\((.{9})\)\)(?!\))/g,
+            async (m, uid) => {
+              const info = await window.roam42.common.getBlockInfoByUID(uid);
+              const string = info?.[0][0].string;
+              return string ? preFormat(string) : m;
+            }
+          );
+          if (newString && newString !== a.string) {
+            a.originString = a.string;
+            a.string = newString;
           }
-
-          const d = depth > 0 ? depth : +a.string.match(/#\.toc-depth-(\d)/)?.[1];
-          const isHeading = d > 0 || a.heading || matchFirst(_isHeading, a);
-
+          // embed
           const embed = a.string.match(/\{\{\[\[embed\]\]: \(\(\(\((.*)\)\)\)\)\}\}/);
           if (embed) {
             const embedUid = embed[1];
@@ -61,19 +78,13 @@ runPlugin("table-of-content", ({ ctx, name, options }) => {
             a.originString = a.string;
             a.string = info?.[0][0].string || a.string;
           }
-          //@ts-ignore
-          const newString = await window.roam42.common.replaceAsync(
-            a.string,
-            /(?<=^|[^(\]\)])\(\((.{9})\)\)(?!\))/g,
-            async (m, uid) => {
-              const info = await window.roam42.common.getBlockInfoByUID(uid);
-              return info?.[0][0].string || m;
-            }
-          );
-          if (newString !== a.string) {
-            a.originString = a.string;
-            a.string = newString;
+
+          if (!a.string) {
+            return [];
           }
+
+          const d = depth > 0 ? depth : +a.string.match(/#\.toc-depth-(\d)/)?.[1];
+          const isHeading = d > 0 || a.heading || matchFirst(_isHeading, a);
 
           if (isHeading) {
             format.forEach((f) => {
