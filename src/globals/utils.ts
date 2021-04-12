@@ -126,7 +126,7 @@ export function parseText(text: string) {
     .replace(/\^\^(.+?)\^\^/g, `<span class="rm-highlight"><span>$1</span></span>`)
     .replace(/\~\~(.+?)\~\~/g, `<del class="rm-strikethrough"><span>$1</span></del>`)
     .replace(/\_\_(.+?)\_\_/g, `<em class="rm-italics"><span>$1</span></em>`)
-    .replace(/\[(.*?)\]\((.*?)\)(?!\))/g, (m, alias, conetnt) => {
+    .replace(/(?<=[^!])\[(.*?)\]\((.*?)\)(?!\))/g, (m, alias, conetnt) => {
       let aliasType: "block" | "page" | "external" = "block";
       if (/\(\(.{9}\)\)/.test(conetnt)) {
         aliasType = "block";
