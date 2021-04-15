@@ -67,7 +67,7 @@ const plugins = [
 // const pluginPaths = fs.readdirSync("./src/plugins");
 const pluginPaths = globby.sync("./src/plugins/**/index.(ts|tsx)");
 // const dynamicMenuPaths = fs.readdirSync("./src/contextmenu/dynamic-menu");
-const dynamicMenuPaths = globby.sync("./src/contextmenu/dynamic-menu/**/*.(ts|tsx)");
+const dynamicMenuPaths = globby.sync("./src/contextmenu/dynamic-menu/**/index.(ts|tsx)");
 
 const libGlobals = {
   // antd: "window.roamEnhance.libs.antd",
