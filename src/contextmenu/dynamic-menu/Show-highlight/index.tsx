@@ -124,7 +124,7 @@ runDynamicMenu("Show highlight", ({ ctx, name }) => {
         // _currentUid = window.roamEnhance.contextMenu.onClickArgs.currentUid;
         showHighlight({ currentUid });
       }
-    }
+    } as Menu
   };
   // document.leave("textarea.rm-block-input", (e) => {
   //   _currentUid = window.roamEnhance.contextMenu.onClickArgs.currentUid;
