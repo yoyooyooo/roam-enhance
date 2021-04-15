@@ -1,6 +1,6 @@
 import { getSingleDOM } from "@/utils/dom";
 import { Box } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import ReactDOM from "react-dom";
 import { animated as a, useTransition } from "react-spring";
 import { useDebounce } from "react-use";
@@ -51,7 +51,13 @@ const Svg = styled.svg<{ active?: boolean }>`
 
 const ReplaceAllIcon = ({ active, ...props }) => {
   return (
-    <svg width='16' height='16' viewBox='0 0 16 16' fill={active ? "#000" : "none"} {...props}>
+    <svg
+      width='16'
+      height='16'
+      viewBox='0 0 16 16'
+      fill={active ? "#000" : "hsl(0, 0%, 55%)"}
+      {...props}
+    >
       <path
         fillRule='evenodd'
         clipRule='evenodd'
@@ -79,16 +85,30 @@ const Replace: React.FC<{ name: string; currentUid: string }> = ({ name, current
     }
   });
 
+  const regex = useMemo(() => {
+    const flags = caseSensitive ? `g` : `gi`;
+    return isRegex
+      ? new RegExp(String.raw`${find}`, flags)
+      : new RegExp(
+          String.raw`${find.replace(
+            /\*|\.|\?|\+|\$|\^|\[|\]|\(|\)|\{|\}|\||\\|\//g,
+            (m) => "\\" + m
+          )}`,
+          flags
+        );
+  }, [isRegex, caseSensitive, find]);
+
   useDebounce(
     async () => {
       if (!find) return;
+      console.log("qqq", { regex });
       const matchBlocks = [];
       let totalBlocks = 0;
       await window.roamEnhance.utils.patchBlockChildrenSync(
         currentUid,
         (a) => {
           totalBlocks++;
-          a.string.includes(find) && matchBlocks.push(a);
+          regex.test(a.string || a.title) && matchBlocks.push(a);
         },
         { skipTop: false }
       );
@@ -177,26 +197,16 @@ const Replace: React.FC<{ name: string; currentUid: string }> = ({ name, current
                 />
                 <Box pl={1}>
                   <ReplaceAllIcon
-                    active={!!find}
+                    active={!!find && !!matchBlocks.length}
                     onClick={() => {
-                      matchBlocks.forEach((a) => {
-                        const flags = caseSensitive ? `gi` : `g`;
-                        const newString = a.string.replace(
-                          isRegex
-                            ? new RegExp(String.raw`${find}`, flags)
-                            : new RegExp(
-                                String.raw`${find.replace(
-                                  /\*|\.|\?|\+|\$|\^|\[|\]|\(|\)|\{|\}|\||\\|\//g,
-                                  (m) => "\\" + m
-                                )}`,
-                                flags
-                              ),
-                          replace
-                        );
-                        if (newString !== a.string) {
-                          window.roam42.common.updateBlock(a.uid, newString, a.open);
-                        }
-                      });
+                      if (!!find && !!matchBlocks.length) {
+                        matchBlocks.forEach((a) => {
+                          const newString = a.string.replace(regex, replace);
+                          if (newString !== a.string) {
+                            window.roam42.common.updateBlock(a.uid, newString, a.open);
+                          }
+                        });
+                      }
                     }}
                   >
                     替换
