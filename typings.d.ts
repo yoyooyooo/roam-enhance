@@ -13,14 +13,18 @@ declare namespace Roam {
   }
 }
 
+type Menu = import("./src/contextmenu/types").Menu;
+type ClickArea = import("./src/contextmenu/types").ClickArea;
+type ClickArgs = import("./src/contextmenu/types").ClickArgs;
+
 type registerMenu = (
-  menu: import("./src/contextmenu/types").Menu[],
-  clickArea: import("./src/contextmenu/types").ClickArea,
-  onClickArgs: import("./src/contextmenu/types").ClickArgs
+  menu: Menu[],
+  clickArea: ClickArea,
+  onClickArgs: ClickArgs
 ) => PromiseOrNot<void>;
 
 type registerMenuCommand = (
-  clickArea: import("./src/contextmenu/types").ClickArea,
+  clickArea: ClickArea,
   menuMap: Record<string, Menu> | (() => Record<string, Menu>)
 ) => void;
 
@@ -46,7 +50,7 @@ type RoamEnhance = {
     registerMenu?: Set<registerMenu>;
     registerMenuCommand?: registerMenuCommand;
     dynamicMenu: { loaded: Set<string> };
-    onClickArgs: Partial<import("./src/contextmenu/types").ClickArgs>;
+    onClickArgs: Partial<ClickArgs>;
   };
   libs?: {
     react: typeof import("react");
