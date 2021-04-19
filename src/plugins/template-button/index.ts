@@ -37,8 +37,7 @@ runPlugin("template-button", async () => {
 
   document.addEventListener("click", async (e) => {
     const target = e.target as HTMLElement;
-    if (target.tagName !== "BUTTON" || target.className !== "bp3-button bp3-small dont-focus-block")
-      return;
+    if (!(target.tagName === "BUTTON" && target.closest(".roam-block-container"))) return;
 
     let currentUid: string;
     try {
