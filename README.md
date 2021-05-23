@@ -35,7 +35,7 @@ click on page title of sidebar:
 
 <img src="http://github.com/yoyooyooo/roam-enhance/blob/master/images/3.png?raw=true" width="200" alt="click on page title of sidebar"/>
 
-### change build-in menu and custom your own menu
+### change build-in menu and customize your own menu
 
 you can create a page named `roam/enhance/menu`,then right click the page title, there will be a menu called `Pull all build-in menu` in the right click menu.
 click it and then it will automatically pull the built-in menu on the current page.
