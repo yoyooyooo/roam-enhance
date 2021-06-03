@@ -36,6 +36,7 @@ runPlugin("template-button", async () => {
   });
 
   document.addEventListener("click", async (e) => {
+    if (!buttonBlocks) return;
     const target = e.target as HTMLElement;
     if (!(target.tagName === "BUTTON" && target.closest(".roam-block-container"))) return;
 
